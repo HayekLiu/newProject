@@ -1,0 +1,452 @@
+[
+  {
+    "name": "Massachusetts Institute of Technology (MIT)",
+    "academicReputation": 100,
+    "employerReputation": 100,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 99.8,
+    "internationalFaculty": 100,
+    "internationalStudents": 94.1
+  },
+  {
+    "name": "Stanford University",
+    "academicReputation": 100,
+    "employerReputation": 100,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 98.6,
+    "internationalFaculty": 99.8,
+    "internationalStudents": 67.7
+  },
+  {
+    "name": "Harvard University",
+    "academicReputation": 100,
+    "employerReputation": 100,
+    "facultyStudent": 98.7,
+    "citationsPerFaculty": 99.6,
+    "internationalFaculty": 86.3,
+    "internationalStudents": 62.2
+  },
+  {
+    "name": "University of Oxford",
+    "academicReputation": 100,
+    "employerReputation": 100,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 84.7,
+    "internationalFaculty": 99.7,
+    "internationalStudents": 98.5
+  },
+  {
+    "name": "California Institute of Technology (Caltech)",
+    "academicReputation": 97.8,
+    "employerReputation": 81.2,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 100,
+    "internationalFaculty": 99.4,
+    "internationalStudents": 87.3
+  },
+  {
+    "name": "ETH Zurich (Swiss Federal Institute of Technology)",
+    "academicReputation": 98.4,
+    "employerReputation": 96.7,
+    "facultyStudent": 85,
+    "citationsPerFaculty": 98.4,
+    "internationalFaculty": 100,
+    "internationalStudents": 98
+  },
+  {
+    "name": "University of Cambridge",
+    "academicReputation": 100,
+    "employerReputation": 100,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 74.2,
+    "internationalFaculty": 100,
+    "internationalStudents": 97.6
+  },
+  {
+    "name": "UCL (University College London)",
+    "academicReputation": 99.3,
+    "employerReputation": 98.7,
+    "facultyStudent": 98.1,
+    "citationsPerFaculty": 76.7,
+    "internationalFaculty": 99.1,
+    "internationalStudents": 100
+  },
+  {
+    "name": "Imperial College London",
+    "academicReputation": 98.6,
+    "employerReputation": 99.9,
+    "facultyStudent": 99.8,
+    "citationsPerFaculty": 72.1,
+    "internationalFaculty": 100,
+    "internationalStudents": 100
+  },
+  {
+    "name": "University of Chicago",
+    "academicReputation": 99.5,
+    "employerReputation": 93.7,
+    "facultyStudent": 96.5,
+    "citationsPerFaculty": 78.5,
+    "internationalFaculty": 70.2,
+    "internationalStudents": 81
+  },
+  {
+    "name": "Nanyang Technological University (NTU)",
+    "academicReputation": 92.1,
+    "employerReputation": 93.8,
+    "facultyStudent": 93.9,
+    "citationsPerFaculty": 88.8,
+    "internationalFaculty": 100,
+    "internationalStudents": 74.2
+  },
+  {
+    "name": "National University of Singapore (NUS)",
+    "academicReputation": 99.8,
+    "employerReputation": 99.2,
+    "facultyStudent": 88.3,
+    "citationsPerFaculty": 75.7,
+    "internationalFaculty": 100,
+    "internationalStudents": 76.4
+  },
+  {
+    "name": "Princeton University",
+    "academicReputation": 99.9,
+    "employerReputation": 98.6,
+    "facultyStudent": 70.7,
+    "citationsPerFaculty": 100,
+    "internationalFaculty": 64.9,
+    "internationalStudents": 67.6
+  },
+  {
+    "name": "Cornell University",
+    "academicReputation": 98.7,
+    "employerReputation": 90.4,
+    "facultyStudent": 65.7,
+    "citationsPerFaculty": 95.1,
+    "internationalFaculty": 93.8,
+    "internationalStudents": 72.3
+  },
+  {
+    "name": "University of Pennsylvania",
+    "academicReputation": 95.8,
+    "employerReputation": 93.7,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 67.6,
+    "internationalFaculty": 84,
+    "internationalStudents": 63.6
+  },
+  {
+    "name": "Tsinghua University",
+    "academicReputation": 97.4,
+    "employerReputation": 99.1,
+    "facultyStudent": 92.4,
+    "citationsPerFaculty": 80.4,
+    "internationalFaculty": 68,
+    "internationalStudents": 30.1
+  },
+  {
+    "name": "Yale University",
+    "academicReputation": 99.9,
+    "employerReputation": 99.9,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 53.5,
+    "internationalFaculty": 78.1,
+    "internationalStudents": 57.4
+  },
+  {
+    "name": "Columbia University",
+    "academicReputation": 99.7,
+    "employerReputation": 97.6,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 53,
+    "internationalFaculty": 40.1,
+    "internationalStudents": 96.9
+  },
+  {
+    "name": "Ecole Polytechnique Fédérale de Lausanne (EPFL)",
+    "academicReputation": 75.6,
+    "employerReputation": 77.6,
+    "facultyStudent": 96.6,
+    "citationsPerFaculty": 98.9,
+    "internationalFaculty": 100,
+    "internationalStudents": 100
+  },
+  {
+    "name": "University of Edinburgh",
+    "academicReputation": 97.5,
+    "employerReputation": 93.7,
+    "facultyStudent": 85.6,
+    "citationsPerFaculty": 53,
+    "internationalFaculty": 98,
+    "internationalStudents": 98.6
+  },
+  {
+    "name": "University of Michigan",
+    "academicReputation": 98.9,
+    "employerReputation": 94.4,
+    "facultyStudent": 91,
+    "citationsPerFaculty": 61.6,
+    "internationalFaculty": 79.7,
+    "internationalStudents": 44.1
+  },
+  {
+    "name": "Peking University",
+    "academicReputation": 99.1,
+    "employerReputation": 99.6,
+    "facultyStudent": 72.3,
+    "citationsPerFaculty": 73,
+    "internationalFaculty": 70.7,
+    "internationalStudents": 36.9
+  },
+  {
+    "name": "The University of Tokyo",
+    "academicReputation": 100,
+    "employerReputation": 99.1,
+    "facultyStudent": 93.3,
+    "citationsPerFaculty": 67.9,
+    "internationalFaculty": 11.1,
+    "internationalStudents": 26.2
+  },
+  {
+    "name": "Johns Hopkins University",
+    "academicReputation": 88.3,
+    "employerReputation": 52.6,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 77.6,
+    "internationalFaculty": 68.8,
+    "internationalStudents": 81.5
+  },
+  {
+    "name": "Duke University",
+    "academicReputation": 89,
+    "employerReputation": 84.2,
+    "facultyStudent": 99.4,
+    "citationsPerFaculty": 80.3,
+    "internationalFaculty": 12.4,
+    "internationalStudents": 59.3
+  },
+  {
+    "name": "University of Hong Kong (HKU)",
+    "academicReputation": 97.3,
+    "employerReputation": 82.6,
+    "facultyStudent": 87.2,
+    "citationsPerFaculty": 44.5,
+    "internationalFaculty": 100,
+    "internationalStudents": 99.1
+  },
+  {
+    "name": "The University of Manchester",
+    "academicReputation": 94.9,
+    "employerReputation": 97.7,
+    "facultyStudent": 74.1,
+    "citationsPerFaculty": 51.5,
+    "internationalFaculty": 92.6,
+    "internationalStudents": 98.6
+  },
+  {
+    "name": "University of California, Berkeley (UCB)",
+    "academicReputation": 100,
+    "employerReputation": 99.9,
+    "facultyStudent": 30.9,
+    "citationsPerFaculty": 97.7,
+    "internationalFaculty": 92.4,
+    "internationalStudents": 39.7
+  },
+  {
+    "name": "Australian National University (ANU)",
+    "academicReputation": 96.9,
+    "employerReputation": 81.3,
+    "facultyStudent": 37.5,
+    "citationsPerFaculty": 87.4,
+    "internationalFaculty": 100,
+    "internationalStudents": 99.8
+  },
+  {
+    "name": "University of Toronto",
+    "academicReputation": 98.9,
+    "employerReputation": 96.3,
+    "facultyStudent": 71.5,
+    "citationsPerFaculty": 43.9,
+    "internationalFaculty": 97.7,
+    "internationalStudents": 93
+  },
+  {
+    "name": "Northwestern University",
+    "academicReputation": 85.9,
+    "employerReputation": 80.2,
+    "facultyStudent": 100,
+    "citationsPerFaculty": 62.8,
+    "internationalFaculty": 76.1,
+    "internationalStudents": 49
+  },
+  {
+    "name": "The Hong Kong University of Science and Technology (HKUST)",
+    "academicReputation": 85,
+    "employerReputation": 71.3,
+    "facultyStudent": 59.5,
+    "citationsPerFaculty": 89.5,
+    "internationalFaculty": 100,
+    "internationalStudents": 87.5
+  },
+  {
+    "name": "King's College London (KCL)",
+    "academicReputation": 88.5,
+    "employerReputation": 80.4,
+    "facultyStudent": 82.3,
+    "citationsPerFaculty": 52,
+    "internationalFaculty": 98.5,
+    "internationalStudents": 99.8
+  },
+  {
+    "name": "Kyoto University",
+    "academicReputation": 98.7,
+    "employerReputation": 92.5,
+    "facultyStudent": 96.3,
+    "citationsPerFaculty": 53.2,
+    "internationalFaculty": 15.4,
+    "internationalStudents": 17.5
+  },
+  {
+    "name": "McGill University",
+    "academicReputation": 92.2,
+    "employerReputation": 93.8,
+    "facultyStudent": 63.3,
+    "citationsPerFaculty": 58.4,
+    "internationalFaculty": 93.7,
+    "internationalStudents": 96.2
+  },
+  {
+    "name": "University of California, Los Angeles (UCLA)",
+    "academicReputation": 100,
+    "employerReputation": 99.7,
+    "facultyStudent": 40.6,
+    "citationsPerFaculty": 88.3,
+    "internationalFaculty": 50.4,
+    "internationalStudents": 38.2
+  },
+  {
+    "name": "Seoul National University (SNU)",
+    "academicReputation": 96.9,
+    "employerReputation": 91.1,
+    "facultyStudent": 88,
+    "citationsPerFaculty": 61.6,
+    "internationalFaculty": 19.2,
+    "internationalStudents": 11.9
+  },
+  {
+    "name": "The University of Melbourne",
+    "academicReputation": 99.2,
+    "employerReputation": 98.1,
+    "facultyStudent": 24.1,
+    "citationsPerFaculty": 75,
+    "internationalFaculty": 97.6,
+    "internationalStudents": 100
+  },
+  {
+    "name": "New York University (NYU)",
+    "academicReputation": 95.9,
+    "employerReputation": 95.6,
+    "facultyStudent": 97.6,
+    "citationsPerFaculty": 24,
+    "internationalFaculty": 33.5,
+    "internationalStudents": 93.4
+  },
+  {
+    "name": "Fudan University",
+    "academicReputation": 83.4,
+    "employerReputation": 93.8,
+    "facultyStudent": 86.5,
+    "citationsPerFaculty": 57.8,
+    "internationalFaculty": 92.7,
+    "internationalStudents": 42.9
+  },
+  {
+    "name": "KAIST - Korea Advanced Institute of Science and Technology",
+    "academicReputation": 85,
+    "employerReputation": 74.5,
+    "facultyStudent": 73.9,
+    "citationsPerFaculty": 98.1,
+    "internationalFaculty": 25.8,
+    "internationalStudents": 10.1
+  },
+  {
+    "name": "The University of Sydney",
+    "academicReputation": 97.5,
+    "employerReputation": 96.4,
+    "facultyStudent": 23.6,
+    "citationsPerFaculty": 70.9,
+    "internationalFaculty": 100,
+    "internationalStudents": 100
+  },
+  {
+    "name": "The University of New South Wales (UNSW)",
+    "academicReputation": 91.2,
+    "employerReputation": 95.7,
+    "facultyStudent": 19.8,
+    "citationsPerFaculty": 84.5,
+    "internationalFaculty": 100,
+    "internationalStudents": 98.5
+  },
+  {
+    "name": "London School of Economics and Political Science (LSE)",
+    "academicReputation": 78.9,
+    "employerReputation": 99.7,
+    "facultyStudent": 34.8,
+    "citationsPerFaculty": 91.1,
+    "internationalFaculty": 100,
+    "internationalStudents": 100
+  },
+  {
+    "name": "University of California, San Diego (UCSD)",
+    "academicReputation": 92.2,
+    "employerReputation": 51.8,
+    "facultyStudent": 60.3,
+    "citationsPerFaculty": 78.4,
+    "internationalFaculty": 60.8,
+    "internationalStudents": 70.3
+  },
+  {
+    "name": "The Chinese University of Hong Kong (CUHK)",
+    "academicReputation": 87.9,
+    "employerReputation": 61.5,
+    "facultyStudent": 67.7,
+    "citationsPerFaculty": 56.2,
+    "internationalFaculty": 100,
+    "internationalStudents": 91.7
+  },
+  {
+    "name": "The University of Queensland (UQ)",
+    "academicReputation": 88.5,
+    "employerReputation": 82.2,
+    "facultyStudent": 27.7,
+    "citationsPerFaculty": 81.8,
+    "internationalFaculty": 100,
+    "internationalStudents": 99.5
+  },
+  {
+    "name": "Carnegie Mellon University",
+    "academicReputation": 75.2,
+    "employerReputation": 77.5,
+    "facultyStudent": 43.5,
+    "citationsPerFaculty": 94.3,
+    "internationalFaculty": 83.6,
+    "internationalStudents": 99.9
+  },
+  {
+    "name": "University of Bristol",
+    "academicReputation": 76.6,
+    "employerReputation": 84.2,
+    "facultyStudent": 72.8,
+    "citationsPerFaculty": 61.8,
+    "internationalFaculty": 89.4,
+    "internationalStudents": 75.6
+  },
+  {
+    "name": "Delft University of Technology",
+    "academicReputation": 71.2,
+    "employerReputation": 88.2,
+    "facultyStudent": 46.4,
+    "citationsPerFaculty": 90,
+    "internationalFaculty": 99.3,
+    "internationalStudents": 87.8
+  }
+]

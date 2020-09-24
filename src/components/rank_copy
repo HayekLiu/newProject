@@ -1,0 +1,954 @@
+<template>
+  <div
+    :id="id"
+    class="rankContainer"
+    style="overflow-y: scroll"
+  />
+</template>
+
+<script>
+import d3tip from 'd3-tip'
+import * as lasso from 'd3-lasso';
+import { axisLeft } from '../common/plugin/d3.v4';
+import { constants } from 'zlib';
+import { fuchsia } from 'color-name';
+let _lasso = lasso;
+export default {
+    name: 'ScatterOfD3',
+    props: {
+        tsneValues:{
+            type:Array,
+            default:()=>[],
+        },
+        nameListData:{
+            type:Array,
+            default:()=>[],
+        },
+        rankData:{
+            type:Array,
+            default:()=>[],
+        },
+        rankAxisData:{
+            type:Array,
+            default:()=>[],
+        },
+        projectAxisData:{
+            type:Array,
+            default:()=>[],
+        }
+    },
+    data(){
+        return{
+            id:'rankContainer',
+            tsneValuesData:[],
+            nameList:[],
+            ranks: [],
+            svg: null,
+            selectedCluster:[],  //套索选择数据
+        }
+    },
+    computed:{
+        
+    },
+    watch:{
+        tsneValues(val){
+            this.tsneValuesData =val;
+        },
+        nameListData(val){
+            this.nameList = val;
+            // console.log('nameList', val)
+            this.init()
+        },
+        rankData(val){
+            // console.log('rank', val)
+            this.ranks = val;
+        },
+        rankAxisData(val){
+            console.log('rankAxisData', val)
+            //this.ranks = val;
+        },
+        projectAxisData(val){
+            console.log('projectAxisData', val)
+            //this.ranks = val;
+        }
+    },
+    mounted() {
+
+        console.log('rankAxisData', this.rankAxisData)
+        console.log('projectAxisData', this.projectAxisData)
+        // console.log('this.tsneValues', this.tsneValues)
+        // console.log('ranks', this.ranks)
+        //let dist = this.minDistance([3, 1], [0, 0], [2, 0])
+        // console.log('dist', dist)
+    },
+    methods:{
+        init() {
+            let self = this
+            let rankAxisData= self.rankAxisData
+            let {clientWidth: clientWidth, clientHeight: clientHeight} = document.getElementById('rankContainer')
+            // let padding = {
+            //     left: 20,
+            //     right: 100, // 为文字留空间
+            //     top: 50, // 顶部留空间画legend和进度条
+            //     bottom: 20
+            // }
+
+            let svg = d3.select("#rankContainer").append('svg')
+                        .attr("width", clientWidth).attr("height", clientHeight)
+                        .style('overflow-y', 'scroll')
+  
+
+
+            let margin = {top: 5, right: 10, bottom: 5, left: 110}
+            let width = clientWidth- margin.left - margin.right
+            let height = clientHeight - margin.top - margin.bottom
+
+            let rankWidth = width;
+            let legendHeight = 15
+            let rankHeight = 35;
+            let projectHeight = 25;
+
+            let legendG = svg.append("g").attr("transform", "translate(" + margin.left + "," + (0) + ")");
+
+            // d3.line()([[0, legendHeight], [clientWidth, legendHeight]])
+            //   .attr('class', 'legendBorder')
+
+            svg.attr("class", "line")
+                // .selectAll("line").data(graph.links)
+                // .enter()
+                .append("line")
+                .style("stroke", "black") 
+                .style("stroke-width", "0.2px") 
+                .style("stroke-dasharray", ("3, 3")) 
+                .attr("x1", function(d) { return 0 })
+                .attr("y1", function(d) { return legendHeight })
+                .attr("x2", function(d) { return clientWidth })
+                .attr("y2", function(d) {  return legendHeight })
+
+            svg.attr("class", "line")
+                // .selectAll("line").data(graph.links)
+                // .enter()
+                .append("line")
+                .style("stroke", "black") 
+                .style("stroke-width", "0.2px") 
+                .style("stroke-dasharray", ("3, 3")) 
+                .attr("x1", function(d) { return 0 })
+                .attr("y1", function(d) { return legendHeight+rankHeight+10 })
+                .attr("x2", function(d) { return clientWidth })
+                .attr("y2", function(d) { return legendHeight+rankHeight+10 })
+            
+            svg.attr("class", "line")
+                // .selectAll("line").data(graph.links)
+                // .enter()
+                .append("line")
+                .style("stroke", "black") 
+                .style("stroke-width", "0.2px") 
+                .style("stroke-dasharray", ("3, 3")) 
+                .attr("x1", function(d) { return 0 })
+                .attr("y1", function(d) { return margin.top+legendHeight+rankHeight+projectHeight+20 })
+                .attr("x2", function(d) { return clientWidth })
+                .attr("y2", function(d) { return margin.top+legendHeight+rankHeight+projectHeight+20 })
+
+            let fieldList = Object.keys(rankAxisData[0]['weightDim'])
+
+            let color = d3.scaleOrdinal()
+                .domain(fieldList)
+                .range(d3.schemeCategory10);
+            let legendRectSize = 10
+            svg.selectAll("myrect")
+               .data(fieldList)
+               .enter()
+               .append("rect")
+               .attr("x", function(d,i){ return 20 + i*(legendRectSize+130)})
+               .attr("y", 2) // 100 is where the first dot appears. 25 is the distance between dots
+               .attr("width", legendRectSize)
+               .attr("height", legendRectSize)
+               .style("fill", function(d){ return color(d)})
+              //  .on("mouseover", highlight)
+              //  .on("mouseleave", noHighlight)
+
+            // Add one dot in the legend for each name.
+            svg.selectAll("mylabels")
+              .data(fieldList)
+              .enter()
+              .append("text")
+                .attr("x", function(d,i){ return 28 + i*(legendRectSize+130) + (legendRectSize/2)})
+                .attr("y", 2+legendRectSize*0.5) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", function(d){ return color(d)})
+                .text(function(d){ return d})
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+                .style("font-weight", "bold")
+                // .on("mouseover", highlight)
+                // .on("mouseleave", noHighlight)
+
+            let linkG = svg.append("g")
+              .attr("transform", "translate(" + 0 + "," + 0 + ")")
+              .attr('class', 'linkG')
+
+            let projectAxisG = svg.append("g")
+              .attr("transform", "translate(" + margin.left + "," + (legendHeight+5) + ")")
+              .attr('class', 'projectAxisG')
+
+            let rankAxisG = svg.append("g")
+              .attr("transform", "translate(" + margin.left + "," + (legendHeight+projectHeight+20) + ")")
+              .attr('class', 'rankAxisG')
+
+            let matrixWSG = svg.append("g")
+              .attr("transform", "translate(" + margin.left + "," + (legendHeight+projectHeight+rankHeight+40) + ")")
+              .attr('class', 'matrixWSG')
+
+            projectAxisG.append("text")
+                .attr("x", -5)
+                .attr("y", (5+projectHeight/2)) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", 'black')
+                .text('Projection Axis')
+                .attr("text-anchor", "end")
+                .style("alignment-baseline", "middle")
+                //.style("font-weight", "bold")
+
+            rankAxisG.append("text")
+                .attr("x", -5)
+                .attr("y", (5+rankHeight/2)) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", 'black')
+                .text('Ranking Axis')
+                .attr("text-anchor", "end")
+                .style("alignment-baseline", "middle")
+                //.style("font-weight", "bold")
+            
+            let themeriver = []
+            rankAxisData.map(item=>{
+                for(let field in item['weightDim']){
+                    item[field] = item['weightDim'][field]
+                    themeriver.push({'key': field, 'value': item['weightDim'][field], 'loc': item['loc']})
+                }
+            })
+            chart(margin, "blue");
+
+            var colorrange = [];
+
+            function chart(data, color) {
+
+                if (color == "blue") {
+                    colorrange = ["#045A8D", "#2B8CBE", "#74A9CF", "#A6BDDB", "#D0D1E6", "#F1EEF6"];
+                } else if (color == "pink") {
+                    colorrange = ["#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1EEF6"];
+                } else if (color == "orange") {
+                    colorrange = ["#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9"];
+                }
+                let strokecolor = colorrange[0];
+
+                let xRankScale = d3.scaleLinear()
+                    .range([0, width]);
+
+                let yRankScale = d3.scaleLinear()
+
+                let zRankScale = d3.scaleOrdinal()
+                    .range(colorrange);
+
+                let nest = d3.nest()
+                    .key(function(d) {
+                        return d.loc;
+                    });
+
+                let nestkey = d3.nest()
+                    .key(function(d) {
+                        return d.field;
+                    });
+
+                let area = d3.area()
+                    .x(function(d) {
+                        return xRankScale(+d.data.key);
+                    })
+                    .y0(function(d) {
+                        return yRankScale(d[0]);
+                    })
+                    .y1(function(d) {
+                        return yRankScale(d[1]);
+                    });
+
+                {
+                    console.log('data', data)
+                    let stack = d3.stack()
+                        .keys(function() {
+                            let findkey = nest.entries(data);
+                            var key = [];
+                            for (var g = 0; g < findkey[0].values.length; g++) {
+                                key[g] = findkey[0].values[g].key;
+                            }
+                            return key;
+                        })
+                        .order(d3.stackOrderNone)
+                        .offset(d3.stackOffsetWiggle);
+
+                    let nestresult = nest.entries(data);
+
+                    for (let i = 0; i < nestresult.length; i++) {
+                        obj = nestresult[i].values;
+                        delete nestresult[i].values;
+                        delete nestresult[i].value;
+                        changeobj = []
+                        for (let j = 0; j < obj.length; j++) {
+                            nestresult[i][obj[j].key] = obj[j].value;
+                        }
+                    };
+
+                    let layers = stack(nestresult);
+                    console.log('layers',layers)
+                    xRankScale.domain(d3.extent(data, function(d) {
+                        return d.loc;
+                    }));
+                    let rankYMin = d3.min(layers, function(layer) {
+                            return d3.min(layer, function(d) {
+                                return d[0] ;
+                            })
+                        })
+                    let rankYMax = d3.max(layers, function(layer) {
+                            return d3.max(layer, function(d) {
+                                return d[1] ;
+                            })
+                        })
+                    let midY = (rankYMin+rankYMax)/2
+                    yRankScale.domain([rankYMin, rankYMax])
+                        .range([height, 0]);
+
+                    console.log(yRankScale.domain())
+                    rankAxisG.selectAll(".layer")
+                        .data(layers)
+                        .enter().append("path")
+                        .attr("class", "layer")
+                        .attr("d", function(d) {
+                            return area(d);
+                        })
+                        .attr("fill", function(d, i) {
+                            return zRankScale(i);
+                        });
+
+                    rankAxisG.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(d3.axisBottom(xRankScale));
+
+                    rankAxisG.append("g")
+                        .attr("class", "y axis")
+                        .attr("transform", "translate(" + width + ", 0)")
+                        .call(d3.axisRight(yRankScale));
+
+                    rankAxisG.append("g")
+                        .attr("class", "y axis")
+                        .call(d3.axisLeft(yRankScale));
+
+                    rankAxisG.selectAll(".layer")
+                        .attr("opacity", 1)
+                        .on("mouseover", function(d, i) {
+                            rankAxisG.selectAll(".layer").transition()
+                                .duration(250)
+                                .attr("opacity", function(d, j) {
+                                    return j != i ? 0.5 : 1;
+                                })
+                        })
+                        .on("mousemove", function(d, i) {
+                          
+
+                        })
+                        .on("mouseout", function(d, i) {
+                          
+                        })
+
+                    var vertical = rankAxisG.select(".chart")
+                        .append("div")
+                        .attr("class", "remove")
+                        .style("position", "absolute")
+                        .style("z-index", "19")
+                        .style("width", "1px")
+                        .style("height", "380px")
+                        .style("top", "10px")
+                        .style("bottom", "30px")
+                        .style("left", "0px")
+                        .style("background", "#fff");
+
+                    rankAxisG.select(".chart")
+                        .on("mousemove", function() {
+                            mousex = d3.mouse(this);
+                            mousex = mousex[0] + 5;
+                            vertical.style("left", mousex + "px")
+                        })
+                        .on("mouseover", function() {
+                            mousex = d3.mouse(this);
+                            mousex = mousex[0] + 5;
+                            vertical.style("left", mousex + "px")
+                        });
+                }
+            }
+            // rank axis !!!
+            // rankAxisG.append("g")
+            //   .attr("class", "x axis");
+            
+            // rankAxisG.append("g")
+            //   .attr("class", "y axis");  
+
+            // let xRankScale = d3.scaleLinear()
+            //   .range([0, rankWidth]);  
+
+            // let yRankScale = d3.scaleLinear()
+            //   .range([rankHeight, 0]);    
+
+            // function updateRankAxis(myData) {
+            //   xRankScale.domain([0, d3.max(myData, d => d.loc)]);
+            //   yRankScale.domain([0, d3.max(myData, d => d.score)]);      
+              
+            //   let weightDims = []
+            //   rankAxisData.map(item=>{
+            //     let temp = self.deepClone(item['weightDim'])
+            //     temp['loc'] = item['loc']
+            //     weightDims.push(temp)
+            //   })
+
+            //   rankAxisData['columns'] = fieldList
+
+            //   var stackedData = d3.stack()
+            //       .keys(fieldList)
+            //       (weightDims)
+
+            //   console.log('stackedData', stackedData)
+
+            //   var area = d3.area()
+            //     .x(function(d) { return xRankScale(d.data.loc); })
+            //     .y0(function(d) { return yRankScale(d[0]); })
+            //     .y1(function(d) { return yRankScale(d[1]); })
+                
+            //   rankAxisG
+            //     .selectAll("rankLine")
+            //     .data(stackedData)
+            //     .enter()
+            //     .append("path")
+            //     .attr("class", function(d) { return "rankLine " + d.key })
+            //     .style("fill", function(d) { return color(d.key); })
+            //     .attr("d", area)
+
+
+            //   let points = rankAxisG.selectAll(".rankRect")
+            //     .data(myData); //update
+              
+            //   let pointsEnter = points
+            //     .enter()
+            //     .append("rect")
+            //     .attr("class", "rankRect");
+              
+            //   let rankItemName = d3tip()
+            //     .attr("class", "d3-tip")
+            //     .offset([-10, 0])
+            //     .html(function(d) {
+            //         return 'Name: '+d.name+'<br>Score: '+d.score.toFixed(2)+'<br>Rank: '+d.rank;
+            //     });
+
+            //   rankAxisG.call(rankItemName)
+
+            //   points.merge(pointsEnter) //Enter + Update
+            //     .attr("id", d=>(d.name+"_rankRect"))
+            //     .attr("x", d => xRankScale(d.loc))
+            //     .attr("y", d => yRankScale(d.score))
+            //     .attr("width", d => 2.5)
+            //     .attr("height", d => rankHeight - yRankScale(d.score))
+            //     .style("fill", "white")
+            //     .style("stroke", "grey")
+            //     .style("opacity", 0.6)
+            //     .style("stroke-width", "0.5px")
+            //     .on('mouseover', function(d, i){
+            //         rankItemName.show(d, this)
+            //         d3.select(this)
+            //             .style('stroke-width', '1.5px')
+            //             .style('cursor', 'pointer')
+
+            //         d3.select('#'+d.name+'_linkPath')
+            //           .attr('opacity', 1)
+            //           .attr('stroke-width', 3.5)
+            //           //.attr('stroke', d.color)
+            //     })
+            //     .on('mouseout', function(d){
+            //         rankItemName.hide()
+            //         d3.select(this)
+            //             .style('stroke-width', '0.5px')
+            //             .style('cursor', 'default')
+                    
+            //         d3.select('#'+d.name+'_linkPath')
+            //             .attr('opacity', 0.2)
+            //             .attr('stroke-width', 1)
+            //     })
+              
+            //   points.exit()
+            //     .remove();
+            
+            //   rankAxisG.select(".x.axis")
+            //     .call(d3.axisBottom(xRankScale).tickSize(0).tickValues([]))
+            //     .attr("transform",
+            //           "translate(0, " + rankHeight + ")");
+              
+            //   // rankAxisG.select(".y.axis")
+            //   //   .call(d3.axisLeft(yScale));      
+            // }
+            // updateRankAxis(rankAxisData);
+            
+
+            // project axis !!!
+            let projectAxisData = self.projectAxisData
+            projectAxisG.append("g")
+              .attr("class", "x axis");
+  
+            projectAxisG.append("g")
+              .attr("class", "y axis");  
+            
+            let xProjectScale = d3.scaleLinear()
+              .range([0, width]);  
+
+            let yProjectScale = d3.scaleLinear()
+              .range([projectHeight, 0]);  
+
+            // 计算偏离度的颜色
+            let inverses = []
+            projectAxisData.map(item=>{
+              if(item['type']=="project_point"){
+                inverses.push(item['inverse'])
+              }
+            })
+            // console.log('myData', myData)
+            // console.log('inverses', inverses)
+            let colorBlue = d3.interpolateHsl("white", "blue")
+            let colorRed = d3.interpolateHsl("white", "red")
+            // color
+            let nameToColor = {}
+            projectAxisData.map(d=>{
+              d.click = 0
+              if(d.type=='poly_point') return 'grey'
+                else{
+                  if(d.inverse<0){
+                    d['color'] = colorRed(d.inverse/d3.min(inverses))
+                  }
+                  else if(d.inverse>0){
+                    d['color'] =  colorBlue(d.inverse/d3.max(inverses))
+                  }
+                  else{
+                    d['color'] = 'grey' // #efeded
+                  }
+              }
+              nameToColor[d.name] = d.color
+            })
+
+            function updateProjectAxis(myData) {
+              xProjectScale.domain([d3.min(myData, d => d.loc), d3.max(myData, d => d.loc)]);
+              yProjectScale.domain([0, d3.max(myData, d => d.verDist)]);      
+             
+
+              let points = projectAxisG.selectAll(".projectRect")
+                .data(myData); //update
+
+              // let itemName = d3tip()
+              //   .attr("class", "d3-tip")
+              //   .offset([-10, 0])
+              //   .html(function(d) {
+              //       return 'Name: '+d.name+'<br>Score: '+d.score.toFixed(2)+'<br>Rank: '+d.rank;
+              //   });
+
+              // rankAxisG.call(itemName)
+
+              let poly_point_data = []
+              let project_point_data = []
+
+              myData.map(item=>{
+                if(item['type']=="poly_point"){
+                  poly_point_data.push(item)
+                }
+                else{
+                  project_point_data.push(item)
+                }
+              })
+
+              let projectItemName = d3tip()
+                .attr("class", "d3-tip")
+                .offset([-10, 0])
+                .html(function(d) {
+                    if(d.type=='poly_point') return 'Polyline Point<br>Cluster: '+d.cluster
+                    else return 'Project Point<br>Name: '+d.name+'<br>Rank: '+d.rank+'<br>Cluster: '+d.cluster+'<br>Inverse: '+d.inverse
+                });
+
+              console.log('projectItemName', projectItemName)
+              projectAxisG.call(projectItemName)
+
+              
+              // console.log('colorBlue', colorBlue)
+              // let ii=2
+              // (function(i) {
+                
+              // })(i);
+
+              projectAxisG.selectAll(".projectCircle")
+                .data(myData)
+                .enter().append("circle")
+                .attr("class", "projectCircle")
+                .attr("id", d=>(d.name+"_projectCircle"))
+                .attr("r", d=>{
+                  if(d.type=='poly_point') return 3
+                  else return 4
+                })
+                .attr("cx", d => xProjectScale(d.loc))
+                .attr("cy", d => (yProjectScale(d.verDist)))
+                .style("fill", d=>(d.color))
+                .style("stroke", 'black')
+                .on('mouseover', function(d, i){
+                    projectItemName.show(d, this)
+                    d3.select(this)
+                        .attr('stroke-width', '2px')
+                        .attr('cursor', 'pointer')
+
+                    d3.select('#'+d.name+'_linkPath')
+                      .attr('opacity', 1)
+                      .attr('stroke-width', 3.5)
+                      .attr('stroke', d.color)
+                    
+                })
+                .on('mouseout', function(d){
+                    projectItemName.hide()
+
+                    let click  = parseInt(d3.select(this).attr('click')) 
+                    console.log("mouseout", d.click)
+                    if(click/2==0){
+                      d3.select(this)
+                        .attr('stroke-width', '0.5px')
+                        .attr('cursor', 'default')
+
+                      d3.select('#'+d.name+'_linkPath')
+                        .attr('opacity', 0.2)
+                        .attr('stroke-width', 1)
+                    }
+                })
+                .attr('click', 0)
+                .on('click', function(d){
+                  console.log(d)
+                  switchColor(d.name)
+
+                  d3.select(this)
+                    .attr('stroke-width', '0.5px')
+                    .attr('cursor', 'default')
+
+                  d3.select('#'+d.name+'_linkPath')
+                    .attr('opacity', 0.2)
+                    .attr('stroke-width', 1)
+
+
+
+                  let click  = parseInt(d3.select(this).attr('click')) 
+                  if(click/2==0){
+                    d3.select(this)
+                        .attr('stroke-width', '2px')
+                        .attr('cursor', 'pointer')
+
+                    d3.select('#'+d.name+'_linkPath')
+                      .attr('opacity', 1)
+                      .attr('stroke-width', 3)
+                      .attr('stroke', d.color)
+                  }
+                  else{
+                    d3.select(this)
+                        .attr('stroke-width', '0.5px')
+                        .attr('cursor', 'default')
+
+                    d3.select('#'+d.name+'_linkPath')
+                      .attr('opacity', 0.2)
+                      .attr('stroke-width', 1)
+                  }
+                  d3.select(this).attr('click', click+1)
+
+                  console.log('click', d.click)
+                })
+                //.style("fill", function(d) { return color(cValue(d));}) 
+                // .on("mouseover", function(d) {
+
+                //     projectItemName.show(d, this)
+                //     d3.select(this)
+                //         .attr('stroke-width', '2px')
+                //         .attr('cursor', 'pointer')
+                //     // tooltip.transition()
+                //     //     .duration(200)
+                //     //     .style("opacity", .9);
+                //     // tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
+                //     // + ", " + yValue(d) + ")")
+                //     //     .style("left", (d3.event.pageX + 5) + "px")
+                //     //     .style("top", (d3.event.pageY - 28) + "px");
+                // })
+                // .on("mouseout", function(d) {
+                //     projectItemName.hide()
+                //     d3.select(this)
+                //         .attr('stroke-width', '0.5px')
+                //         .attr('cursor', 'default')
+                //     // tooltip.transition()
+                //     //     .duration(500)
+                //     //     .style("opacity", 0);
+                // });
+
+
+              console.log('poly_point_data', poly_point_data)
+
+
+              // let pointsEnter = points
+              //   .enter()
+              //   .append("rect")
+              //   .attr("class", "projectRect");
+
+              // points.merge(pointsEnter) //Enter + Update
+              //   .attr("x", d => xProjectScale(d.loc))
+              //   .attr("y", d => yProjectScale(d.verDist))
+              //   .attr("width", d => 2)
+              //   .attr("height", d => projectHeight - yProjectScale(d.verDist))
+              //   .style("fill", "white")
+              //   .style("stroke", "grey")
+              //   .style("stroke-width", "0.5px")
+
+
+                // .on('mouseover', function(d, i){
+                //     itemName.show(d, this)
+                //     d3.select(this)
+                //         .attr('stroke-width', '2px')
+                //         .attr('cursor', 'pointer')
+                // })
+                // .on('mouseout', function(){
+                //     itemName.hide()
+                //     d3.select(this)
+                //         .attr('stroke-width', '0.5px')
+                //         .attr('cursor', 'default')
+                // })
+              
+              points.exit()
+                .remove();
+              
+              projectAxisG.select(".x.axis")
+                .call(d3.axisBottom(xProjectScale).tickSize(0).tickValues([]))
+                .attr("transform",
+                      "translate(0, " + projectHeight + ")")
+              // projectAxisG.select(".y.axis")
+              //   .call(d3.axisLeft(yProjectScale));    
+            }
+            updateProjectAxis(projectAxisData);
+
+            // matrix !!!
+            let matrixSize = width/(rankAxisData.length-1)
+
+            let nameList = []
+            let contributionData = {}
+            rankAxisData.map((item, x)=>{
+              nameList.push(item.name)
+              contributionData[item.name] = {}
+              let tempData = []
+              Object.keys(item['weightDim']).map(field=>{
+                tempData.push({'field': field, 'contribution': item['weightDim'][field]})
+                contributionData[item.name][field] = item['weightDim'][field]
+              })
+
+              let rect = matrixWSG.selectAll("matrixRect").data(tempData)
+               .enter()
+               .append("rect")
+               .attr('id', d=>(item.name+'_'+d.field+'_Rect'))
+               .attr("x", x*matrixSize)
+               .attr("y", (d, i)=>(5 + i*(matrixSize+3)) )// 100 is where the first dot appears. 25 is the distance between dots
+               .attr("width", 3)
+               .attr("height", matrixSize)
+               .style('fill', '#dedbdb')
+               .style('stroke', '#f7f6f6')
+               .style('stroke-width', '0.5px')
+              //  .style("fill", function(d){ return color(d)}
+              // svg.selectAll("myrect")
+              //  .data(fieldList)
+              //  .enter()
+              //  .append("rect")
+              //  .attr("x", function(d,i){ return 5 + i*(legendRectSize+95)})
+              //  .attr("y", 2) // 100 is where the first dot appears. 25 is the distance between dots
+              //  .attr("width", legendRectSize)
+              //  .attr("height", legendRectSize)
+              //  .style("fill", function(d){ return color(d)})
+
+               //console.log('rect', rect)
+            })
+
+            matrixWSG.selectAll("comField")
+              .data(fieldList)
+              .enter()
+              .append("text")
+                .attr('class', 'comField')
+                .attr("x", -2)
+                .attr("y", (d, i)=>(5 + matrixSize/2+i*(matrixSize+3))) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", function(d){ return color(d)})
+                .text(function(d){ return d})
+                .attr("text-anchor", "end")
+                .style("alignment-baseline", "middle")
+                //.style("font-weight", "bold")
+
+
+            matrixWSG.selectAll("comName")
+              .data(nameList)
+              .enter()
+              .append("text")
+                .attr('class', 'comName')
+                // .attr("x", (d,i)=>(i*matrixSize))
+                // .attr("y", (5 + fieldList.length*(matrixSize+3))) 
+                // .style("fill", function(d){ return color(d)})
+                .text(function(d){ return d})
+                .attr("text-anchor", "end")
+                .style("alignment-baseline", "middle")
+                //.style("font-weight", "bold")
+                .style('font-size', '8px')
+                .attr("transform", function(d, i){
+                  let x = i*matrixSize
+                  let y = 5 + fieldList.length*(matrixSize+3)
+
+                  return "translate("+x+","+y+") rotate("+(-40)+")"
+                })
+                //.attr('transform', 'rotate(-65)')
+
+            // draw path !!!
+            let lineFunction = d3.line()
+                          .x(function(d) { return d.x; })
+                          .y(function(d) { return d.y; })
+                          .curve(d3.curveMonotoneX) // apply smoothing to the line
+            
+            projectAxisData.map(item=>{
+              if(item['type']=='project_point'){
+                //projectName.push(item.name)
+                let name = item.name
+
+                let projCircleSelector = d3.select('#'+name+'_projectCircle')
+                let rankBarSelector = d3.select('#'+name+'_rankRect')
+                let pathData = [
+                  {
+                    'x': margin.left+parseFloat(projCircleSelector.attr('cx')),
+                    'y': legendHeight+5+parseFloat(projCircleSelector.attr('cy'))
+                  },
+                  {
+                    'x': margin.left+parseFloat(rankBarSelector.attr('x'))+1,
+                    'y': legendHeight+projectHeight+20+parseFloat(rankBarSelector.attr('y'))-5
+                  },
+                  {
+                    'x': margin.left+parseFloat(rankBarSelector.attr('x'))+1,
+                    'y': legendHeight+projectHeight+20+parseFloat(rankBarSelector.attr('y'))+parseFloat(rankBarSelector.attr('height'))+5
+                  },
+                  {
+                    'x': margin.left+nameList.indexOf(name)*matrixSize+1.5,
+                    'y': legendHeight+projectHeight+rankHeight+45
+                  },
+                  {
+                    'x': margin.left+nameList.indexOf(name)*matrixSize+1.5,
+                    'y': legendHeight+projectHeight+rankHeight+45+fieldList.length*(matrixSize+3)
+                  }
+                ]
+                console.log(pathData)
+
+                //console.log(nameToColor[name])
+                linkG.append("path")
+                  .attr("d", lineFunction(pathData))
+                  .attr('id', name+'_linkPath')
+                  .attr("stroke", nameToColor[name])
+                  .attr("stroke-width", 1)
+                  .attr("opacity", 0.2)
+                  .attr("fill", "none");
+
+              }
+            })
+
+            console.log('contributionData', contributionData)
+            //switchColor('工商银行')
+            // let iii=1
+            // (function(iii) {
+            // })(iii);
+
+            let colorSteelBlue = d3.interpolateHsl("white", "steelblue")
+
+            function switchColor(selectedName){
+              let intervals = [] 
+              nameList.map(name=>{
+                fieldList.map(field=>{
+                  let value = contributionData[name][field]
+                  let selectValue = contributionData[selectedName][field]
+                  intervals.push(Math.abs(selectValue-value))
+                })
+              })
+
+              nameList.map(name=>{
+                fieldList.map(field=>{
+                  let value = contributionData[name][field]
+                  let selectValue = contributionData[selectedName][field]
+                  let interval = value-selectValue
+                  let color = colorSteelBlue(interval/d3.max(intervals))
+
+                  d3.select('#'+name+'_'+field+'_Rect')
+                    .transition()
+                    .duration(1500)
+                    .style("fill", color);
+                })
+
+              })
+
+            }
+            // function switchColor(selectedName){
+          
+            //   let intervals = [] 
+            //   nameList.map(name=>{
+            //     fieldList.map(field=>{
+            //       let value = contributionData[name][field]
+            //       let selectValue = contributionData[selectedName][field]
+            //       intervals.push(value-selectValue)
+            //     })
+            //   })
+
+            //   nameList.map(name=>{
+            //     fieldList.map(field=>{
+            //       let value = contributionData[name][field]
+            //       let selectValue = contributionData[selectedName][field]
+            //       let interval = value-selectValue
+            //       let color = null
+            //       if(interval<0){
+            //         color = colorRed(interval/d3.min(intervals))
+            //       }
+            //       else if(interval>0){
+            //         color =  colorBlue(interval/d3.max(intervals))
+            //       }
+            //       else{
+            //         color = 'grey' // #efeded
+            //       }
+            //       d3.select('#'+name+'_'+field+'_Rect')
+            //         .transition()
+            //         .duration(1500)
+            //         .style("fill", color);
+            //     })
+            //   })
+            
+            // }
+
+            //console.log('projectName', projectName)     
+        },
+        deepClone(source){
+            let self = this
+            if (!source && typeof source !== 'object') {
+                throw new Error('error arguments', 'deepClone');
+            }
+            const targetObj = source.constructor === Array ? [] : {};
+            Object.keys(source).forEach(keys => {
+                if (source[keys] && typeof source[keys] === 'object') {
+                    targetObj[keys] = self.deepClone(source[keys]);
+                } else {
+                    targetObj[keys] = source[keys];
+                }
+            });
+            return targetObj;
+        }       
+    }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="scss" type="text/scss">
+ @import './../assets/css/d3-tip.css';
+  .rankContainer{
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+</style>
