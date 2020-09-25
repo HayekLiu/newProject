@@ -52,6 +52,7 @@ export default {
            
             martrixShow:false,
             testShow:false,
+            typeValueWeight :{},
             valueWeight: {
                 // true 代表越大越好，false代表越小越好
                 //name: '银行名称',
@@ -63,7 +64,7 @@ export default {
                 // ctocdRatio: 0.1,//'核心一级资本充足率', //Core tier one capital adequacy ratio
                 //LoanWeight: //'贷款权重',
                 nonPerformingLoansRatio: 0.1,//'不良率',
-                concernRate: 0.05,//'关注率',
+                specialMentionedLoansRatio: 0.05,//'关注率',
                 //scrapAndConcern: false,// '不良+关注',
                 //ExcessLoanRatio: false,// '逾贷比',
                 provisionCoverage: 0.15,// '拨备覆盖率',
@@ -71,7 +72,7 @@ export default {
                 liquidityRatio: 0.1,// '流动性比例',
                 assetProfitRatio: 0.05,// '资产利润率',
                 capitalProfitRatio: 0.05,// '资本利润率',
-                // costIncomeRatio: 0.01,// '成本收入比',
+                costToIncomeRatio: 0.01,// '成本收入比',
                 // singleTenCustomer: 0.01,// '单一客户',
                 // topTenCustomer: 0.01,// '前十大客户',
             },
@@ -82,7 +83,7 @@ export default {
 
     },
     mounted(){
-        this.init();
+        this.init(true);
 
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
@@ -96,38 +97,41 @@ export default {
         
     },
     methods:{
-        init(){
+        init(flag){
             let self = this;
             let copyItem = {};
             let nameList = [];
+            let typeList = []
             let values = [];
-            //console.log('mockData', mockData)
+            let bankType = [];
+            console.log('mockData', mockData)
+            //debugger
             mockData.forEach(item=>{
                 for(let key in item){
                     if(Object.keys(self.valueWeight).indexOf(key)!=-1){
                         copyItem[key] = item[key];
                     }
                 }
+                bankType.push(item['type'])
                 nameList.push(item.name);
+                typeList.push(item.type)
                 values.push(Object.values(copyItem).map(value=>Number.parseFloat(value) || 0));
                
             });
-            // console.log('values', values)
-            this.fieldList = Object.keys(mockData[0]);
-            this.fieldList.splice(this.fieldList.indexOf('name'), 1);
+            //console.log('values', values)
+            this.fieldList = Object.keys(self.valueWeight)
+            //console.log('this.fieldList', this.fieldList)
 
             this.fieldColor = d3.scaleOrdinal()
                 .domain(this.fieldList)
-                .range(['#6f61ec', '#76c4e7', '#96dfe2', '#b6e5b9', '#f5da66', '#e89e80', '#de7191', '#c562aa']);
-            
+                .range(['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E8684A', '#6DC8EC', '#9270CA', '#FF9D4D', '#269A99', '#FF99C3']);
+            // ['#6f61ec', '#76c4e7', '#96dfe2', '#b6e5b9', '#f5da66', '#e89e80', '#de7191', '#c562aa']
+                
             let fieldSymbol = {}
             this.fieldList.map(field=>{
                 fieldSymbol[field] = true
             })
-
             if(!this.fieldSymbol) this.fieldSymbol = fieldSymbol
-
-
             // ['#6f61ec', '#76c4e7', '#96dfe2', '#b6e5b9', '#f5da66', '#e89e80', '#de7191', '#b4a199']
             // ['#a73835', '#394754', '#779fa6', '#c01866', '#a166ae', '#819e83', '#b88530', '#b4a199']
             // ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999']
@@ -135,12 +139,16 @@ export default {
             // ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2']
             // ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6']
             //d3.schemeCategory10
-
             this.nameListData = nameList;
-
-            let weightData = self.getWeightData(values, this.fieldList);
+            let weightData
+            if(flag){
+                weightData = self.getWeightData(values, this.fieldList, typeList, true);
+            }
+            else{
+                weightData = self.getWeightData(values, this.fieldList, typeList, false);
+            }
             // console.log('weightData', weightData)
-            let [rankAxisData, ranks] = this.getRank(weightData, values, nameList, this.fieldList);
+            let [rankAxisData, ranks] = this.getRank(weightData, values, nameList, this.fieldList, bankType);
 
             rankAxisData = this.getCluster(rankAxisData)
             this.rankAxisData = rankAxisData;
@@ -148,13 +156,10 @@ export default {
 
             self.rankAxisDataArrays.unshift(rankAxisData)
             this.rankAxisDataTable = this.deepClone(rankAxisData);
-
-          
             this.tableData = this.deepClone(mockData);
             ranks.map((rank, i)=>{
                 this.tableData[i]['rank'] = rank;
             });
-            //this.tsneValues = self.getTsneData(values)
 
             this.tsneValues = self.getTsneData(weightData);
             this.tsneArrays.push(this.tsneValues);
@@ -164,19 +169,7 @@ export default {
             // this.tsneArrays = [a,b,c];
             
             this.testShow = true;
-            this.matrixData = self.getMatrixData(this.tsneValues, this.nameListData);
-            console.log(this.matrixData);
-            this.getmatrixDataJson(this.matrixData);
-            //console.log('this.tsneValues', this.tsneValues)
-            // let axisData = self.getPatternOne(self.tsneValues, ranks, nameList) 
-            // let clusterIDs = ranks
-
-            let[clusterIDs, axisData] = self.getPatternTwo(self.tsneValues, ranks, nameList);
-            console.log('clusterIDs', clusterIDs);
-            console.log('axisData two', axisData);
            
-
-            //self.getSVMWeight(this.rankAxisData)
         },
         getSampleIDs(loc, len){
             if(loc>3 && loc<len-3) return [loc-3, loc-2, loc-1, loc+1, loc+2, loc+3];
@@ -193,7 +186,20 @@ export default {
                 return locs;
             }
         },
-        getSVMWeight(rankAxisData, dragData){
+        getRandom(n, min, max){
+            var arr=[];
+            for(let i=0;i<n;i++){
+             arr[i]=parseInt(Math.random()*(max-min+1)+min);
+             for(let j=0;j<i;j++){
+              if(arr[i]==arr[j]){
+               i=i-1;
+               break;
+              }
+             }
+            }
+            return arr;
+        },
+        getGobalSVMWeight(rankAxisData, dragData){
             let self = this;
             let ranktodata = {};
             let nametodata = {};
@@ -205,6 +211,127 @@ export default {
                 fieldList = Object.keys(item['weightDim']);
             });
             
+            console.log('rankAxisData_getSVMWeight', rankAxisData)
+            let data = [];
+            let labels= [];
+            dragData.map(item=>{
+                let weightDim = nametodata[item['dragBank']]['weightDim'];
+                let locs = self.getRandom(parseInt(item['newBankIndex']*0.5), 1, item['newBankIndex']-1)
+                locs = locs.concat(self.getRandom(parseInt((rankAxisData.length - item['newBankIndex'])*0.2), item['newBankIndex']+1, rankAxisData.length))
+                console.log('locs', locs)
+                
+                locs.map(loc=>{
+                    let comweightDim = ranktodata[loc]['weightDim'];
+                    let temp = [];
+                    for(let field in weightDim){
+                        temp.push(comweightDim[field]-weightDim[field]);
+                    }
+                    data.push(temp);
+                    if(loc<item['newBankIndex']){
+                        labels.push(1);
+                    }
+                    else{
+                        labels.push(-1);
+                    }
+                });
+            });
+
+            var wb; // weights and offset structure
+            var svm= new svmjs.SVM();
+            var svmC = 1.0;
+            svm.train(data, labels, { kernel: 'linear' , C: svmC});
+            wb= svm.getWeights();
+            wb['w'] = self.getPercentWeight(wb['w'])
+            let valueWeight = [];
+            let fieldSymbol = {} 
+            fieldList.map((field, i)=>{
+                valueWeight[field] = wb['w'][i]
+            });
+            return valueWeight;
+        },
+        getLocSVMWeight(rankAxisData, dragData){
+            let self = this;
+            let ranktodata = {};
+            let nametodata = {};
+            let len = rankAxisData.length;
+            let fieldList = [];
+            let typeRankData = {
+                'Large State-owned Commercial Bank': {'weightDims': [], 'ranks':[]},
+                'Joint-stock Commercial Bank': {'weightDims': [], 'ranks':[]},
+                'City Commercial Bank': {'weightDims': [], 'ranks':[]},
+                'Rural Commercial Bank': {'weightDims': [], 'ranks':[]}
+            }
+
+            rankAxisData.map(item=>{
+                ranktodata[item['rank']] = item;
+                nametodata[item['name']] = item;
+                fieldList = Object.keys(item['weightDim']);
+                typeRankData[item['type']]['weightDims'].push(item['weightDim'])
+                typeRankData[item['type']]['ranks'].push(item['rank'])
+            });
+
+            let typeValueWeight = {}
+            for(let bankType in typeRankData){
+                console.log(bankType)
+                let data = [];
+                let labels= [];
+                dragData.map(item=>{
+                    let weightDim = nametodata[item['dragBank']]['weightDim'];
+                    typeRankData[bankType]['weightDims'].map((comweightDim, i)=>{
+                        if(item['newBankIndex']!=typeRankData[bankType]['ranks'][i]){
+                            let temp = [];
+                            for(let field in weightDim){
+                                temp.push(comweightDim[field]-weightDim[field]);
+                            }
+                            data.push(temp)
+                            if(typeRankData[bankType]['ranks'][i]<item['newBankIndex']){
+                                labels.push(1);
+                            }
+                            else{
+                                labels.push(-1);
+                            }
+                        }
+                    })
+                });
+                let sum = 0
+                labels.map(label=>{
+                    sum+=label
+                })
+                if(Math.abs(sum)!=labels.length){
+                    let svm= new svmjs.SVM();
+                    svm.train(data, labels, { kernel: 'linear' , C: 1.0});
+                    let wb= svm.getWeights(); // weights and offset structure
+                    wb['w'] = self.getPercentWeight(wb['w'])
+                    console.log(wb)
+                    let valueWeight = [];
+                    fieldList.map((field, i)=>{
+                        // valueWeight[field] = Math.abs(wb['w'][i])
+                        valueWeight[field] = wb['w'][i]
+                    });
+                    typeValueWeight[bankType] = valueWeight
+                }
+                else{
+                    typeValueWeight[bankType] = []
+                }
+            }
+            console.log('typeRankData', typeRankData)
+            console.log('typeValueWeight', typeValueWeight)
+            return typeValueWeight
+        },
+        getDefaultSVMWeight(rankAxisData, dragData){
+            let self = this;
+            let ranktodata = {};
+            let nametodata = {};
+            let len = rankAxisData.length;
+            let fieldList = [];
+            rankAxisData.map(item=>{
+                ranktodata[item['rank']] = item;
+                nametodata[item['name']] = item;
+                fieldList = Object.keys(item['weightDim']);
+            });
+            
+            console.log('rankAxisData_getSVMWeight', rankAxisData)
+
             let data = [];
             let labels= [];
             dragData.map(item=>{
@@ -218,43 +345,54 @@ export default {
                     let temp = [];
                     for(let field in weightDim){
                         // console.log(field)
-                        temp.push(weightDim[field] - comweightDim[field]);
+                        temp.push(comweightDim[field]-weightDim[field]);
                     }
                     data.push(temp);
                     if(loc<item['newBankIndex']){
-                        labels.push(-1);
+                        labels.push(1);
                     }
                     else{
-                        labels.push(1);
+                        labels.push(-1);
                     }
                 });
             });
-            //console.log(data, labels)
-
+            console.log(data, labels)
             var wb; // weights and offset structure
-            // var ss= 50.0; // scaling factor for drawing
             var svm= new svmjs.SVM();
-            // var trainstats;
-            // var dirty= true;
-            // var kernelid= 0;
-            // var rbfKernelSigma = 0.5;
             var svmC = 1.0;
-
             svm.train(data, labels, { kernel: 'linear' , C: svmC});
             wb= svm.getWeights();
+            wb['w'] = self.getPercentWeight(wb['w'])
+
+            console.log('wb123', wb)
             let valueWeight = [];
             let fieldSymbol = {} 
             fieldList.map((field, i)=>{
-                valueWeight[field] = Math.abs(wb['w'][i])
                 //valueWeight[field] = wb['w'][i]
+                valueWeight[field] = Math.abs(wb['w'][i])
                 if(wb['w'][i]>=0) fieldSymbol[field] = true
                 else fieldSymbol[field] = false
             });
             this.fieldSymbol = fieldSymbol
-
-            console.log('fieldSymbol', fieldSymbol)
             return valueWeight;
-            //console.log(1111, valueWeight, svm.getWeights(), trainstats)
+        },
+        getPercentWeight(weights){
+            let minValue = 1000
+            weights.map(weight=>{
+                minValue = Math.min(minValue, weight)
+            })
+
+            console.log('wb123', minValue)
+
+            let sum = 0
+            weights.map((weight, i)=>{
+                weights[i]+=-2*minValue
+                sum+=weights[i]
+            })
+            weights.map((weight, i)=>{
+                weights[i]/=sum
+            })
+            return weights
         },
         getCluster(rankAxisData){
             rankAxisData.map(item=>{
@@ -283,155 +421,8 @@ export default {
             })
             return rankAxisData
         },
-        getPatternTwo(tsneValues, ranks){
-            let data = {1:[], 2:[], 3:[], 4:[], 5:[]};
-            let clusterIDs = [];
-            for(let i=0; i<ranks.length; i++){
-                if(ranks[i]<4){
-                    data[1].push(tsneValues[i]);
-                    clusterIDs.push(1);
-                }
-                else if(ranks[i]<11){
-                    data[2].push(tsneValues[i]);
-                    clusterIDs.push(2);
-                }
-                else if(ranks[i]<27){
-                    data[3].push(tsneValues[i]);
-                    clusterIDs.push(3);
-                }
-                else if(ranks[i]<33){
-                    data[4].push(tsneValues[i]);
-                    clusterIDs.push(4);
-                }
-                else{
-                    data[5].push(tsneValues[i]);
-                    clusterIDs.push(5);
-                }
-            }
-
-            let axisData = [];
-            Object.keys(data).map((rank)=>{
-                let x = 0;
-                let y = 0;
-                // console.log('rank123', rank)
-                data[rank].map(item=>{
-                    x+=item[0];
-                    y+=item[1];
-                });
-                axisData.push([x/data[rank].length, y/data[rank].length]);
-            });
-            return [clusterIDs, axisData];
-            // console.log('data', data)
-            // data.sort(function(a,b){
-            //     return a.rank - b.rank
-            // })
-            // console.log('data', data)
-
-            // return data.map(function(row) {
-            //     return row['item'];
-            // })
-        },
-        getPatternOne(tsneValues, ranks, nameList){
-            let data = [];
-            for(let i=0; i<tsneValues.length; i++){
-                data.push({'item': tsneValues[i], 'rank': ranks[i], 'name': nameList[i]});
-            }
-            data.sort(function(a,b){
-                return a.rank - b.rank;
-            });
-            // console.log('data', data)
-
-            return data.map(function(row) {
-                return row['item'];
-            });
-        },
-       
         pointDistance(A, B){
             return Math.sqrt(Math.pow(A[0]-B[0], 2)+Math.pow(A[1]-B[1], 2));
-        },
-        minDistance(E, A, B){
-            //求点E到线段A和B的垂线距离
-            let AB = [null, null];
-            // vector AB
-            AB[0] = B[0] - A[0];
-            AB[1] = B[1] - A[1];
-            
-            // vector BP
-            let BE = [null, null];
-            BE[0] = E[0] - B[0];
-            BE[1] = E[1] - B[1];
-
-            // vector AP
-            
-            let AE = [null, null];
-            AE[0] = E[0] - A[0];
-            AE[1] = E[1] - A[1];
-
-            // Variables to store dot product
-
-            // Calculating the dot product
-            let AB_BE = AB[0] * BE[0] + AB[1] * BE[1];
-            let AB_AE = AB[0] * AE[0] + AB[1] * AE[1];
-
-            // Minimum distance from
-            // point E to the line segment
-            let reqAns = 0; // 投影距离
-            
-            // Case 1 点在B点外。
-            if (AB_BE > 0){
-                //Finding the magnitude 
-                let y = E[1] - B[1];
-                let x = E[0] - B[0];
-                reqAns = Math.sqrt(x * x + y * y);
-	
-            }
-            else if(AB_AE < 0){
-                let y = E[1] - A[1]; 
-                let x = E[0] - A[0];
-                reqAns = Math.sqrt(x * x + y * y);
-            }
-            else{
-                // Finding the perpendicular distance 
-                let x1 = AB[0];
-                let y1 = AB[1];
-                let x2 = AE[0];
-                let y2 = AE[1];
-                let mod = Math.sqrt(x1 * x1 + y1 * y1);
-                reqAns = Math.abs(x1 * y2 - y1 * x2) / mod; 
-            }
-
-            let x1 = AB[0]; 
-            let y1 = AB[1];
-            let x2 = AE[0];
-            let y2 = AE[1];
-            let mod = Math.sqrt(x1 * x1 + y1 * y1);
-            let reqAnsPerpendicular = Math.abs(x1 * y2 - y1 * x2) / mod; 
-
-            // 距离左边的点的位置
-            let offset = AB_AE/Math.abs(AB_AE)*Math.sqrt(AE[0] * AE[0] + AE[1] * AE[1] - reqAnsPerpendicular*reqAnsPerpendicular); 
-            return [reqAns, reqAnsPerpendicular, offset];
-        },
-        //矩阵数据整理
-        getmatrixDataJson(matrixData){
-            let nodes=[],
-                links=[],
-                target=0,
-                sourceStart =1;
-            for(let i in matrixData){
-                // console.log(Object.keys(matrixData[i]).length)
-                nodes.push({"name": i, "group": 0}); 
-                let source = sourceStart; 
-                for(let j in matrixData[i]){
-                    links.push({"source": source, "target": target, "value": matrixData[i][j]*100});
-                    source++;
-                }
-                sourceStart++;
-                target++;
-            }
-            nodes.push({"name": '', "group": 0});
-            this.miserables = {'nodes':nodes,'links':links};
-            this.martrixShow = true;
-            // console.log(this.miserables)
         },
         // 数组降维
         getTsneData(dists){
@@ -465,12 +456,10 @@ export default {
                 item[0] = (item[0]+1)*5;
                 item[1] = (item[1]+1)*5;
             });
-
             //console.log('results', results)
             return results;
-            
         },
-        getRank(data, originData, nameList, fieldList){
+        getRank(data, originData, nameList, fieldList, bankType){
             let scores = [];
 
             let maxScore = 0;
@@ -485,7 +474,7 @@ export default {
                     originDim[fieldList[j]] = originData[i][j];
                 }
                 maxScore = Math.max(maxScore, score);
-                scores.push({originOrder: i, score: score, name: nameList[i], weightDim: weightDim, originDim: originDim});
+                scores.push({originOrder: i, 'type': bankType[i], score: score, name: nameList[i], weightDim: weightDim, originDim: originDim});
             }
             // 将数据的得分归一化到0-100
             scores.map(item=>{
@@ -524,7 +513,7 @@ export default {
 
             
             let rankAxisData = this.deepClone(scores);
-            console.log('score', scores, data);
+            //console.log('score', scores, data);
 
             scores.sort(function(a,b){
                 return a.originOrder - b.originOrder;
@@ -539,7 +528,7 @@ export default {
         
             return [rankAxisData, ranks];
         },
-        getWeightData(rawdata, fieldList){
+        getWeightData(rawdata, fieldList, typeList, flag){
             let self = this;
             //极小型指标 -> 极大型指标
             function minTOmax(items){
@@ -587,35 +576,18 @@ export default {
 
             data = normalization(data);
             data = transpose(data);
-            let weights = Object.values(self.valueWeight);
+
+            console.log('datadata', data)
+            let weights
             for(let i=0; i<data.length; i++){
                 // var score = 0
+                if(flag) weights = Object.values(self.valueWeight);
+                else weights = Object.values(self.typeValueWeight[typeList[i]]);
                 for(let j=0; j<data[i].length; j++){
                     data[i][j]*=weights[j];
                 }
             }
             return data;
-        },
-        getMatrixData(tsneValues, nameList){
-            let matrixData = {};
-            let maxValue = 0;
-            for(let i=0; i<nameList.length; i++){
-                matrixData[nameList[i]] = {};
-                for(let j=i+1; j<nameList.length; j++){
-                    matrixData[nameList[i]][nameList[j]] = Math.sqrt(Math.pow(tsneValues[i][0]-tsneValues[j][0], 2)+Math.pow(tsneValues[i][1]-tsneValues[j][1], 2));
-                    maxValue = Math.max(maxValue, matrixData[nameList[i]][nameList[j]]);
-                }
-            }
-
-            console.log('maxValue', maxValue);
-            for(let i=0; i<nameList.length; i++){
-                for(let j=i+1; j<nameList.length; j++){
-                    matrixData[nameList[i]][nameList[j]] = matrixData[nameList[i]][nameList[j]]*5/maxValue;
-                    
-                }
-            }
-            return matrixData;
-            //console.log('matrixData', matrixData)
         },
         //左上散点图三套索选中的银行数据
         selectedIDsArr(obj){
@@ -640,8 +612,16 @@ export default {
         dragBank(val){
             console.log('拖拽银行----',val);
             
-            this.valueWeight = this.getSVMWeight(this.rankAxisData, val);
-            this.init();
+            this.valueWeight = this.getDefaultSVMWeight(this.rankAxisData, val);
+            this.init(true);
+            //this.getLocSVMWeight(this.rankAxisData, val);
+            this.valueWeight = this.getGobalSVMWeight(this.rankAxisData, val);
+            this.init(true);
+
+            this.typeValueWeight = this.getLocSVMWeight(this.rankAxisData, val);
+            console.log('typeValueWeight',  this.typeValueWeight)
+            this.init(false);
+            
             //this.tsneArrays.push(this.tsneValues);
         },
 

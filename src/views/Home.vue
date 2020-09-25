@@ -5,7 +5,7 @@
       class="flex flex-center space-between header"
     >
       <div class="nav">
-        <span class="text-primary">RankAxis: Towards a Systematic Combination of Projection and Ranking in Multi-Attribute Data Exploration</span>
+        <span class="text-primary">A Visual Analytics Approach to Tackling the Problem of Bank Rating using Hierarchical Weighting Adjustment</span>
       </div>
     </header>
     <div style="height:30px;"></div>
