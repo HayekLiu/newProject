@@ -14,7 +14,7 @@
       <div style="height:calc(100% - 24vw);">
       
       </div>
-      <Radar/>
+      <Radar :indicator='indicator' :radarSeriesData = 'radarSeriesData'/>
     </div>
     <div style="width:76%;height:100%;margin-left:24%;">
         <div class="main">
@@ -44,6 +44,8 @@
             :rank-axis-data="rankAxisData"
             @dragBank = 'dragBank'
             @getChooseColor = 'getChooseColor'
+            @deleteIndex = 'deleteIndex'
+            @radarBankName = 'radarBankName'
           />
         </div>
     </div>

@@ -5,35 +5,36 @@
  </template>
  
 <script>
-import echarts from 'echarts'
+import echarts from 'echarts';
 export default {
     name: 'radar',
-    // props: {
-    //     indicator:{
-    //         type:Array,
-    //         default:()=>[]
-    //     },
-    //     radarSeriesData:{
-    //         type:Array,
-    //         default:()=>[]
-    //     }
-    // },
-    // watch:{
-    //     radarSeriesData(newVal){
-    //         var myChart = echarts.init(document.getElementById('radarBox'));
-    //         this.option.series[0].data = newVal;
-    //         // 绘制图表
-    //         myChart.setOption(this.option);
-    //     },
-    //     indicator(newVal){
-    //         var myChart = echarts.init(document.getElementById('radarBox'));
-    //         // this.option.series.data = newVal;
-    //         this.option.radar.indicator = newVal;
-    //         // 绘制图表
-    //         myChart.setOption(this.option);
-    //     }
+    props: {
+        indicator:{
+            type:Array,
+            default:()=>[]
+        },
+        radarSeriesData:{
+            type:Array,
+            default:()=>[]
+        }
+    },
+    watch:{
+        radarSeriesData(newVal){
+            console.log(newVal)
+            var myChart = echarts.init(document.getElementById('radarBox'));
+            this.option.series[0].data = newVal;
+            // 绘制图表
+            myChart.setOption(this.option);
+        },
+        indicator(newVal){
+            var myChart = echarts.init(document.getElementById('radarBox'));
+            // this.option.series.data = newVal;
+            this.option.radar.indicator = newVal;
+            // 绘制图表
+            myChart.setOption(this.option);
+        }
 
-    // },
+    },
     data(){
         return {
             option : {
@@ -68,19 +69,15 @@ export default {
                     },
                     nameGap: 4,
                     indicator: [
-                        { name: '1', max: 5000},
-                        { name: '2', max: 14000},
-                        { name: '3', max: 28000},
-                        { name: '4', max: 35000},
-                        { name: '贷款权重', max: 50000},
-                        { name: '不良率', max: 21000},
-                        { name: '关注率', max: 35000},
-                        { name: '拨备覆盖率', max: 35000},
-                        { name: '流动性比例', max: 35000},
-                        { name: '资产利润率', max: 35000},
-                        { name: '成本收入比', max: 42000},
-                        { name: '单一客户', max: 35000},
-                        { name: '前十大客户', max: 35000},
+                        //{ name: '贷款权重', max: 50000},
+                        //{ name: '不良率', max: 21000},
+                        //{ name: '关注率', max: 35000},
+                        //{ name: '拨备覆盖率', max: 35000},
+                        //{ name: '流动性比例', max: 35000},
+                        //{ name: '资产利润率', max: 35000},
+                        //{ name: '成本收入比', max: 42000},
+                        //{ name: '单一客户', max: 35000},
+                        //{ name: '前十大客户', max: 35000},
                     ],
                     radius:'60%',
                 },
@@ -89,13 +86,12 @@ export default {
                     type: 'radar',
                     // areaStyle: {normal: {}},
                     data: [
-                        {
-                            value: [4300, 10000, 28000, 35000, 50000, 19000,35000,35000,35000,35000,35000,35000,35000]
-                            // name: '预算分配（Allocated Budget）'
-                        },
-                        {
-                            value: [5000, 14000, 28000, 31000, 42000, 21000,5000, 14000, 28000, 31000, 42000, 21000,30000]
-                        }
+                        //{
+                        //    value: [ 50000, 19000,35000,35000,35000,35000,35000,35000,35000]
+                        //},
+                        //{
+                        //    value: [ 42000, 21000,5000, 14000, 28000, 31000, 42000, 21000,30000]
+                        //}
                     ]
                 }]
             }

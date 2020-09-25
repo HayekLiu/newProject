@@ -10,8 +10,7 @@ import mockData from './../mock/mockData.json';
 window.svmjs = require("svm");
 export default {
     name: 'Home',
-    components: {
-       
+    components: {  
         TableView,
         Radar,
         ScatterLink
@@ -34,6 +33,27 @@ export default {
                 singleTenCustomer: false,// '单一客户',
                 topTenCustomer: false,// '前十大客户',
             },
+            tableDataObj:{
+                name: {label:'Name',value:''},
+                type:{label:'Type',value:''},
+                rank:{label:'Rank',value:''},
+                cluster:{label:'Rating',value:''},
+                assetSize:{label:'assetSize',value:''},
+                capitalAdequacyRatio:{label:'capitalAdequacyRatio',value:''},
+                nonPerformingLoansRatio:{label:'nonPerformingLoansRatio',value:''},
+                specialMentionedLoansRatio:{label:'specialMentionedLoansRatio',value:''},
+                // concernRate:{label:'concernRate',value:''},            
+                provisionCoverage:{label:'provisionCoverage',value:''},
+            
+                liquidityRatio:{label:'liquidityRatio',value:''},
+                assetProfitRatio:{label:'assetProfitRatio',value:''},
+                capitalProfitRatio:{label:'capitalProfitRatio',value:''},
+                costToIncomeRatio:{label:'costToIncomeRatio',value:''},
+            
+            },
+            indicator:[], //雷达图坐标轴
+            radarSeriesData:[], //雷达图数据
+
             tableData:[],
             tsneValues:[],
             tsneArrays: [], // 二维数组，多个Tsne数据
@@ -63,7 +83,7 @@ export default {
                 // ctocdRatio: 0.1,//'核心一级资本充足率', //Core tier one capital adequacy ratio
                 //LoanWeight: //'贷款权重',
                 nonPerformingLoansRatio: 0.1,//'不良率',
-                concernRate: 0.05,//'关注率',
+                // concernRate: 0.05,//'关注率',
                 //scrapAndConcern: false,// '不良+关注',
                 //ExcessLoanRatio: false,// '逾贷比',
                 provisionCoverage: 0.15,// '拨备覆盖率',
@@ -83,7 +103,7 @@ export default {
     },
     mounted(){
         this.init();
-
+        this.radarDataFun();
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
         
@@ -123,18 +143,9 @@ export default {
             let fieldSymbol = {}
             this.fieldList.map(field=>{
                 fieldSymbol[field] = true
-            })
+            });
 
-            if(!this.fieldSymbol) this.fieldSymbol = fieldSymbol
-
-
-            // ['#6f61ec', '#76c4e7', '#96dfe2', '#b6e5b9', '#f5da66', '#e89e80', '#de7191', '#b4a199']
-            // ['#a73835', '#394754', '#779fa6', '#c01866', '#a166ae', '#819e83', '#b88530', '#b4a199']
-            // ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf', '#999999']
-            // ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#fccde5', '#d9d9d9']
-            // ['#fbb4ae', '#b3cde3', '#ccebc5', '#decbe4', '#fed9a6', '#ffffcc', '#e5d8bd', '#fddaec', '#f2f2f2']
-            // ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6']
-            //d3.schemeCategory10
+            if(!this.fieldSymbol) this.fieldSymbol = fieldSymbol;
 
             this.nameListData = nameList;
 
@@ -142,11 +153,16 @@ export default {
             // console.log('weightData', weightData)
             let [rankAxisData, ranks] = this.getRank(weightData, values, nameList, this.fieldList);
 
-            rankAxisData = this.getCluster(rankAxisData)
+            rankAxisData = this.getCluster(rankAxisData);
             this.rankAxisData = rankAxisData;
-            console.log('rankAxisData123', rankAxisData)
+            console.log('rankAxisData123', rankAxisData);
 
-            self.rankAxisDataArrays.unshift(rankAxisData)
+            if(self.rankAxisDataArrays.length == 0){
+                self.rankAxisDataArrays.push(rankAxisData);
+            }else{
+                self.rankAxisDataArrays.splice(1,0,rankAxisData);
+            }
+            
             this.rankAxisDataTable = this.deepClone(rankAxisData);
 
           
@@ -648,6 +664,97 @@ export default {
         //选中的legend字段
         getChooseColor(val){
             this.chooseColorArr = val;
+        },
+        
+        //删除堆叠图对应的删除投影图
+        deleteIndex(index){
+            this.tsneArrays.splice(index,1);
+            this.rankAxisDataArrays.splice(index,1);
+        },
+
+
+        //雷达图
+        radarDataFun(){
+            let self = this;
+            //console.log(this.$refs.tree.getCheckedNodes().map(item=>item.label));
+            //雷达图信息
+            let indicatorArr = [];
+            for(let i in self.valueWeight){
+                let maxData = d3.max(self.tableData, item => {
+                    return item[i];
+                });
+                indicatorArr.push({name:self.tableDataObj[i].label,max:maxData})
+            }
+            self.indicator = indicatorArr;
+        },
+
+
+        //表格选中的银行
+        radarBankName(name){
+            let self = this;
+            let bankType;
+            let bankData;
+            self.tableData.map(item=>{
+                if(item.name == name){
+                    bankData = item;
+                    bankType = item.type;
+                }
+            });
+
+            let bankTypeArr = self.tableData.filter(item=>{
+                if(bankType == item.type){
+                    return item;
+                }
+            });
+            
+            // this.valueWeight
+            let values = [];
+            let seriesData  = [];
+            for(let i in self.valueWeight){  //权重字段
+                values.push(bankData[i])
+            }
+            seriesData.push({
+                name:bankData.name,
+                value:values,
+                // lineStyle: { // 单项线条样式。
+                //     color:_this.colorList[bankData],
+                // }
+            });
+
+            let clusterNumData = bankTypeArr.map((item)=>{
+                // this.valueWeight
+                let values = [];
+                for(let i in self.valueWeight){  //权重字段
+                    values.push(item[i])
+                }
+                return values
+            })
+
+            let clusterAverageVue = [];
+            for(let j = 0;j < clusterNumData[0].length; j++){
+                let avegeNum = 0;
+                for(let m = 0;m < clusterNumData.length; m++){
+                    avegeNum += clusterNumData[m][j]
+                }
+                clusterAverageVue.push(Math.floor(avegeNum/clusterNumData.length*100)/100);
+            }
+            
+            let clusterAverage = {
+                name:'均值',
+                value:clusterAverageVue,
+                // lineStyle: { // 单项线条样式。
+                //     color:this.clusterArrColor[i],
+                // },
+            };
+         
+            seriesData.push(clusterAverage)
+
+            // this.selectedTableData,this.valueWeight
+
+            
+            self.radarSeriesData = seriesData;
+
+            // console.log(seriesData)
         }
 
     },

@@ -44,7 +44,7 @@ export default {
             this.init();
         },
         rankAxisDataArrays(val){
-            console.log('rankAxisDataArrays', val)
+            console.log('rankAxisDataArrays----------', val)
         },
         nameListData(val){
             this.nameList = val;
