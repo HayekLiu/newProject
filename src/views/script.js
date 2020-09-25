@@ -108,6 +108,8 @@ export default {
     },
     mounted(){
         this.init(true);
+
+        this.init(true);
         this.radarDataFun();
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
@@ -150,7 +152,7 @@ export default {
                 .domain(this.fieldList)
                 .range(['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E8684A', '#6DC8EC', '#9270CA', '#FF9D4D', '#269A99', '#FF99C3']);
             // ['#6f61ec', '#76c4e7', '#96dfe2', '#b6e5b9', '#f5da66', '#e89e80', '#de7191', '#c562aa']
-                
+
             let fieldSymbol = {}
             this.fieldList.map(field=>{
                 fieldSymbol[field] = true
@@ -222,7 +224,7 @@ export default {
             // this.tsneArrays = [a,b,c];
             
             this.testShow = true;
-           
+
         },
         getSampleIDs(loc, len){
             if(loc>3 && loc<len-3) return [loc-3, loc-2, loc-1, loc+1, loc+2, loc+3];
@@ -263,7 +265,7 @@ export default {
                 nametodata[item['name']] = item;
                 fieldList = Object.keys(item['weightDim']);
             });
-            
+
             console.log('rankAxisData_getSVMWeight', rankAxisData)
             let data = [];
             let labels= [];
@@ -272,7 +274,7 @@ export default {
                 let locs = self.getRandom(parseInt(item['newBankIndex']*0.5), 1, item['newBankIndex']-1)
                 locs = locs.concat(self.getRandom(parseInt((rankAxisData.length - item['newBankIndex'])*0.2), item['newBankIndex']+1, rankAxisData.length))
                 console.log('locs', locs)
-                
+
                 locs.map(loc=>{
                     let comweightDim = ranktodata[loc]['weightDim'];
                     let temp = [];
@@ -296,7 +298,7 @@ export default {
             wb= svm.getWeights();
             wb['w'] = self.getPercentWeight(wb['w'])
             let valueWeight = [];
-            let fieldSymbol = {} 
+            let fieldSymbol = {}
             fieldList.map((field, i)=>{
                 valueWeight[field] = wb['w'][i]
             });
@@ -382,7 +384,7 @@ export default {
                 nametodata[item['name']] = item;
                 fieldList = Object.keys(item['weightDim']);
             });
-            
+
             console.log('rankAxisData_getSVMWeight', rankAxisData)
 
             let data = [];
@@ -674,7 +676,7 @@ export default {
             this.typeValueWeight = this.getLocSVMWeight(this.rankAxisData, val);
             console.log('typeValueWeight',  this.typeValueWeight)
             this.init(false);
-            
+
 
             console.log('rankAxisDataArrays', this.rankAxisDataArrays)
             //this.tsneArrays.push(this.tsneValues);
