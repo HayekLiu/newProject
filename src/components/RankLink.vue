@@ -45,6 +45,7 @@ export default {
         },
         rankAxisDataArrays(val){
             this.init();
+            
             console.log('rankAxisDataArrays', val)
         },
         nameListData(val){
@@ -75,6 +76,7 @@ export default {
 
             width = width - margin.left - margin.right;
             height = height - margin.top - margin.bottom;
+
 
             let svg = d3.select("#" + this.id).append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -111,17 +113,11 @@ export default {
                 .attr('stroke', 'black')
                 // .attr('stroke', '#D0CECE')
                 .attr('stroke-width', '1px')
-                // .attr('class',(d,i)=>this.nameListData[i]+' uItem')
-                // .attr('id',(d,i)=>this.nameListData[i]+'_tsne')
+                .attr('class',(d,i)=>d.name+'_rank_point')
+                //.attr('id',(d,i)=>this.nameListData[i]+'_tsne')
 
 
-            // let xScale = d3.scaleLinear()
-            //     .range([0, width])
-            //     .domain([d3.min(xArr)-1, d3.max(xArr)+1]);
-            // let yScale = d3.scaleLinear()
-            //     .range([height, 0])
-            //     .domain([d3.min(yArr)-1, d3.max(yArr)+1]);
-
+          
             //x坐标轴
             let xAxis = d3.axisBottom()
             .scale(xScale);

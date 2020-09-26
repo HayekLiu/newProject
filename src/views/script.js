@@ -155,7 +155,24 @@ export default {
             this.rankAxisData = rankAxisData;
             console.log('rankAxisData123', rankAxisData)
 
-            self.rankAxisDataArrays.unshift(rankAxisData)
+            self.rankAxisDataArrays.push(rankAxisData)
+
+            self.rankAxisDataArrays[0].map(item=>{
+                item['scheme'] = 'Default Scheme'
+            })
+            for(let i=1; i<self.rankAxisDataArrays.length; i++){
+                let a = parseInt(i/3)+1
+                let b = i%3
+                let type =null
+                if(b==1) type = 'Scheme ' + a+': Local Weight'
+                if(b==2) type = 'Scheme ' + a+': Global Weight'
+                if(b==0) type = 'Scheme ' + a+': Type Weight'
+                self.rankAxisDataArrays[i].map(item=>{
+                    item['scheme'] = type
+                })
+            }
+           
+            // self.rankAxisDataArrays.unshift(rankAxisData)
             this.rankAxisDataTable = this.deepClone(rankAxisData);
             this.tableData = this.deepClone(mockData);
             ranks.map((rank, i)=>{
