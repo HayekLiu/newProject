@@ -45,7 +45,7 @@ export default {
         },
         rankAxisDataArrays(val){
             this.init();
-            
+
             console.log('rankAxisDataArrays', val)
         },
         nameListData(val){
@@ -117,7 +117,7 @@ export default {
                 //.attr('id',(d,i)=>this.nameListData[i]+'_tsne')
 
 
-          
+
             //x坐标轴
             let xAxis = d3.axisBottom()
             .scale(xScale);
