@@ -5,16 +5,17 @@ import TSNE from 'tsne-js';
 import TableView from '@/components/TableView.vue';
 import Radar from '@/components/Radar.vue';
 import ScatterLink from '@/components/ScatterLink.vue';
+import RankLink from '@/components/RankLink.vue';
 import mockData from './../mock/mockData.json';
 // import miserables from './../mock/matrix.json' //矩阵数据
 window.svmjs = require("svm");
 export default {
     name: 'Home',
     components: {
-       
         TableView,
         Radar,
-        ScatterLink
+        ScatterLink,
+        RankLink
     },
     data(){
         return{
@@ -622,6 +623,8 @@ export default {
             console.log('typeValueWeight',  this.typeValueWeight)
             this.init(false);
             
+
+            console.log('rankAxisDataArrays', this.rankAxisDataArrays)
             //this.tsneArrays.push(this.tsneValues);
         },
 
