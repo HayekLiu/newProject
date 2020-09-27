@@ -153,7 +153,7 @@ export default {
 
             rankAxisData = this.getCluster(rankAxisData)
             this.rankAxisData = rankAxisData;
-            console.log('rankAxisData123', rankAxisData)
+            // console.log('rankAxisData123', rankAxisData)
 
             self.rankAxisDataArrays.push(rankAxisData)
 
@@ -479,6 +479,7 @@ export default {
         },
         getRank(data, originData, nameList, fieldList, bankType){
             let scores = [];
+            console.log('data123', data)
 
             let maxScore = 0;
             // 求数据的得分
@@ -504,6 +505,7 @@ export default {
                 Object.keys(item['weightDim']).map(field=>{
                     item['weightDim'][field] = item['score']*item['weightDim'][field]/sum;
                 });
+                //console.log(item)
             });
 
             scores.sort(function(a,b){

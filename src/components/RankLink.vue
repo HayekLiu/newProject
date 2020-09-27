@@ -5,6 +5,8 @@
 <script>
 import d3tip from 'd3-tip';
 import * as lasso from 'd3-lasso';
+import { connect } from 'tls';
+import { constants } from 'zlib';
 let _lasso = lasso;
 export default {
     name: 'RankLink',
@@ -20,7 +22,10 @@ export default {
         nameListData:{
             type:Array,
             default:()=>[],
-        }
+        },
+        fieldColor: {
+           
+        },
     },
     data(){
         return{
@@ -57,7 +62,7 @@ export default {
     },
     methods:{
         init() {
-            //d3.select('#svgrankLink').remove();
+            d3.select('#svgrankLink').remove();
             let self = this;
             let {clientWidth:width, clientHeight:height} = document.getElementById('rankLink');
 
@@ -77,46 +82,132 @@ export default {
             width = width - margin.left - margin.right;
             height = height - margin.top - margin.bottom;
 
-
             let svg = d3.select("#" + this.id).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.left + margin.right)
                 .attr("id", "svg" + this.id)
             
-            svg = svg
+            let rankHeight = height/2 
+
+
+            // let dashLineData =[
+            //     {'x1': 0, 'y1': legendHeight+projectHeight+10, 'x2':  clientWidth, 'y2': legendHeight+projectHeight+10}
+            // ]
+
+            // svg.attr("class", "line")
+            //     .selectAll("line").data(dashLineData)
+            //     .enter()
+            //     .append("line")
+            //     .style("stroke", "black")
+            //     .style("stroke-width", "0.2px")
+            //     .style("stroke-dasharray", ("3, 3"))
+            //     .attr("x1", d=>(d.x1))
+            //     .attr("y1", d=>(d.y1))
+            //     .attr("x2", d=>(d.x2))
+            //     .attr("y2", d=>(d.y2))
+                
+            let rankG = svg
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
             
             let xScale = d3.scaleLinear()
                 .range([0, width])
-                .domain(d3.extent(self.rankAxisDataArrays[0].map(item=>{return item['rank']})));
+                .domain([1, self.rankAxisDataArrays[0].length]);
             let yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain(d3.extent(self.rankAxisDataArrays[0].map(item=>{return item['score']})));
+                .range([rankHeight, 0])
+                .domain([0, 100]);
 
             let arcScale = d3.scaleLinear()
                     .range([0, 5])
                     .domain([0, 100]);
             let colorRed = d3.interpolateHsl("white", "red");
-            
-            let circles = svg.selectAll('.rank_point')
-                .data(self.rankAxisDataArrays[0])
-                .enter().append('circle')
-                .attr('r', (d, i)=>{
-                    return arcScale(d.score);
-                })
-                .attr('fill', (d,i)=>{
+
+            let rankTips = d3tip()
+                .attr("class", "d3-tip")
+                .offset([-10, 0])
+                .html(function(d) {
+                    return "Bank Name: "+d.name+"<br>Scheme: "+d.scheme;
+                });
+
+            rankG.call(rankTips);
+
+            let color = d3.schemeCategory10;
+            self.rankAxisDataArrays.map((item, index)=>{
+                let type = item[0]['scheme'].replaceAll(' ', '').replaceAll(':', '')
+                console.log('type123', type)
+                rankG.selectAll('.rank_point_'+type)
+                    .data(item)
+                    .enter().append('circle')
+                    .attr('r', (d, i)=>{
+                        return arcScale(d.score);
+                    })
+                    .attr('fill', (d,i)=>{
+                        return color[index]
                         return colorRed(d.score/100);
-                })
-                .attr('cx', d=> xScale(d.rank))
-                .attr('cy', d=> yScale(d.score))
-                .attr('stroke', 'black')
-                // .attr('stroke', '#D0CECE')
-                .attr('stroke-width', '1px')
-                .attr('class',(d,i)=>d.name+'_rank_point')
-                //.attr('id',(d,i)=>this.nameListData[i]+'_tsne')
+                    })
+                    .attr('cx', d=> xScale(d.rank))
+                    .attr('cy', d=> yScale(d.score))
+                    .attr('stroke', 'black')
+                    // .attr('stroke', '#D0CECE')
+                    .attr('stroke-width', '1px')
+                    .attr('class',(d,i)=>d.name+'_rank_point_'+type)
+                    //.attr('id',(d,i)=>this.nameListData[i]+'_tsne')
+                    .on('mouseover', function(d, i){
+                        console.log(d)
+                        rankTips.show(d, this);
+                        //  d3.select(this)
+                        //     .attr('r', 7)
+                        //     .attr('stroke-width', '2px')
+                        //     .attr('cursor', 'pointer');
+                    })
+                    .on('mouseout', function(){
+                        rankTips.hide();
+                        // d3.select(this)
+                        //     .attr('r', 5)
+                        //     .attr('stroke-width', '1px')
+                        //     .attr('cursor', 'default');
+                    });
+            })
+            
 
+            let weightDims = [];
+            let yValue = 0;
+           // console.log('fieldColor', self.fieldColor.domain())
+            let fieldList = self.fieldColor.domain()
+            self.rankAxisDataArrays[0].map(item=>{
+                let temp = self.deepClone(item['weightDim']);
+                let value = 0;
 
+                fieldList.map(field=>{
+                    value+=item['weightDim'][field];
+                });
+                yValue = Math.max(yValue, value);
+                temp['loc'] = item['loc'];
+                temp['rank'] = item['rank'];
+                temp['value'] = value;
+                weightDims.push(temp);
+            });
+
+            let yStackScale = d3.scaleLinear()
+                .range([rankHeight, 0]);
+            yStackScale.domain([0, yValue]);
+
+            console.log('weightDims123', weightDims)
+            let layers = d3.stack().keys(fieldList)(weightDims);
+
+            // 堆叠柱状图
+            let barWidth = width / self.rankAxisDataArrays[0].length - 1
+            // rankG.append("g").selectAll("g")
+            //     .data(layers)
+            // .enter().append("g")
+            //     .style("fill", function(d) { return self.fieldColor(d.key); })	
+            //     .selectAll("rect")
+            // .data(function(d) {  return d; })
+            //     .enter().append("rect")
+            //     .attr("x", function(d, i) { return xScale(d.data.rank); })
+            //     .attr("y", function(d) { return yStackScale(d[1]); })
+            //     .attr("height", function(d) { return yStackScale(d[0]) - yStackScale(d[1]); })
+            //     .attr("width", barWidth);
           
             //x坐标轴
             let xAxis = d3.axisBottom()
@@ -126,18 +217,30 @@ export default {
             let yAxis = d3.axisLeft()
             .scale(yScale);
 
-            let gX = svg.append("g")
+            let gX = rankG.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(0," + rankHeight + ")")
                 .call(xAxis);
 
-            let gY = svg.append("g")
+            let gY = rankG.append("g")
                 .attr("class", "y axis")
                 .call(yAxis);
-
-
-
            
+        },
+        deepClone(source){
+            let self = this;
+            if (!source && typeof source !== 'object') {
+                throw new Error('error arguments', 'deepClone');
+            }
+            const targetObj = source.constructor === Array ? [] : {};
+            Object.keys(source).forEach(keys => {
+                if (source[keys] && typeof source[keys] === 'object') {
+                    targetObj[keys] = self.deepClone(source[keys]);
+                } else {
+                    targetObj[keys] = source[keys];
+                }
+            });
+            return targetObj;
         },
     }
 };
