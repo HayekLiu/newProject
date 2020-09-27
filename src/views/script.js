@@ -108,8 +108,6 @@ export default {
     },
     mounted(){
         this.init(true);
-
-        this.init(true);
         this.radarDataFun();
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
