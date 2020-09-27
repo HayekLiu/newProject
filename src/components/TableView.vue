@@ -16,9 +16,9 @@
             @percentChange="onPercentChange" 
             />
         </div>
-        <div id='clusterSVGBox' style="margin-right: 16px;"></div>
+        <div id='clusterSVGBox' style="margin-right: 16px;"></div> -->
         <div class="legendColor">
-            <span v-for='(item,index) in legendArr' :key = 'index' class="item" @click = 'chooseColor(item.name,index)'>
+            <span v-for='(item,index) in legendArr' :key = 'index' class="item" @click = 'chooseColor(item.name,index)' :title="item.name">
                 <span class="itemColor" :style="{'backgroundColor':item.flag ? item.color:'#bfbfbf'}"></span>
                 {{item.name}}
             </span>
@@ -45,6 +45,10 @@ export default {
             default:()=>[],
         },
         rankAxisDataTable:{
+            type:Array,
+            default:()=>[],
+        },
+        rankAxisDataTableArr:{
             type:Array,
             default:()=>[],
         },
@@ -133,7 +137,7 @@ export default {
             stackedDataFlag:true, //是否增加堆叠图数据
             legendArr:[
                 {name:'assetSize',color:'',flag:true},
-                {name:'type',color:'',flag:true},
+                //{name:'type',color:'',flag:true},
                 {name:'capitalAdequacyRatio',color:'',flag:true},
                 {name:'nonPerformingLoansRatio',color:'',flag:true},
 
@@ -269,7 +273,8 @@ export default {
                 .enter()
                 .append('div')
                 .attr('class', function (column) {
-                    if (column.name == 'name') {
+
+                    if (column.name == 'name'|| column.name == 'type') {
                         return 'td firstRow firstRowOne';
                     }
                     // else if (column.name == 'index') {
@@ -281,7 +286,7 @@ export default {
                 })
                 .attr('style', 'justify-content:center;');
 
-            thead.select('.firstRowOne')
+            thead.selectAll('.firstRowOne')
                 .append('div')
                 .attr('class', 'beforeRow orderRow');
             thead.select('.firstRowTwo')
@@ -297,12 +302,12 @@ export default {
                     return 'firstText';
                 })
                 .style('text-align',function(d){
-                    if(d.name == 'name'){
+                    if(d.name == 'name'||d.name == 'type'){
                         return 'center';
                     }
                 })
                 .style('width',function(d){
-                    if(d.name == 'name'){
+                    if(d.name == 'name'||d.name == 'type'){
                         return '80px';
                     }
                 })
@@ -340,6 +345,8 @@ export default {
                     $('.costNumberView').find('.tbody').find('.tr').css('background-color','#fff');
                     $(this).css('border-color','#5DA5B3');
                     $(this).css('background-color','#5DA5B3');
+
+                    _this.$emit('radarBankName',d.name)
                 })
                 .attr('id',function(d){
                     return 'tr_'+d.name;
@@ -375,7 +382,7 @@ export default {
                 .attr('height', 18)
                 .append('xhtml:div')
                 .style('text-align', function(d){ 
-                    if(d.col != 'name'){
+                    if(d.col != 'name' && d.col != 'type'){
                         return 'right';
                     }else{
                         return 'center';
@@ -386,7 +393,7 @@ export default {
                 .style('font-size', '12px')
                 .style('line-height', '18px')
                 .style('padding-right', function(d){
-                    if(d.col != 'name'){
+                    if(d.col != 'name' && d.col != 'type'){
                         return '28px';
                     }
                 })
@@ -419,7 +426,23 @@ export default {
                 })
                 .attr('transform', function () {
                     return `translate(2, 14)`;
-                });
+                })
+                .attr('title', function (d) {
+                    if(d.col == 'assetSize'){
+                        return d.value.toLocaleString();
+                    }else if(d.col == 'capitalAdequacyRatio'|| d.col == 'ctocdRatio'|| d.col == 'scrapAndConcern'
+                    || d.col == 'tocdRatio'|| d.col == 'nonPerformingLoansRatio'|| d.col == 'concernRate'|| d.col == 'provisionCoverage'
+                    || d.col == 'liquidityRatio'|| d.col == 'assetProfitRatio'|| d.col == 'ExcessLoanRatio'
+                    || d.col == 'capitalProfitRatio'|| d.col == 'costIncomeRatio' || d.col == 'singleTenCustomer'
+                    || d.col == 'topTenCustomer'|| d.col == 'LoanWeight' || d.col == 'depositAbsorptionWeight'){
+
+                        return (d.value*100).toFixed(2)+'%';
+                    }else if(d.col == 'cluster'){
+                        return d.value;
+                    }else{
+                        return d.value;
+                    }
+                })
             // 排序
             d3.select('.costNumberView')
                 .selectAll('.topSecond')
@@ -462,52 +485,71 @@ export default {
         //堆叠图数据处理
         stackedData(){
             let self = this;
+
             // console.log('1111111',this.rankAxisDataTable)
             let fieldList = Object.keys(this.rankAxisDataTable[0]['weightDim']);
-            //记录表格推叠图数据
-            let bankName = document.getElementsByClassName('bankName');
-            //获取表格排序
-            let nameArr=[];
-            for(let i = 0;i<bankName.length;i++){
-                nameArr.push(bankName[i].innerText);
-            }
-            let dataTable = [];
-            let weightDims = [];
-            nameArr.map(item=>{
-                this.rankAxisDataTable.map(i=>{
-                    if(item == i.name){
-                        dataTable.push(i);
-                    }
-                });
-            });
-            dataTable.map(item=>{
-                // item['weightDim']['loc'] = item['loc']
-                weightDims.push(item['weightDim']);
-            });
-            dataTable['columns'] = fieldList;
-            let stackedData = d3.stack()
-                .keys(dataTable.columns)(weightDims)
-                .map(d => (d.forEach(v => v.key = d.key), d));
+            // //记录表格推叠图数据
+            // let bankName = document.getElementsByClassName('bankName');
+            // //获取表格排序
+            // let nameArr=[];
+            // for(let i = 0;i<bankName.length;i++){
+            //     nameArr.push(bankName[i].innerText);
+            // }
 
-            stackedData.map((item,link)=>{
-                item.map((i,k)=>{
-                    i['name'] = nameArr[k];
-                    i['svgBoxIndex'] = self.svgBoxIndex;
-                    i['link'] = link;
-                });
-            });
-            self.svgBoxIndex++;
-            // splice(2, 0, "three")
-            let weighData = [];
-            let vWeight = self.valueWeightData;
-
-            for(let k in vWeight){
-                weighData.push({name:k,value:vWeight[k], type: self.fieldSymbol[k]});
-            }
+            console.log('rankAxisDataTableArr=========>',this.rankAxisDataTableArr)
 
             if(self.stackedDataFlag){
-                self.stackedFigureData.splice(0,0,{stackedData:stackedData,dataTable:dataTable,weighData:weighData});
-            } 
+                self.stackedFigureData = [];
+            }
+
+            self.rankAxisDataTableArr.map((dItem)=>{
+
+                let nameArr = dItem.map((item)=>{
+                    return item.name;
+                });
+
+                let dataTable = [];
+                let weightDims = [];
+                nameArr.map(item=>{
+                    dItem.map(i=>{
+                        if(item == i.name){
+                            dataTable.push(i);
+                        }
+                    });
+                });
+                dataTable.map(item=>{
+                // item['weightDim']['loc'] = item['loc']
+                    weightDims.push(item['weightDim']);
+                });
+                dataTable['columns'] = fieldList;
+                let stackedData = d3.stack()
+                    .keys(dataTable.columns)(weightDims)
+                    .map(d => (d.forEach(v => v.key = d.key), d));
+
+                stackedData.map((item,link)=>{
+
+                    item.map((i,k)=>{
+                        i['name'] = nameArr[k];
+                        i['svgBoxIndex'] = self.svgBoxIndex;
+                        i['link'] = link;
+
+                    });
+                });
+                self.svgBoxIndex++;
+                // splice(2, 0, "three")
+                let weighData = [];
+                let vWeight = self.valueWeightData;
+
+                for(let k in vWeight){
+                    weighData.push({name:k,value:vWeight[k], type: self.fieldSymbol[k]});
+                }
+
+                if(self.stackedDataFlag){
+                    self.stackedFigureData.push({stackedData:stackedData,dataTable:dataTable,weighData:weighData})
+                    // self.stackedFigureData.splice(1,0,{stackedData:stackedData,dataTable:dataTable,weighData:weighData});
+                }
+
+            })
         },
 
         //表格拖拽
@@ -689,7 +731,7 @@ export default {
             let {clientWidth: clientWidth} = document.getElementById('table');
             let margin = {top: 20, right: 10, bottom: 0, left: 80};
 
-            let width = (clientWidth- margin.left - margin.right)*0.3;
+            let width = (clientWidth- margin.left - margin.right)*0.26;
             self.stackedData();
             // if(!self.stackedDataFlag){
             //     self.stackedFigureData.splice(1,1);
@@ -707,26 +749,26 @@ export default {
             let num = self.stackedFigureData.length;
             //堆积图间距
             let stackedWid = 50;
-            //表格每条格子高度为22
-            let height = 18*73 - margin.top - margin.bottom+30;
+            //表格每条格子高xx*73
+            let height = 18*72 - margin.top - margin.bottom+30;
             Object.keys(this.rankAxisDataTable[0]['weightDim']);
             let color = self.fieldColor;
 
             d3.select('#svgMain').remove();
             const svg = d3.create("svg")
                 .attr('id','svgMain')
-                .attr('width',width*num+stackedWid*(num))
+                .attr('width',width*num+stackedWid*(num)+stackedWid)
                 .attr('height',height+40)
-                .style('width',width*num+stackedWid*(num)+'px')
+                .style('width',width*num+stackedWid*(num)+stackedWid+'px')
                 .style('height',(height+40)+'px')
-                .attr("viewBox", [0, 0, width*num+stackedWid*(num), height+40]);
+                .attr("viewBox", [0, 0, width*num+stackedWid*(num)+stackedWid, height+40]);
 
             let gLin = svg.append("g")
                 .attr("transform", "translate(" + 0 + "," + 40 + ")")
                 .attr('class', 'gLin');
 
             self.stackedFigureData.map((item,index)=>{
-                let  stackedDataLen =  self.stackedFigureData.length;
+                // let  stackedDataLen =  self.stackedFigureData.length;
                 let x = d3.scaleLinear()
                     .domain([0, d3.max(item.stackedData, d => d3.max(d, d => d[1]))])
                     .range([margin.left, width - margin.right]);
@@ -761,13 +803,13 @@ export default {
                 // 权重柱状图
                 let weightG = svg.append("g")
                     .attr('class','g_weight'+index)
-                    .attr("width", 160)
+                    .attr("width", 117)
                     .attr("height", 16)
                     .attr("transform",function(){
                         if(index == 0){
-                            return  "translate(" + (stackedWid+90) + "," + 44 + ")";
+                            return  "translate(" + (stackedWid+70) + "," + 44 + ")";
                         }else{
-                            return  "translate(" + ((width+stackedWid)*index+stackedWid+90) + "," + 44 + ")";
+                            return  "translate(" + ((width+stackedWid)*index+stackedWid+70) + "," + 44 + ")";
                         }
                     });
 
@@ -776,7 +818,7 @@ export default {
                 console.log('weighData', weighData);
                 let weightX = d3.scaleLinear()
                     .domain([0, weighData.length])
-                    .range([0, 160]);
+                    .range([0, 117]);
 
                 let weightYPosition = d3.scaleLinear()
                     .domain(d3.extent(weighData, d => Math.abs(d.value)))
@@ -792,7 +834,7 @@ export default {
                     //.style("stroke-dasharray", ("3, 3")) 
                     .attr("x1", 0)
                     .attr("y1", 8)
-                    .attr("x2", 160)
+                    .attr("x2", 117)
                     .attr("y2", 8);
 
                 console.log('weighData', weighData);
@@ -812,8 +854,43 @@ export default {
                         if(d.value>0) return 8-weightYPosition(d.value);
                         else return weightYNegative(d.value);
                     })
-                    .attr('width', 15);
-                    
+                    .attr("transform",function(){
+                        return  "translate(2,0 )";
+                    })
+                    .attr('width', 11);
+
+
+
+                if(index == 1){
+                    let pathLineData = [];
+                    pathLineData.push(
+                        {x:width+stackedWid*1.5,y:0},
+                        {x:(width+stackedWid)*4+stackedWid/2,y:0},
+                        {x:(width+stackedWid)*4+stackedWid/2,y:height},
+                        {x:width+stackedWid*1.5,y:height},
+                        {x:width+stackedWid*1.5,y:0}
+                    );
+                    let pathLine = svg.append("g")
+                        .attr('class','pathLine_'+index);
+                    d3.selectAll('.pathLink').remove();
+                    let lineFunction = d3.line()
+                        .x(function(d) {
+                            return d.x;
+                        })
+                        .y(function(d) { return d.y; });
+                        // .curve(d3.curveMonotoneX)
+                    pathLine.append("path")
+                        .attr("d", lineFunction(pathLineData))
+                        .attr('class', 'pathLink')
+                        .attr("stroke", 'red')
+                        .attr("stroke-width", 1)
+                        .attr("transform", "translate(" + 0 + ", 40)")
+                        .attr("opacity", 0.8)
+                        .style("stroke-dasharray", ("3, 3"))
+                        .attr("fill", "none");
+                }
+
+
                 //方案排序
                 g.append('text')
                     .attr('dy',12)
@@ -823,12 +900,43 @@ export default {
                     .style('font-weight','bolder')
                     .style('cursor', 'pointer')
                     .text(function(){
-                        return 'Scheme'+(stackedDataLen-index);
+                        if(index>0){
+                            return 'Scheme'+(index);
+                        }else{
+                            return 'Scheme';
+                        }
+
                     })
                     .on('click',function(){
-                        console.log('方案'+(stackedDataLen-index));
+                        if(index>1){
+                            console.log('方案Scheme'+index);
+                        }else{
+                            console.log('方案Scheme');
+                        }
                     });
-                
+
+                let isClose = require('./../assets/images/isClose.svg');
+                g.append('image')
+                    .attr('height', 14)
+                    .attr('width', 14)
+                    .attr('x',()=>width+10)
+                    .attr('xlink:href',function(){
+                        if(index== 3){
+                            return isClose;
+                        }
+                    })
+                    .style('cursor','pointer')
+                    .on('click',function(){     //删除堆叠图
+                        if(index!=0){
+                            self.stackedDataFlag = false;
+                            self.$emit('deleteIndex',index);
+                            self.stackedFigureData.splice(index-2,3);
+                            self.stacked();
+                        }
+
+                    })
+
+
                 let pd = g.selectAll("g")
                     .data(function(){
                         return item.stackedData;
@@ -869,8 +977,9 @@ export default {
                         $('#tr_'+d.name).css('background-color','#5DA5B3');
 
                     })
-                    // .append("title")
+                    // .append("title")   //堆叠图上的title悬浮
                     // .text(function(d){
+
                     //     return `${d.name} ${self.valueWeight[d.key]['label']}${(d.data[d.key])}`;
                     // });
                 g.append("g")
@@ -1260,7 +1369,7 @@ export default {
         .legendColor{
             width: 100%;display: flex;justify-content: flex-start;flex-wrap: wrap;padding: 0 10px;
             .item{
-                width: 150px;height: 18px;line-height:22px;font-size:12px;text-align:left;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;cursor: pointer;
+                height: 18px;margin-left: 8px;line-height:22px;font-size:12px;text-align:left;cursor: pointer;
                 .itemColor{
                     display:inline-block;width:10px;height:10px;margin-right:2px;vertical-align: middle;
                 }

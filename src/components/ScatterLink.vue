@@ -44,7 +44,7 @@ export default {
             this.init();
         },
         rankAxisDataArrays(val){
-            console.log('rankAxisDataArrays', val)
+            console.log('rankAxisDataArrays----------', val)
         },
         nameListData(val){
             this.nameList = val;
@@ -59,7 +59,7 @@ export default {
             let self = this;
             let {clientWidth:width, clientHeight:height} = document.getElementById('scatterLink');
 
-            let blockWidth = width * 0.28; // 每个区块的宽度，根据数据长度计算
+            let blockWidth = width * 0.22; // 每个区块的宽度，根据数据长度计算
             this.blockWidth = blockWidth;
             let padding = {
                 left: 25,
@@ -68,7 +68,7 @@ export default {
                 bottom: 20
             };
             this.svg = d3.select("#" + this.id).append("svg")
-                .attr("width", width).attr("height", height)
+                .attr("width", (blockWidth+40)*this.tsneArrays.length).attr("height", height)
                 .attr("id", "svg" + this.id);
            
             
@@ -118,7 +118,12 @@ export default {
 
                 blockg.append('text')
                     .text(()=>{
-                        return 'Scheme'+(self.rankAxisDataArrays.length-k);
+                        if(k!=0){
+                            return 'Scheme'+k;
+                        }else{
+                            return 'Scheme';
+                        }
+                        // return 'Scheme'+(self.rankAxisDataArrays.length-k);
                     })
                     .style('font-size','12px')
                     .style('font-weight','bolder')
@@ -381,6 +386,8 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
+    overflow-x: auto;
+    text-align: left;
   }
   .lasso {
       path {

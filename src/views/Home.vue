@@ -10,13 +10,13 @@
     </header>
     <div style="height:30px;"></div>
     <!-- 左侧 -->
-    <div style="width:24%;height:100%;position: absolute;border-right: 1px solid #ccc;">
+    <div style="width:24%;height:calc(68% - 30px);position: absolute;border-right: 1px solid #ccc;">
       <div style="height:calc(100% - 24vw);">
-      
+
       </div>
-      <Radar/>
+      <Radar :indicator='indicator' :radarSeriesData = 'radarSeriesData'/>
     </div>
-    <div style="width:76%;height:100%;margin-left:24%;">
+    <div style="width:76%;height:calc(68% - 30px);margin-left:24%;">
         <div class="main">
           <div class="right-box">
             <!-- 数据选择 -->
@@ -39,6 +39,7 @@
             </div>
           </div>
         </div>
+        </div>
         <div class="table-view">
           <TableView
             :table-data="tableData"
@@ -47,12 +48,13 @@
             :field-symbol = "fieldSymbol"
             :valueWeightData='valueWeight'
             :rank-axis-data="rankAxisData"
+            :rankAxisDataTableArr = 'rankAxisDataTableArr'
             @dragBank = 'dragBank'
             @getChooseColor = 'getChooseColor'
+            @deleteIndex = 'deleteIndex'
+            @radarBankName = 'radarBankName'
           />
-        </div>
-    </div>
-    
+      </div>
   </div>
 </template>
 
@@ -76,9 +78,10 @@
     }
 
 .main{
-    display: flex;height: -moz-calc(67% - 30px);
-              height: -webkit-calc(67% - 30px);
-              height: calc(67% - 30px);;
+    display: flex;height: 100%;
+              // height: -moz-calc(100% - 30px);
+              // height: -webkit-calc(100% - 30px);
+              // height: calc(100% - 30px);;
     .left-box{
         width: 40%;
         /* padding-left: 2%; */

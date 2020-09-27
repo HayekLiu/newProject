@@ -35,6 +35,29 @@ export default {
                 singleTenCustomer: false,// '单一客户',
                 topTenCustomer: false,// '前十大客户',
             },
+
+            tableDataObj:{
+                name: {label:'Name',value:''},
+                type:{label:'Type',value:''},
+                rank:{label:'Rank',value:''},
+                cluster:{label:'Rating',value:''},
+                assetSize:{label:'assetSize',value:''},
+                capitalAdequacyRatio:{label:'capitalAdequacyRatio',value:''},
+                nonPerformingLoansRatio:{label:'nonPerformingLoansRatio',value:''},
+                specialMentionedLoansRatio:{label:'specialMentionedLoansRatio',value:''},
+                // concernRate:{label:'concernRate',value:''},
+                provisionCoverage:{label:'provisionCoverage',value:''},
+
+                liquidityRatio:{label:'liquidityRatio',value:''},
+                assetProfitRatio:{label:'assetProfitRatio',value:''},
+                capitalProfitRatio:{label:'capitalProfitRatio',value:''},
+                costToIncomeRatio:{label:'costToIncomeRatio',value:''},
+
+            },
+            indicator:[], //雷达图坐标轴
+            radarSeriesData:[], //雷达图数据
+
+            rankAxisDataTableArr:[],  //堆叠图数据
             tableData:[],
             tsneValues:[],
             tsneArrays: [], // 二维数组，多个Tsne数据
@@ -85,7 +108,7 @@ export default {
     },
     mounted(){
         this.init(true);
-
+        this.radarDataFun();
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
         
@@ -171,7 +194,7 @@ export default {
                     item['scheme'] = type
                 })
             }
-           
+        
             // self.rankAxisDataArrays.unshift(rankAxisData)
             this.rankAxisDataTable = this.deepClone(rankAxisData);
             this.tableData = this.deepClone(mockData);
@@ -180,7 +203,15 @@ export default {
             });
 
             this.tsneValues = self.getTsneData(weightData);
-            this.tsneArrays.push(this.tsneValues);
+            // this.tsneArrays.push(this.tsneValues);
+            if(this.rankAxisDataTableArr < 1){
+                this.tsneArrays.splice(1,0,this.tsneValues);
+                this.rankAxisDataTableArr.splice(1,0,this.rankAxisDataTable);
+            }else{
+                this.tsneArrays.push(this.tsneValues);
+                this.rankAxisDataTableArr.push(this.rankAxisDataTable);
+            }
+
             // let a = self.getTsneData(weightData);
             // let b = self.getTsneData(weightData);
             // let c = self.getTsneData(weightData);
@@ -650,6 +681,99 @@ export default {
         //选中的legend字段
         getChooseColor(val){
             this.chooseColorArr = val;
+        },
+
+        //删除堆叠图对应的删除投影图
+        deleteIndex(index){
+            this.tsneArrays.splice(index-2,3);
+            this.rankAxisDataArrays.splice(index-2,3);
+            this.rankAxisDataTableArr.splice(index-2,3);
+        },
+
+
+        //雷达图
+        radarDataFun(){
+            let self = this;
+            //console.log(this.$refs.tree.getCheckedNodes().map(item=>item.label));
+            //雷达图信息
+            let indicatorArr = [];
+            for(let i in self.valueWeight){
+                let maxData = d3.max(self.tableData, item => {
+                    return item[i];
+                });
+                indicatorArr.push({name:self.tableDataObj[i].label,max:maxData})
+            }
+            console.log(' self.indicator==========>', self.indicator)
+            self.indicator = indicatorArr;
+        },
+
+
+        //表格选中的银行
+        radarBankName(name){
+            let self = this;
+            let bankType;
+            let bankData;
+            self.tableData.map(item=>{
+                if(item.name == name){
+                    bankData = item;
+                    bankType = item.type;
+                }
+            });
+
+            let bankTypeArr = self.tableData.filter(item=>{
+                if(bankType == item.type){
+                    return item;
+                }
+            });
+
+            // this.valueWeight
+            let values = [];
+            let seriesData  = [];
+            for(let i in self.valueWeight){  //权重字段
+                values.push(bankData[i])
+            }
+            seriesData.push({
+                name:bankData.name,
+                value:values,
+                // lineStyle: { // 单项线条样式。
+                //     color:_this.colorList[bankData],
+                // }
+            });
+
+            let clusterNumData = bankTypeArr.map((item)=>{
+                // this.valueWeight
+                let values = [];
+                for(let i in self.valueWeight){  //权重字段
+                    values.push(item[i])
+                }
+                return values
+            })
+
+            let clusterAverageVue = [];
+            for(let j = 0;j < clusterNumData[0].length; j++){
+                let avegeNum = 0;
+                for(let m = 0;m < clusterNumData.length; m++){
+                    avegeNum += clusterNumData[m][j]
+                }
+                clusterAverageVue.push(Math.floor(avegeNum/clusterNumData.length*100)/100);
+            }
+
+            let clusterAverage = {
+                name:'均值',
+                value:clusterAverageVue,
+                // lineStyle: { // 单项线条样式。
+                //     color:this.clusterArrColor[i],
+                // },
+            };
+
+            seriesData.push(clusterAverage)
+
+            // this.selectedTableData,this.valueWeight
+
+
+            self.radarSeriesData = seriesData;
+
+            // console.log(seriesData)
         }
 
     },
