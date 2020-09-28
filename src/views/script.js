@@ -178,11 +178,7 @@ export default {
             this.rankAxisData = rankAxisData;
             // console.log('rankAxisData123', rankAxisData)
 
-            if(self.rankAxisDataArrays.length == 0){
-                self.rankAxisDataArrays.push(rankAxisData);
-            }else{
-                self.rankAxisDataArrays.splice(1,0,rankAxisData);
-            }
+            self.rankAxisDataArrays.push(rankAxisData)
 
             self.rankAxisDataArrays[0].map(item=>{
                 item['scheme'] = 'Default Scheme'
@@ -198,7 +194,7 @@ export default {
                     item['scheme'] = type
                 })
             }
-
+        
             // self.rankAxisDataArrays.unshift(rankAxisData)
             this.rankAxisDataTable = this.deepClone(rankAxisData);
             this.tableData = this.deepClone(mockData);

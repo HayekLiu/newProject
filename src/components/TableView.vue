@@ -4,8 +4,8 @@
     class="tableView"
   >
     <div class="btn-box" id="areaDiv">
-        <span class="saveBtn" @click='saveProject'>Save Scheme</span>
-        <!-- 滑动条
+        <span class="saveBtn" @click='saveProject'>Save risk weight scheme</span>
+        <!-- 滑动条 -->
         <div style="margin: 0 10px;">
             <c-progress class="c-progress"
             :percent="7"

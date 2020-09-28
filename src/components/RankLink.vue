@@ -50,7 +50,7 @@ export default {
         },
         rankAxisDataArrays(val){
             this.init();
-
+            
             console.log('rankAxisDataArrays', val)
         },
         nameListData(val){
@@ -81,6 +81,7 @@ export default {
 
             width = width - margin.left - margin.right;
             height = height - margin.top - margin.bottom;
+
 
             let svg = d3.select("#" + this.id).append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -192,6 +193,22 @@ export default {
                 .range([rankHeight, 0]);
             yStackScale.domain([0, yValue]);
 
+            console.log('weightDims123', weightDims)
+            let layers = d3.stack().keys(fieldList)(weightDims);
+
+            // 堆叠柱状图
+            let barWidth = width / self.rankAxisDataArrays[0].length - 1
+            // rankG.append("g").selectAll("g")
+            //     .data(layers)
+            // .enter().append("g")
+            //     .style("fill", function(d) { return self.fieldColor(d.key); })
+            //     .selectAll("rect")
+            // .data(function(d) {  return d; })
+            //     .enter().append("rect")
+            //     .attr("x", function(d, i) { return xScale(d.data.rank); })
+            //     .attr("y", function(d) { return yStackScale(d[1]); })
+            //     .attr("height", function(d) { return yStackScale(d[0]) - yStackScale(d[1]); })
+            //     .attr("width", barWidth);
 
             //x坐标轴
             let xAxis = d3.axisBottom()
