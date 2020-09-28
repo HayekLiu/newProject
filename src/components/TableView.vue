@@ -15,8 +15,8 @@
             :show-per-text="true" 
             @percentChange="onPercentChange" 
             />
-        </div>
-        <div id='clusterSVGBox' style="margin-right: 16px;"></div> -->
+        </div> -->
+        <!-- <div id='clusterSVGBox' style="margin-right: 16px;"></div> -->
         <div class="legendColor">
             <span v-for='(item,index) in legendArr' :key = 'index' class="item" @click = 'chooseColor(item.name,index)' :title="item.name">
                 <span class="itemColor" :style="{'backgroundColor':item.flag ? item.color:'#bfbfbf'}"></span>
