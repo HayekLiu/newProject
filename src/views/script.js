@@ -8,7 +8,8 @@ import ScatterLink from '@/components/ScatterLink.vue';
 import RankLink from '@/components/RankLink.vue';
 import mockData from './../mock/mockData.json';
 // import miserables from './../mock/matrix.json' //矩阵数据
-window.svmjs = require("svm");
+import * as svmjs from "svm";
+window.svmjs = svmjs;
 export default {
     name: 'Home',
     components: {
@@ -108,7 +109,7 @@ export default {
     },
     mounted(){
         this.init(true);
-        this.radarDataFun();
+        this.radarDataFun(this.tableData);
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
         
@@ -264,7 +265,7 @@ export default {
             let self = this;
             let ranktodata = {};
             let nametodata = {};
-            let len = rankAxisData.length;
+            // let len = rankAxisData.length;
             let fieldList = [];
             rankAxisData.map(item=>{
                 ranktodata[item['rank']] = item;
@@ -304,7 +305,7 @@ export default {
             wb= svm.getWeights();
             wb['w'] = self.getPercentWeight(wb['w'])
             let valueWeight = [];
-            let fieldSymbol = {}
+            // let fieldSymbol = {}
             fieldList.map((field, i)=>{
                 valueWeight[field] = wb['w'][i]
             });
@@ -314,7 +315,7 @@ export default {
             let self = this;
             let ranktodata = {};
             let nametodata = {};
-            let len = rankAxisData.length;
+            // let len = rankAxisData.length;
             let fieldList = [];
             let typeRankData = {
                 'Large State-owned Commercial Bank': {'weightDims': [], 'ranks':[]},
@@ -704,13 +705,13 @@ export default {
 
 
         //雷达图
-        radarDataFun(){
+        radarDataFun(tableData){
             let self = this;
             //console.log(this.$refs.tree.getCheckedNodes().map(item=>item.label));
             //雷达图信息
             let indicatorArr = [];
             for(let i in self.valueWeight){
-                let maxData = d3.max(self.tableData, item => {
+                let maxData = d3.max(tableData, item => {
                     return item[i];
                 });
                 indicatorArr.push({name:self.tableDataObj[i].label,max:maxData})
@@ -737,7 +738,7 @@ export default {
                     return item;
                 }
             });
-
+            self.radarDataFun(bankTypeArr)
             // this.valueWeight
             let values = [];
             let seriesData  = [];

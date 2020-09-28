@@ -4,10 +4,10 @@
 
 <script>
 import d3tip from 'd3-tip';
-import * as lasso from 'd3-lasso';
-import { connect } from 'tls';
-import { constants } from 'zlib';
-let _lasso = lasso;
+// import * as lasso from 'd3-lasso';
+// import { connect } from 'tls';
+// import { constants } from 'zlib';
+// let _lasso = lasso;
 export default {
     name: 'RankLink',
     props: {
@@ -119,9 +119,9 @@ export default {
                 .domain([0, 100]);
 
             let arcScale = d3.scaleLinear()
-                    .range([0, 5])
-                    .domain([0, 100]);
-            let colorRed = d3.interpolateHsl("white", "red");
+                .range([0, 5])
+                .domain([0, 100]);
+            // let colorRed = d3.interpolateHsl("white", "red");
 
             let rankTips = d3tip()
                 .attr("class", "d3-tip")
@@ -139,21 +139,21 @@ export default {
                 rankG.selectAll('.rank_point_'+type)
                     .data(item)
                     .enter().append('circle')
-                    .attr('r', (d, i)=>{
+                    .attr('r', (d)=>{
                         return arcScale(d.score);
                     })
-                    .attr('fill', (d,i)=>{
+                    .attr('fill', ()=>{
                         return color[index]
-                        return colorRed(d.score/100);
+                        // return colorRed(d.score/100);
                     })
                     .attr('cx', d=> xScale(d.rank))
                     .attr('cy', d=> yScale(d.score))
                     .attr('stroke', 'black')
                     // .attr('stroke', '#D0CECE')
                     .attr('stroke-width', '1px')
-                    .attr('class',(d,i)=>d.name+'_rank_point_'+type)
+                    .attr('class',(d)=>d.name+'_rank_point_'+type)
                     //.attr('id',(d,i)=>this.nameListData[i]+'_tsne')
-                    .on('mouseover', function(d, i){
+                    .on('mouseover', function(d){
                         console.log(d)
                         rankTips.show(d, this);
                         //  d3.select(this)
@@ -173,7 +173,7 @@ export default {
 
             let weightDims = [];
             let yValue = 0;
-           // console.log('fieldColor', self.fieldColor.domain())
+            // console.log('fieldColor', self.fieldColor.domain())
             let fieldList = self.fieldColor.domain()
             self.rankAxisDataArrays[0].map(item=>{
                 let temp = self.deepClone(item['weightDim']);
@@ -194,10 +194,10 @@ export default {
             yStackScale.domain([0, yValue]);
 
             console.log('weightDims123', weightDims)
-            let layers = d3.stack().keys(fieldList)(weightDims);
+            // let layers = d3.stack().keys(fieldList)(weightDims);
 
             // 堆叠柱状图
-            let barWidth = width / self.rankAxisDataArrays[0].length - 1
+            // let barWidth = width / self.rankAxisDataArrays[0].length - 1
             // rankG.append("g").selectAll("g")
             //     .data(layers)
             // .enter().append("g")
@@ -212,18 +212,18 @@ export default {
 
             //x坐标轴
             let xAxis = d3.axisBottom()
-            .scale(xScale);
+                .scale(xScale);
 
             //y坐标轴
             let yAxis = d3.axisLeft()
-            .scale(yScale);
+                .scale(yScale);
 
-            let gX = rankG.append("g")
+            rankG.append("g")
                 .attr("class", "x axis")
                 .attr("transform", "translate(0," + rankHeight + ")")
                 .call(xAxis);
 
-            let gY = rankG.append("g")
+            rankG.append("g")
                 .attr("class", "y axis")
                 .call(yAxis);
            

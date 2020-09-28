@@ -1016,13 +1016,13 @@ export default {
                         $('.costNumberView').find('.tbody').find('.tr').css('background-color','#fff');
                         $('#tr_'+d.name).css('border-color','#5DA5B3');
                         $('#tr_'+d.name).css('background-color','#5DA5B3');
-
+                        self.$emit('radarBankName',d.name);
                     })
-                    // .append("title")   //堆叠图上的title悬浮
-                    // .text(function(d){
+                    .append("title")   //堆叠图上的title悬浮
+                    .text(function(d){
 
-                    //     return `${d.name} ${self.valueWeight[d.key]['label']}${(d.data[d.key])}`;
-                    // });
+                        return `${d.name} ${self.valueWeight[d.key]['label']}${(d.data[d.key])}`;
+                    });
                 g.append("g")
                     .call(yAxis);
             });

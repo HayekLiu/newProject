@@ -43,7 +43,7 @@ export default {
                 },
                 tooltip: {
                     trigger:'item',
-                    position:'top',
+                    position:'right',
                     fontSize:12,
                   
                 },
