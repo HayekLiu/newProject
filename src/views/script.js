@@ -185,7 +185,8 @@ export default {
                 item['scheme'] = 'Default Scheme'
             })
             for(let i=1; i<self.rankAxisDataArrays.length; i++){
-                let a = parseInt(i/3)+1
+                //let a = parseInt(i/3)+1
+                let a = 1
                 let b = i%3
                 let type =null
                 if(b==1) type = 'Scheme ' + a+': Local Weight'
@@ -303,7 +304,7 @@ export default {
             var svmC = 1.0;
             svm.train(data, labels, { kernel: 'linear' , C: svmC});
             wb= svm.getWeights();
-            wb['w'] = self.getPercentWeight(wb['w'])
+            // wb['w'] = self.getPercentWeight(wb['w'])
             let valueWeight = [];
             // let fieldSymbol = {}
             fieldList.map((field, i)=>{
@@ -363,7 +364,7 @@ export default {
                     let svm= new svmjs.SVM();
                     svm.train(data, labels, { kernel: 'linear' , C: 1.0});
                     let wb= svm.getWeights(); // weights and offset structure
-                    wb['w'] = self.getPercentWeight(wb['w'])
+                    // wb['w'] = self.getPercentWeight(wb['w'])
                     console.log(wb)
                     let valueWeight = [];
                     fieldList.map((field, i)=>{
@@ -424,7 +425,7 @@ export default {
             var svmC = 1.0;
             svm.train(data, labels, { kernel: 'linear' , C: svmC});
             wb= svm.getWeights();
-            wb['w'] = self.getPercentWeight(wb['w'])
+            //wb['w'] = self.getPercentWeight(wb['w'])
 
             console.log('wb123', wb)
             let valueWeight = [];
@@ -678,13 +679,16 @@ export default {
             
             this.valueWeight = this.getDefaultSVMWeight(this.rankAxisData, val);
             this.init(true);
+            console.log('valueWeight', this.valueWeight)
             //this.getLocSVMWeight(this.rankAxisData, val);
             this.valueWeight = this.getGobalSVMWeight(this.rankAxisData, val);
             this.init(true);
+            console.log('valueWeight', this.valueWeight)
 
             this.typeValueWeight = this.getLocSVMWeight(this.rankAxisData, val);
             console.log('typeValueWeight',  this.typeValueWeight)
             this.init(false);
+            console.log('valueWeight', this.typeValueWeight)
 
 
             console.log('rankAxisDataArrays', this.rankAxisDataArrays)
