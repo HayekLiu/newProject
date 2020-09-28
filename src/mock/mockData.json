@@ -1,7 +1,7 @@
 [
   {
     "name": "工商银行",
-    "type": "大型商业银行",
+    "type": "Large State-owned Commercial Bank",
     "assetSize": 276995,
     "capitalAdequacyRatio": 0.1539,
     "nonPerformingLoansRatio": 0.0152,
@@ -14,7 +14,7 @@
   },
   {
     "name": "建设银行",
-    "type": "大型商业银行",
+    "type": "Large State-owned Commercial Bank",
     "assetSize": 232227,
     "capitalAdequacyRatio": 0.1719,
     "nonPerformingLoansRatio": 0.0146,
@@ -27,7 +27,7 @@
   },
   {
     "name": "农业银行",
-    "type": "大型商业银行",
+    "type": "Large State-owned Commercial Bank",
     "assetSize": 226095,
     "capitalAdequacyRatio": 0.1512,
     "nonPerformingLoansRatio": 0.0159,
@@ -40,7 +40,7 @@
   },
   {
     "name": "中国银行",
-    "type": "大型商业银行",
+    "type": "Large State-owned Commercial Bank",
     "assetSize": 212673,
     "capitalAdequacyRatio": 0.1497,
     "nonPerformingLoansRatio": 0.0142,
@@ -53,7 +53,7 @@
   },
   {
     "name": "交通银行",
-    "type": "大型商业银行",
+    "type": "Large State-owned Commercial Bank",
     "assetSize": 95312,
     "capitalAdequacyRatio": 0.1437,
     "nonPerformingLoansRatio": 0.0149,
@@ -66,7 +66,7 @@
   },
   {
     "name": "邮储银行",
-    "type": "大型商业银行",
+    "type": "Large State-owned Commercial Bank",
     "assetSize": 95162,
     "capitalAdequacyRatio": 0.1376,
     "nonPerformingLoansRatio": 0.0086,
@@ -79,7 +79,7 @@
   },
   {
     "name": "招商银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 67457,
     "capitalAdequacyRatio": 0.1568,
     "nonPerformingLoansRatio": 0.0136,
@@ -92,7 +92,7 @@
   },
   {
     "name": "兴业银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 67117,
     "capitalAdequacyRatio": 0.122,
     "nonPerformingLoansRatio": 0.0157,
@@ -105,7 +105,7 @@
   },
   {
     "name": "浦发银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 62896,
     "capitalAdequacyRatio": 0.1367,
     "nonPerformingLoansRatio": 0.0192,
@@ -118,7 +118,7 @@
   },
   {
     "name": "中信银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 60667,
     "capitalAdequacyRatio": 0.1247,
     "nonPerformingLoansRatio": 0.0177,
@@ -131,7 +131,7 @@
   },
   {
     "name": "光大银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 43573,
     "capitalAdequacyRatio": 0.1301,
     "nonPerformingLoansRatio": 0.0159,
@@ -144,7 +144,7 @@
   },
   {
     "name": "平安银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 34186,
     "capitalAdequacyRatio": 0.115,
     "nonPerformingLoansRatio": 0.0175,
@@ -157,7 +157,7 @@
   },
   {
     "name": "北京银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 25729,
     "capitalAdequacyRatio": 0.1207,
     "nonPerformingLoansRatio": 0.0146,
@@ -170,7 +170,7 @@
   },
   {
     "name": "上海银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 20278,
     "capitalAdequacyRatio": 0.13,
     "nonPerformingLoansRatio": 0.0114,
@@ -183,7 +183,7 @@
   },
   {
     "name": "民生银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 59948,
     "capitalAdequacyRatio": 0.1175,
     "nonPerformingLoansRatio": 0.0176,
@@ -196,7 +196,7 @@
   },
   {
     "name": "华夏银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 26806,
     "capitalAdequacyRatio": 0.1319,
     "nonPerformingLoansRatio": 0.0185,
@@ -209,7 +209,7 @@
   },
   {
     "name": "广发银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 23609,
     "capitalAdequacyRatio": 0.1178,
     "nonPerformingLoansRatio": 0.0145,
@@ -222,7 +222,7 @@
   },
   {
     "name": "江苏银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 19258,
     "capitalAdequacyRatio": 0.1255,
     "nonPerformingLoansRatio": 0.0139,
@@ -235,7 +235,7 @@
   },
   {
     "name": "浙商银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 16467,
     "capitalAdequacyRatio": 0.1338,
     "nonPerformingLoansRatio": 0.012,
@@ -248,7 +248,7 @@
   },
   {
     "name": "南京银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 12433,
     "capitalAdequacyRatio": 0.1293,
     "nonPerformingLoansRatio": 0.0089,
@@ -261,7 +261,7 @@
   },
   {
     "name": "宁波银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 11164,
     "capitalAdequacyRatio": 0.1486,
     "nonPerformingLoansRatio": 0.0078,
@@ -274,7 +274,7 @@
   },
   {
     "name": "徽商银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 10505,
     "capitalAdequacyRatio": 0.1165,
     "nonPerformingLoansRatio": 0.0104,
@@ -287,7 +287,7 @@
   },
   {
     "name": "渤海银行",
-    "type": "股份制商业银行",
+    "type": "Joint-stock Commercial Bank",
     "assetSize": 10345,
     "capitalAdequacyRatio": 0.1177,
     "nonPerformingLoansRatio": 0.0184,
@@ -300,7 +300,7 @@
   },
   {
     "name": "重庆农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 9506,
     "capitalAdequacyRatio": 0.1352,
     "nonPerformingLoansRatio": 0.0129,
@@ -313,7 +313,7 @@
   },
   {
     "name": "杭州银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 9211,
     "capitalAdequacyRatio": 0.1371,
     "nonPerformingLoansRatio": 0.0145,
@@ -326,7 +326,7 @@
   },
   {
     "name": "北京农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 8811,
     "capitalAdequacyRatio": 0.1526,
     "nonPerformingLoansRatio": 0.0036,
@@ -339,7 +339,7 @@
   },
   {
     "name": "厦门国际银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 8061,
     "capitalAdequacyRatio": 0.1277,
     "nonPerformingLoansRatio": 0.0073,
@@ -352,7 +352,7 @@
   },
   {
     "name": "上海农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 8337,
     "capitalAdequacyRatio": 0.1575,
     "nonPerformingLoansRatio": 0.0113,
@@ -365,7 +365,7 @@
   },
   {
     "name": "广州农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 7633,
     "capitalAdequacyRatio": 0.1428,
     "nonPerformingLoansRatio": 0.0127,
@@ -378,7 +378,7 @@
   },
   {
     "name": "长沙银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 5266,
     "capitalAdequacyRatio": 0.1224,
     "nonPerformingLoansRatio": 0.0129,
@@ -391,7 +391,7 @@
   },
   {
     "name": "广州银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 5136,
     "capitalAdequacyRatio": 0.1338,
     "nonPerformingLoansRatio": 0.0086,
@@ -404,7 +404,7 @@
   },
   {
     "name": "贵阳银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 5033,
     "capitalAdequacyRatio": 0.1297,
     "nonPerformingLoansRatio": 0.0135,
@@ -417,7 +417,7 @@
   },
   {
     "name": "天津银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 6593,
     "capitalAdequacyRatio": 0.1453,
     "nonPerformingLoansRatio": 0.0164,
@@ -430,7 +430,7 @@
   },
   {
     "name": "中原银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 6170,
     "capitalAdequacyRatio": 0.1437,
     "nonPerformingLoansRatio": 0.0244,
@@ -443,7 +443,7 @@
   },
   {
     "name": "成都银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 4923,
     "capitalAdequacyRatio": 0.1408,
     "nonPerformingLoansRatio": 0.0154,
@@ -455,21 +455,8 @@
     "costToIncomeRatio": 0.2577
   },
   {
-    "name": "汇丰中国",
-    "type": "城市商业银行",
-    "assetSize": 4763,
-    "capitalAdequacyRatio": 0.183,
-    "nonPerformingLoansRatio": 0.0043,
-    "specialMentionedLoansRatio": 0.0283,
-    "provisionCoverage": 3.5341,
-    "liquidityRatio": 0.0358,
-    "assetProfitRatio": 0.0082,
-    "capitalProfitRatio": 0.0809,
-    "costToIncomeRatio": 0.5405
-  },
-  {
     "name": "重庆银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 4504,
     "capitalAdequacyRatio": 0.1321,
     "nonPerformingLoansRatio": 0.0136,
@@ -482,7 +469,7 @@
   },
   {
     "name": "东莞农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 4082,
     "capitalAdequacyRatio": 0.1484,
     "nonPerformingLoansRatio": 0.0127,
@@ -495,7 +482,7 @@
   },
   {
     "name": "深圳农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 3169,
     "capitalAdequacyRatio": 0.1368,
     "nonPerformingLoansRatio": 0.0114,
@@ -508,7 +495,7 @@
   },
   {
     "name": "东莞银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 3145,
     "capitalAdequacyRatio": 0.1303,
     "nonPerformingLoansRatio": 0.0139,
@@ -521,7 +508,7 @@
   },
   {
     "name": "苏州银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 3111,
     "capitalAdequacyRatio": 0.1296,
     "nonPerformingLoansRatio": 0.017,
@@ -534,7 +521,7 @@
   },
   {
     "name": "广东顺德农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 2979,
     "capitalAdequacyRatio": 0.1395,
     "nonPerformingLoansRatio": 0.0176,
@@ -547,7 +534,7 @@
   },
   {
     "name": "西安银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2435,
     "capitalAdequacyRatio": 0.1417,
     "nonPerformingLoansRatio": 0.012,
@@ -560,7 +547,7 @@
   },
   {
     "name": "厦门银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2324,
     "capitalAdequacyRatio": 0.1503,
     "nonPerformingLoansRatio": 0.0133,
@@ -573,7 +560,7 @@
   },
   {
     "name": "温州银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2278,
     "capitalAdequacyRatio": 0.1185,
     "nonPerformingLoansRatio": 0.0172,
@@ -586,7 +573,7 @@
   },
   {
     "name": "晋商银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2276,
     "capitalAdequacyRatio": 0.1299,
     "nonPerformingLoansRatio": 0.0188,
@@ -599,7 +586,7 @@
   },
   {
     "name": "杭州联合农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 2099,
     "capitalAdequacyRatio": 0.1468,
     "nonPerformingLoansRatio": 0.0133,
@@ -612,7 +599,7 @@
   },
   {
     "name": "重庆三峡银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2047,
     "capitalAdequacyRatio": 0.1293,
     "nonPerformingLoansRatio": 0.013,
@@ -625,7 +612,7 @@
   },
   {
     "name": "郑州银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 4661,
     "capitalAdequacyRatio": 0.1315,
     "nonPerformingLoansRatio": 0.0246,
@@ -638,7 +625,7 @@
   },
   {
     "name": "江西银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 4191,
     "capitalAdequacyRatio": 0.136,
     "nonPerformingLoansRatio": 0.019,
@@ -651,7 +638,7 @@
   },
   {
     "name": "江苏江南农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 3798,
     "capitalAdequacyRatio": 0.1295,
     "nonPerformingLoansRatio": 0.0181,
@@ -664,7 +651,7 @@
   },
   {
     "name": "九江银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 3116,
     "capitalAdequacyRatio": 0.1155,
     "nonPerformingLoansRatio": 0.0199,
@@ -677,7 +664,7 @@
   },
   {
     "name": "青岛农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 2941,
     "capitalAdequacyRatio": 0.1255,
     "nonPerformingLoansRatio": 0.0157,
@@ -690,7 +677,7 @@
   },
   {
     "name": "齐鲁银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2657,
     "capitalAdequacyRatio": 0.145,
     "nonPerformingLoansRatio": 0.0164,
@@ -703,7 +690,7 @@
   },
   {
     "name": "长安银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2413,
     "capitalAdequacyRatio": 0.1098,
     "nonPerformingLoansRatio": 0.0178,
@@ -716,7 +703,7 @@
   },
   {
     "name": "华兴银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 1968,
     "capitalAdequacyRatio": 0.127,
     "nonPerformingLoansRatio": 0.0109,
@@ -729,7 +716,7 @@
   },
   {
     "name": "江苏紫金农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 1932,
     "capitalAdequacyRatio": 0.1335,
     "nonPerformingLoansRatio": 0.0169,
@@ -742,7 +729,7 @@
   },
   {
     "name": "台州银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 1894,
     "capitalAdequacyRatio": 0.1639,
     "nonPerformingLoansRatio": 0.0064,
@@ -755,7 +742,7 @@
   },
   {
     "name": "珠海华润银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 1745,
     "capitalAdequacyRatio": 0.1277,
     "nonPerformingLoansRatio": 0.0191,
@@ -768,7 +755,7 @@
   },
   {
     "name": "浙江泰隆商行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 1686,
     "capitalAdequacyRatio": 0.152,
     "nonPerformingLoansRatio": 0.0116,
@@ -781,7 +768,7 @@
   },
   {
     "name": "江苏常熟农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 1667,
     "capitalAdequacyRatio": 0.1512,
     "nonPerformingLoansRatio": 0.0099,
@@ -794,7 +781,7 @@
   },
   {
     "name": "浙江萧山农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 1579,
     "capitalAdequacyRatio": 0.1389,
     "nonPerformingLoansRatio": 0.0122,
@@ -807,7 +794,7 @@
   },
   {
     "name": "乌鲁木齐银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 1527,
     "capitalAdequacyRatio": 0.1758,
     "nonPerformingLoansRatio": 0.0193,
@@ -820,7 +807,7 @@
   },
   {
     "name": "赣州银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 1365,
     "capitalAdequacyRatio": 0.1209,
     "nonPerformingLoansRatio": 0.0188,
@@ -833,7 +820,7 @@
   },
   {
     "name": "江苏苏州农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 1168,
     "capitalAdequacyRatio": 0.1489,
     "nonPerformingLoansRatio": 0.0131,
@@ -846,7 +833,7 @@
   },
   {
     "name": "江苏江阴农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 1149,
     "capitalAdequacyRatio": 0.1521,
     "nonPerformingLoansRatio": 0.0215,
@@ -859,7 +846,7 @@
   },
   {
     "name": "江苏昆山农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 1017,
     "capitalAdequacyRatio": 0.1371,
     "nonPerformingLoansRatio": 0.013,
@@ -872,7 +859,7 @@
   },
   {
     "name": "甘肃银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 3286,
     "capitalAdequacyRatio": 0.1355,
     "nonPerformingLoansRatio": 0.0229,
@@ -885,7 +872,7 @@
   },
   {
     "name": "南粤银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 2049,
     "capitalAdequacyRatio": 0.1157,
     "nonPerformingLoansRatio": 0.0195,
@@ -898,7 +885,7 @@
   },
   {
     "name": "江苏张家港农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 1134.46,
     "capitalAdequacyRatio": 0.1565,
     "nonPerformingLoansRatio": 0.0147,
@@ -911,7 +898,7 @@
   },
   {
     "name": "金华银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 721,
     "capitalAdequacyRatio": 0.1384,
     "nonPerformingLoansRatio": 0.0169,
@@ -924,7 +911,7 @@
   },
   {
     "name": "嘉兴银行",
-    "type": "城市商业银行",
+    "type": "City Commercial Bank",
     "assetSize": 673,
     "capitalAdequacyRatio": 0.1248,
     "nonPerformingLoansRatio": 0.0113,
@@ -937,7 +924,7 @@
   },
   {
     "name": "江苏盐城农商",
-    "type": "农村商业银行",
+    "type": "Rural Commercial Bank",
     "assetSize": 316,
     "capitalAdequacyRatio": 0.1367,
     "nonPerformingLoansRatio": 0.0202,

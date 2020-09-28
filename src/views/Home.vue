@@ -5,18 +5,18 @@
       class="flex flex-center space-between header"
     >
       <div class="nav">
-        <span class="text-primary">RankAxis: Towards a Systematic Combination of Projection and Ranking in Multi-Attribute Data Exploration</span>
+        <span class="text-primary">A Visual Analytics Approach to Tackling the Problem of Bank Rating using Hierarchical Weighting Adjustment</span>
       </div>
     </header>
     <div style="height:30px;"></div>
     <!-- 左侧 -->
-    <div style="width:24%;height:100%;position: absolute;border-right: 1px solid #ccc;">
+    <div style="width:24%;height:calc(68% - 30px);position: absolute;border-right: 1px solid #ccc;">
       <div style="height:calc(100% - 24vw);">
-      
+
       </div>
       <Radar :indicator='indicator' :radarSeriesData = 'radarSeriesData'/>
     </div>
-    <div style="width:76%;height:100%;margin-left:24%;">
+    <div style="width:76%;height:calc(68% - 30px);margin-left:24%;">
         <div class="main">
           <div class="right-box">
             <!-- 数据选择 -->
@@ -30,9 +30,15 @@
             </div>
             <!-- 数据选择 -->
             <div style="height: 65%; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;padding-right: 4px;padding-left: 4px;">
-            
+              <RankLink
+                :name-list-data="nameListData"
+                :tsne-arrays="tsneArrays"
+                :rank-axis-data-arrays ="rankAxisDataArrays"
+                :field-color = "fieldColor"
+              />
             </div>
           </div>
+        </div>
         </div>
         <div class="table-view">
           <TableView
@@ -42,14 +48,13 @@
             :field-symbol = "fieldSymbol"
             :valueWeightData='valueWeight'
             :rank-axis-data="rankAxisData"
+            :rankAxisDataTableArr = 'rankAxisDataTableArr'
             @dragBank = 'dragBank'
             @getChooseColor = 'getChooseColor'
             @deleteIndex = 'deleteIndex'
             @radarBankName = 'radarBankName'
           />
-        </div>
-    </div>
-    
+      </div>
   </div>
 </template>
 
@@ -73,9 +78,10 @@
     }
 
 .main{
-    display: flex;height: -moz-calc(67% - 30px);
-              height: -webkit-calc(67% - 30px);
-              height: calc(67% - 30px);;
+    display: flex;height: 100%;
+              // height: -moz-calc(100% - 30px);
+              // height: -webkit-calc(100% - 30px);
+              // height: calc(100% - 30px);;
     .left-box{
         width: 40%;
         /* padding-left: 2%; */
