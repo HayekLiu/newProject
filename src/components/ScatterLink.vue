@@ -118,16 +118,16 @@ export default {
 
                 blockg.append('text')
                     .text(()=>{
-                        if(k!=0){
-                            return 'Scheme'+k;
-                        }else{
-                            return 'Scheme';
-                        }
-                        // return 'Scheme'+(self.rankAxisDataArrays.length-k);
+                        // if(k!=0){
+                        //     return 'Scheme'+k;
+                        // }else{
+                        //     return 'Scheme';
+                        // }
+                        return self.rankAxisDataArrays[k][0].scheme;
                     })
-                    .style('font-size','12px')
+                    .style('font-size','8px')
                     .style('font-weight','bolder')
-                    .attr("transform", "translate("+padding.right+","+16+" )");
+                    .attr("transform", "translate("+padding.right+","+12+" )");
 
                 this.svg.append("line")
                     .style("stroke", "grey") 

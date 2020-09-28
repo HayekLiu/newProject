@@ -216,6 +216,18 @@ export default {
                 this.rankAxisDataTableArr.push(this.rankAxisDataTable);
             }
 
+            for(let i=1; i<self.rankAxisDataTableArr.length; i++){
+                let a = parseInt(i/3)+1
+                let b = i%3
+                let type =null
+                if(b==1) type = 'Scheme ' + a+': Local Weight'
+                if(b==2) type = 'Scheme ' + a+': Global Weight'
+                if(b==0) type = 'Scheme ' + a+': Type Weight'
+                self.rankAxisDataTableArr[i].map(item=>{
+                    item['scheme'] = type
+                })
+            }
+
             // let a = self.getTsneData(weightData);
             // let b = self.getTsneData(weightData);
             // let c = self.getTsneData(weightData);
@@ -242,13 +254,13 @@ export default {
         getRandom(n, min, max){
             var arr=[];
             for(let i=0;i<n;i++){
-             arr[i]=parseInt(Math.random()*(max-min+1)+min);
-             for(let j=0;j<i;j++){
-              if(arr[i]==arr[j]){
-               i=i-1;
-               break;
-              }
-             }
+                arr[i]=parseInt(Math.random()*(max-min+1)+min);
+                for(let j=0;j<i;j++){
+                    if(arr[i]==arr[j]){
+                        i=i-1;
+                        break;
+                    }
+                }
             }
             return arr;
         },
@@ -687,9 +699,9 @@ export default {
 
         //删除堆叠图对应的删除投影图
         deleteIndex(index){
-            this.tsneArrays.splice(index-2,3);
-            this.rankAxisDataArrays.splice(index-2,3);
-            this.rankAxisDataTableArr.splice(index-2,3);
+            this.tsneArrays.splice(index,1);
+            this.rankAxisDataArrays.splice(index,1);
+            this.rankAxisDataTableArr.splice(index,1);
         },
 
 

@@ -79,6 +79,7 @@ export default {
             pageSize: 10,
             total: 20,
 
+            tableDataDefault:[],
             selectDadioArr:[],
             selectAllFlag:false,  //是否全选
             chooseArr:[],  //表格中选中的
@@ -179,7 +180,10 @@ export default {
                 });
             }
             d3.select('#svgDiv').remove();
-            this.draw(valArr);
+            if(this.tableDataDefault.length == 0){
+                this.tableDataDefault = this.deepClone(valArr)
+            }
+            this.draw(this.tableDataDefault);
   
         },
         rankAxisDataTable(val){
@@ -307,7 +311,9 @@ export default {
                     }
                 })
                 .style('width',function(d){
-                    if(d.name == 'name'||d.name == 'type'){
+                    if(d.name == 'name'){
+                        return '66px';
+                    }else if(d.name == 'type'){
                         return '80px';
                     }
                 })
@@ -798,6 +804,17 @@ export default {
                             return  "translate(" + ((width+stackedWid)*index+stackedWid) + "," + 40 + ")";
                         }
 
+                    })
+                    .on('mouseover',function(){
+                        //悬浮显示虚线框和删除按钮
+                        if(index>0){
+                            d3.selectAll('.isClose').style('display','none');
+                            d3.selectAll('.pathLink').style('display','none');
+                        
+                            d3.select('.pathLine_'+index).style('display','block');
+                            d3.select('.isClose'+index).style('display','block');
+                        }
+                        
                     });
 
                 // 权重柱状图
@@ -807,9 +824,9 @@ export default {
                     .attr("height", 16)
                     .attr("transform",function(){
                         if(index == 0){
-                            return  "translate(" + (stackedWid+70) + "," + 44 + ")";
+                            return  "translate(" + (stackedWid+76) + "," + 44 + ")";
                         }else{
-                            return  "translate(" + ((width+stackedWid)*index+stackedWid+70) + "," + 44 + ")";
+                            return  "translate(" + ((width+stackedWid)*index+stackedWid+76) + "," + 44 + ")";
                         }
                     });
 
@@ -860,59 +877,81 @@ export default {
                     .attr('width', 11);
 
 
-
-                if(index == 1){
-                    let pathLineData = [];
-                    pathLineData.push(
-                        {x:width+stackedWid*1.5,y:0},
-                        {x:(width+stackedWid)*4+stackedWid/2,y:0},
-                        {x:(width+stackedWid)*4+stackedWid/2,y:height},
-                        {x:width+stackedWid*1.5,y:height},
-                        {x:width+stackedWid*1.5,y:0}
-                    );
-                    let pathLine = svg.append("g")
-                        .attr('class','pathLine_'+index);
-                    d3.selectAll('.pathLink').remove();
-                    let lineFunction = d3.line()
-                        .x(function(d) {
-                            return d.x;
-                        })
-                        .y(function(d) { return d.y; });
+                //画虚线框
+                let pathLineData = [];
+                pathLineData.push(
+                    {x:width+stackedWid*1.5,y:0},
+                    {x:(width+stackedWid)*2+stackedWid/2,y:0},
+                    {x:(width+stackedWid)*2+stackedWid/2,y:height},
+                    {x:width+stackedWid*1.5,y:height},
+                    {x:width+stackedWid*1.5,y:0}
+                );
+                let pathLine = svg.append("g");
+                //.attr('class','pathLine_'+index);
+                d3.selectAll('.pathLink').remove();
+                if(index!=0){
+                    if(index == 1){
+                        
+                        let lineFunction = d3.line()
+                            .x(function(d) {
+                                return d.x;
+                            })
+                            .y(function(d) { return d.y; });
                         // .curve(d3.curveMonotoneX)
-                    pathLine.append("path")
-                        .attr("d", lineFunction(pathLineData))
-                        .attr('class', 'pathLink')
-                        .attr("stroke", 'red')
-                        .attr("stroke-width", 1)
-                        .attr("transform", "translate(" + 0 + ", 40)")
-                        .attr("opacity", 0.8)
-                        .style("stroke-dasharray", ("3, 3"))
-                        .attr("fill", "none");
+                        pathLine.append("path")
+                            .attr("d", lineFunction(pathLineData))
+                            .attr('class', 'pathLink pathLine_'+index)
+                            .attr("stroke", 'red')
+                            .attr("stroke-width", 1)
+                            .attr("transform", "translate(" + 0 + ", 40)")
+                            .attr("opacity", 0.8)
+                            .style("stroke-dasharray", ("3, 3"))
+                            .attr("fill", "none");
+                    }else{
+                        // d3.selectAll('.pathLink').remove();
+                        let lineFunction = d3.line()
+                            .x(function(d) {
+                                return d.x;
+                            })
+                            .y(function(d) { return d.y; });
+                        // .curve(d3.curveMonotoneX)
+                        pathLine.append("path")
+                            .attr("d", lineFunction(pathLineData))
+                            .attr('class', 'pathLink pathLine_'+index)
+                            .attr("stroke", 'red')
+                            .attr("stroke-width", 1)
+                            // .attr("transform", "translate(" + 0 + ", 40)")
+                            .attr("opacity", 0.8)
+                            .style("stroke-dasharray", ("3, 3"))
+                            .attr("fill", "none")
+                            .attr("transform",function(){
+                                return  "translate(" + ((width+stackedWid)*(index-1)) + "," + 40 + ")";
+                            })
+                            .style('display','none');
+                    }
                 }
 
 
                 //方案排序
                 g.append('text')
                     .attr('dy',12)
-                    .attr('dx',10)
-                    .style('font-size', '12px')
+                    .attr('dx',-20)
+                    .style('font-size', '8px')
                     .style('font-weight', 'light')
                     .style('font-weight','bolder')
                     .style('cursor', 'pointer')
                     .text(function(){
-                        if(index>0){
-                            return 'Scheme'+(index);
-                        }else{
-                            return 'Scheme';
-                        }
+
+                        return item.dataTable[0].scheme;
+                        // if(index>0){
+                        //     return 'Scheme'+(index);
+                        // }else{
+                        //     return 'Scheme';
+                        // }
 
                     })
                     .on('click',function(){
-                        if(index>1){
-                            console.log('方案Scheme'+index);
-                        }else{
-                            console.log('方案Scheme');
-                        }
+                        console.log('方案Scheme'+item.dataTable[0].scheme);
                     });
 
                 let isClose = require('./../assets/images/isClose.svg');
@@ -921,7 +960,7 @@ export default {
                     .attr('width', 14)
                     .attr('x',()=>width+10)
                     .attr('xlink:href',function(){
-                        if(index== 3){
+                        if(index!= 0){
                             return isClose;
                         }
                     })
@@ -930,11 +969,13 @@ export default {
                         if(index!=0){
                             self.stackedDataFlag = false;
                             self.$emit('deleteIndex',index);
-                            self.stackedFigureData.splice(index-2,3);
+                            self.stackedFigureData.splice(index,1);
                             self.stacked();
                         }
 
                     })
+                    .attr('class','isClose'+index+' isClose')
+                    .style('display','none');
 
 
                 let pd = g.selectAll("g")
@@ -1362,7 +1403,7 @@ export default {
     align-items: center;
 
     .btn-box{
-        width: 100%;display: flex;justify-content: flex-start;align-items: center;height: 60px;line-height: 30px;padding-left:10px;
+        width: 100%;display: flex;justify-content: flex-start;align-items: center;height: 30px;line-height: 30px;padding-left:10px;
         .saveBtn{
             background-color: #409EFF;color: #fff;height: 24px;line-height: 24px;padding:0 10px;border-radius: 4px;cursor: pointer;font-size: 12px;font-weight: bold;flex: 0 0 auto;
         }
@@ -1380,16 +1421,16 @@ export default {
     .costNumberView {
         width: 100%;
         /* height: 100%; */
-        height: -moz-calc(100% - 60px);
-        height: -webkit-calc(100% - 60px);
-        height: calc(100% - 60px);
+        height: -moz-calc(100% - 30px);
+        height: -webkit-calc(100% - 30px);
+        height: calc(100% - 30px);
         overflow-x: hidden;
         overflow-y: auto;
         display: flex;
         
         .th {   
                 position: absolute;
-                top: 50px;
+                top: 30px;
                 background-color:#fff;
                 display: flex;
                 align-items: center;
