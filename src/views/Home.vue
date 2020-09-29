@@ -10,17 +10,16 @@
     </header>
     <div style="height:30px;"></div>
     <!-- 左侧 -->
-    <div style="width:24%;height:calc(68% - 30px);position: absolute;border-right: 1px solid #ccc;">
-      <!-- <div style="height:calc(100% - 24vw);">
-
+    <!-- <div style="width:24%;height:calc(68% - 30px);position: absolute;border-right: 1px solid #ccc;">
+      <div style="height:calc(100% - 24vw);">
       </div>
-      <Radar :indicator='indicator' :radarSeriesData = 'radarSeriesData'/> -->
-    </div>
-    <div style="width:76%;height:calc(68% - 30px);margin-left:24%;">
+      <Radar :indicator='indicator' :radarSeriesData = 'radarSeriesData'/>
+    </div> -->
+    <div style="width:100%;height:calc(68% - 30px);margin-left:0%;">
         <div class="main">
           <div class="right-box">
             <!-- 数据选择 -->
-            <div style="height: 35%;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;">
+            <div style="height: 45%;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;">
               <ScatterLink
                 :name-list-data="nameListData"
                 :tsne-arrays="tsneArrays"
@@ -29,7 +28,7 @@
               />
             </div>
             <!-- 数据选择 -->
-            <div style="height: 65%; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;padding-right: 4px;padding-left: 4px;">
+            <div style="height: 55%; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;padding-right: 4px;padding-left: 4px;">
               <RankLink
                 :name-list-data="nameListData"
                 :tsne-arrays="tsneArrays"

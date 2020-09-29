@@ -125,7 +125,7 @@ export default {
                         // }
                         return self.rankAxisDataArrays[k][0].scheme;
                     })
-                    .style('font-size','8px')
+                    .style('font-size','11px')
                     .style('font-weight','bolder')
                     .attr("transform", "translate("+padding.right+","+12+" )");
 
