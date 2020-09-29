@@ -141,8 +141,8 @@ export default {
                 nameList.push(item.name);
                 typeList.push(item.type)
                 values.push(Object.values(copyItem).map(value=>Number.parseFloat(value) || 0));
-               
             });
+
             //console.log('values', values)
             this.fieldList = Object.keys(self.valueWeight)
             //console.log('this.fieldList', this.fieldList)
@@ -165,7 +165,7 @@ export default {
             // ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6']
             //d3.schemeCategory10
             this.nameListData = nameList;
-            let weightData
+            let weightData;
             if(flag){
                 weightData = self.getWeightData(values, this.fieldList, typeList, true);
             }

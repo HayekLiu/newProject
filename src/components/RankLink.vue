@@ -82,14 +82,12 @@ export default {
             width = width - margin.left - margin.right;
             height = height - margin.top - margin.bottom;
 
-
             let svg = d3.select("#" + this.id).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.left + margin.right)
                 .attr("id", "svg" + this.id)
             
             let rankHeight = height/2
-
 
             // let dashLineData =[
             //     {'x1': 0, 'y1': legendHeight+projectHeight+10, 'x2':  clientWidth, 'y2': legendHeight+projectHeight+10}
@@ -106,10 +104,10 @@ export default {
             //     .attr("y1", d=>(d.y1))
             //     .attr("x2", d=>(d.x2))
             //     .attr("y2", d=>(d.y2))
-
+            let axisHeight = height/7
             let rankG = svg
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                .attr("transform", "translate(" + margin.left + "," + (margin.top+axisHeight) + ")");
             
             let xScale = d3.scaleLinear()
                 .range([0, width])
@@ -147,7 +145,7 @@ export default {
                         // return colorRed(d.score/100);
                     })
                     .attr('cx', d=> xScale(d.rank))
-                    .attr('cy', d=> yScale(d.score))
+                    .attr('cy', d=> 0)
                     .attr('stroke', 'black')
                     // .attr('stroke', '#D0CECE')
                     .attr('stroke-width', '1px')
@@ -220,12 +218,12 @@ export default {
 
             rankG.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(0," + rankHeight + ")")
+                .attr("transform", "translate(0," + 0 + ")")
                 .call(xAxis);
 
-            rankG.append("g")
-                .attr("class", "y axis")
-                .call(yAxis);
+            // rankG.append("g")
+            //     .attr("class", "y axis")
+            //     .call(yAxis);
            
         },
         deepClone(source){
