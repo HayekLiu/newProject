@@ -3,7 +3,7 @@ import TSNE from 'tsne-js';
 // import { formatBigNum, deepClone, formatFloat } from 'common/utils';
 
 import TableView from '@/components/TableView.vue';
-import Radar from '@/components/Radar.vue';
+// import Radar from '@/components/Radar.vue';
 import ScatterLink from '@/components/ScatterLink.vue';
 import RankLink from '@/components/RankLink.vue';
 import mockData from './../mock/mockData.json';
@@ -14,7 +14,7 @@ export default {
     name: 'Home',
     components: {
         TableView,
-        Radar,
+        
         ScatterLink,
         RankLink
     },
@@ -109,7 +109,7 @@ export default {
     },
     mounted(){
         this.init(true);
-        this.radarDataFun(this.tableData);
+        // this.radarDataFun(this.tableData);
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
         
@@ -708,90 +708,90 @@ export default {
         },
 
 
-        //雷达图
-        radarDataFun(tableData){
-            let self = this;
-            //console.log(this.$refs.tree.getCheckedNodes().map(item=>item.label));
-            //雷达图信息
-            let indicatorArr = [];
-            for(let i in self.valueWeight){
-                let maxData = d3.max(tableData, item => {
-                    return item[i];
-                });
-                indicatorArr.push({name:self.tableDataObj[i].label,max:maxData})
-            }
-            console.log(' self.indicator==========>', self.indicator)
-            self.indicator = indicatorArr;
-        },
+        // //雷达图
+        // radarDataFun(tableData){
+        //     let self = this;
+        //     //console.log(this.$refs.tree.getCheckedNodes().map(item=>item.label));
+        //     //雷达图信息
+        //     let indicatorArr = [];
+        //     for(let i in self.valueWeight){
+        //         let maxData = d3.max(tableData, item => {
+        //             return item[i];
+        //         });
+        //         indicatorArr.push({name:self.tableDataObj[i].label,max:maxData})
+        //     }
+        //     console.log(' self.indicator==========>', self.indicator)
+        //     self.indicator = indicatorArr;
+        // },
 
 
-        //表格选中的银行
-        radarBankName(name){
-            let self = this;
-            let bankType;
-            let bankData;
-            self.tableData.map(item=>{
-                if(item.name == name){
-                    bankData = item;
-                    bankType = item.type;
-                }
-            });
+        // //表格选中的银行
+        // radarBankName(name){
+        //     let self = this;
+        //     let bankType;
+        //     let bankData;
+        //     self.tableData.map(item=>{
+        //         if(item.name == name){
+        //             bankData = item;
+        //             bankType = item.type;
+        //         }
+        //     });
 
-            let bankTypeArr = self.tableData.filter(item=>{
-                if(bankType == item.type){
-                    return item;
-                }
-            });
-            self.radarDataFun(bankTypeArr)
-            // this.valueWeight
-            let values = [];
-            let seriesData  = [];
-            for(let i in self.valueWeight){  //权重字段
-                values.push(bankData[i])
-            }
-            seriesData.push({
-                name:bankData.name,
-                value:values,
-                // lineStyle: { // 单项线条样式。
-                //     color:_this.colorList[bankData],
-                // }
-            });
+        //     let bankTypeArr = self.tableData.filter(item=>{
+        //         if(bankType == item.type){
+        //             return item;
+        //         }
+        //     });
+        //     self.radarDataFun(bankTypeArr)
+        //     // this.valueWeight
+        //     let values = [];
+        //     let seriesData  = [];
+        //     for(let i in self.valueWeight){  //权重字段
+        //         values.push(bankData[i])
+        //     }
+        //     seriesData.push({
+        //         name:bankData.name,
+        //         value:values,
+        //         // lineStyle: { // 单项线条样式。
+        //         //     color:_this.colorList[bankData],
+        //         // }
+        //     });
 
-            let clusterNumData = bankTypeArr.map((item)=>{
-                // this.valueWeight
-                let values = [];
-                for(let i in self.valueWeight){  //权重字段
-                    values.push(item[i])
-                }
-                return values
-            })
+        //     let clusterNumData = bankTypeArr.map((item)=>{
+        //         // this.valueWeight
+        //         let values = [];
+        //         for(let i in self.valueWeight){  //权重字段
+        //             values.push(item[i])
+        //         }
+        //         return values
+        //     })
 
-            let clusterAverageVue = [];
-            for(let j = 0;j < clusterNumData[0].length; j++){
-                let avegeNum = 0;
-                for(let m = 0;m < clusterNumData.length; m++){
-                    avegeNum += clusterNumData[m][j]
-                }
-                clusterAverageVue.push(Math.floor(avegeNum/clusterNumData.length*100)/100);
-            }
+        //     let clusterAverageVue = [];
+        //     for(let j = 0;j < clusterNumData[0].length; j++){
+        //         let avegeNum = 0;
+        //         for(let m = 0;m < clusterNumData.length; m++){
+        //             avegeNum += clusterNumData[m][j]
+        //         }
+        //         clusterAverageVue.push(Math.floor(avegeNum/clusterNumData.length*100)/100);
+        //     }
 
-            let clusterAverage = {
-                name:'均值',
-                value:clusterAverageVue,
-                // lineStyle: { // 单项线条样式。
-                //     color:this.clusterArrColor[i],
-                // },
-            };
+        //     let clusterAverage = {
+        //         name:'均值',
+        //         value:clusterAverageVue,
+        //         // lineStyle: { // 单项线条样式。
+        //         //     color:this.clusterArrColor[i],
+        //         // },
+        //     };
 
-            seriesData.push(clusterAverage)
+        //     seriesData.push(clusterAverage)
 
-            // this.selectedTableData,this.valueWeight
+        //     // this.selectedTableData,this.valueWeight
 
 
-            self.radarSeriesData = seriesData;
+        //     self.radarSeriesData = seriesData;
 
-            // console.log(seriesData)
-        }
+        //     // console.log(seriesData)
+        // }
 
     },
 };

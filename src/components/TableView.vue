@@ -352,7 +352,7 @@ export default {
                     $(this).css('border-color','#5DA5B3');
                     $(this).css('background-color','#5DA5B3');
 
-                    _this.$emit('radarBankName',d.name)
+                    // _this.$emit('radarBankName',d.name)
                 })
                 .attr('id',function(d){
                     return 'tr_'+d.name;
@@ -502,7 +502,7 @@ export default {
             //     nameArr.push(bankName[i].innerText);
             // }
 
-            console.log('rankAxisDataTableArr=========>',this.rankAxisDataTableArr)
+            console.log('rankAxisDataTableArr=========>',this.rankAxisDataTableArr);
 
             if(self.stackedDataFlag){
                 self.stackedFigureData = [];
@@ -796,7 +796,7 @@ export default {
                     .call(g => g.selectAll(".domain").remove());
 
                 let g = svg.append("g")
-                    .attr('class','g_'+index)
+                    .attr('class','g_drag g_'+index)
                     .attr("transform",function(){
                         if(index == 0){
                             return  "translate(" + stackedWid + "," + 40 + ")";
@@ -817,64 +817,64 @@ export default {
                         
                     });
 
-                // 权重柱状图
-                let weightG = svg.append("g")
-                    .attr('class','g_weight'+index)
-                    .attr("width", 117)
-                    .attr("height", 16)
-                    .attr("transform",function(){
-                        if(index == 0){
-                            return  "translate(" + (stackedWid+76) + "," + 44 + ")";
-                        }else{
-                            return  "translate(" + ((width+stackedWid)*index+stackedWid+76) + "," + 44 + ")";
-                        }
-                    });
+                // // 权重柱状图
+                // let weightG = svg.append("g")
+                //     .attr('class','g_weight'+index)
+                //     .attr("width", 117)
+                //     .attr("height", 16)
+                //     .attr("transform",function(){
+                //         if(index == 0){
+                //             return  "translate(" + (stackedWid+76) + "," + 44 + ")";
+                //         }else{
+                //             return  "translate(" + ((width+stackedWid)*index+stackedWid+76) + "," + 44 + ")";
+                //         }
+                //     });
 
-                let weighData = item.weighData;
+                // let weighData = item.weighData;
 
-                console.log('weighData', weighData);
-                let weightX = d3.scaleLinear()
-                    .domain([0, weighData.length])
-                    .range([0, 117]);
+                // console.log('weighData11111111111111111111', weighData);
+                // let weightX = d3.scaleLinear()
+                //     .domain([0, weighData.length])
+                //     .range([0, 117]);
 
-                let weightYPosition = d3.scaleLinear()
-                    .domain(d3.extent(weighData, d => Math.abs(d.value)))
-                    .range([8, 0]);
+                // let weightYPosition = d3.scaleLinear()
+                //     .domain(d3.extent(weighData, d => Math.abs(d.value)))
+                //     .range([8, 0]);
 
-                let weightYNegative = d3.scaleLinear()
-                    .domain(d3.extent(weighData, d => Math.abs(d.value)))
-                    .range([0, 8]);
+                // let weightYNegative = d3.scaleLinear()
+                //     .domain(d3.extent(weighData, d => Math.abs(d.value)))
+                //     .range([0, 8]);
 
-                weightG.append("line")
-                    .style("stroke", "grey") 
-                    .style("stroke-width", "1px") 
-                    //.style("stroke-dasharray", ("3, 3")) 
-                    .attr("x1", 0)
-                    .attr("y1", 8)
-                    .attr("x2", 117)
-                    .attr("y2", 8);
+                // weightG.append("line")
+                //     .style("stroke", "grey") 
+                //     .style("stroke-width", "1px") 
+                //     //.style("stroke-dasharray", ("3, 3")) 
+                //     .attr("x1", 0)
+                //     .attr("y1", 8)
+                //     .attr("x2", 117)
+                //     .attr("y2", 8);
 
-                console.log('weighData', weighData);
-                weightG.selectAll("rect")
-                    .data(weighData)
-                    .enter()
-                    .append("rect")
-                    .attr("fill", d => color(d.name))
-                    .attr("stroke", 'grey')
-                    .attr("x", (d, i) => (weightX(i)+i*1))
-                    .attr('y', function(d){
-                        if(d.value>0) return weightYPosition(d.value);
-                        else return 0;
+                // console.log('weighData', weighData);
+                // weightG.selectAll("rect")
+                //     .data(weighData)
+                //     .enter()
+                //     .append("rect")
+                //     .attr("fill", d => color(d.name))
+                //     .attr("stroke", 'grey')
+                //     .attr("x", (d, i) => (weightX(i)+i*1))
+                //     .attr('y', function(d){
+                //         if(d.value>0) return weightYPosition(d.value);
+                //         else return 0;
                         
-                    })
-                    .attr('height', function(d){
-                        if(d.value>0) return 8-weightYPosition(d.value);
-                        else return weightYNegative(d.value);
-                    })
-                    .attr("transform",function(){
-                        return  "translate(2,0 )";
-                    })
-                    .attr('width', 11);
+                //     })
+                //     .attr('height', function(d){
+                //         if(d.value>0) return 8-weightYPosition(d.value);
+                //         else return weightYNegative(d.value);
+                //     })
+                //     .attr("transform",function(){
+                //         return  "translate(1,0 )";
+                //     })
+                //     .attr('width', 10);
 
 
                 //画虚线框
@@ -935,7 +935,7 @@ export default {
                 //方案排序
                 g.append('text')
                     .attr('dy',12)
-                    .attr('dx',-20)
+                    .attr('dx',60)
                     .style('font-size', '8px')
                     .style('font-weight', 'light')
                     .style('font-weight','bolder')
@@ -1421,9 +1421,9 @@ export default {
     .costNumberView {
         width: 100%;
         /* height: 100%; */
-        height: -moz-calc(100% - 30px);
-        height: -webkit-calc(100% - 30px);
-        height: calc(100% - 30px);
+        // height: -moz-calc(100% - 30px);
+        // height: -webkit-calc(100% - 30px);
+        // height: calc(100% - 30px);
         overflow-x: hidden;
         overflow-y: auto;
         display: flex;
