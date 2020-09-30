@@ -724,8 +724,9 @@ export default {
                 });
                
             }
+            let setDragBank = {newDragBankArr:newDragBankArr,newNameArr:newNameArr};
             if(!this.stackedDataFlag ){
-                this.$emit('dragBank',newDragBankArr);
+                this.$emit('dragBank',setDragBank);
             }
             this.stackedDataFlag = true;
             //保存后拖拽数组清空
@@ -796,7 +797,7 @@ export default {
                     .call(g => g.selectAll(".domain").remove());
 
                 let g = svg.append("g")
-                    .attr('class','g_drag g_'+index)
+                    .attr('class','g_'+index)
                     .attr("transform",function(){
                         if(index == 0){
                             return  "translate(" + stackedWid + "," + 40 + ")";

@@ -674,7 +674,8 @@ export default {
             return targetObj;
         },
         //拖拽银行传过来的银行拖拽序号
-        dragBank(val){
+        dragBank(valArr){
+            let val = valArr.newDragBankArr;
             console.log('拖拽银行----',val);
             
             this.valueWeight = this.getDefaultSVMWeight(this.rankAxisData, val);
