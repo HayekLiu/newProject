@@ -20,7 +20,7 @@
         <div class="main">
           <div class="right-box">
             <!-- 数据选择 -->
-            <div style="height: 35%;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;">
+            <div style="height: 45%;border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;">
               <ScatterLink
                 :name-list-data="nameListData"
                 :tsne-arrays="tsneArrays"
@@ -29,7 +29,7 @@
               />
             </div>
             <!-- 数据选择 -->
-            <div style="height: 65%; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;padding-right: 4px;padding-left: 4px;">
+            <div style="height: 55%; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;padding-right: 4px;padding-left: 4px;">
               <RankLink
                 :name-list-data="nameListData"
                 :tsne-arrays="tsneArrays"

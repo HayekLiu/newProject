@@ -946,7 +946,7 @@ export default {
                 g.append('text')
                     .attr('dy',12)
                     .attr('dx',60)
-                    .style('font-size', '8px')
+                    .style('font-size', '11px')
                     .style('font-weight', 'light')
                     .style('font-weight','bolder')
                     .style('cursor', 'pointer')
