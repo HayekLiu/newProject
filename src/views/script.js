@@ -174,7 +174,9 @@ export default {
                 weightData = self.getWeightData(values, this.fieldList, typeList, false);
             }
             // console.log('weightData', weightData)
-            let [rankAxisData, ranks] = this.getRank(weightData, values, nameList, this.fieldList, bankType);
+
+            let normalizationData = self.getNormalizationData(values, this.fieldList);
+            let [rankAxisData, ranks] = this.getRank(weightData, normalizationData, values, nameList, this.fieldList, bankType);
 
             rankAxisData = this.getCluster(rankAxisData)
             rankAxisData['inputSample'] = inputSample
@@ -537,7 +539,7 @@ export default {
             //console.log('results', results)
             return results;
         },
-        getRank(data, originData, nameList, fieldList, bankType){
+        getRank(data, normalizationDatas, originData, nameList, fieldList, bankType){
             let scores = [];
             console.log('data123', data)
 
@@ -547,13 +549,15 @@ export default {
                 var score = 0;
                 let originDim = {};
                 let weightDim = {};
+                let normalizationDim = {};
                 for(let j=0; j<data[i].length; j++){
                     score +=data[i][j];
                     weightDim[fieldList[j]] = data[i][j];
+                    normalizationDim[fieldList[j]] = normalizationDatas[i][j];
                     originDim[fieldList[j]] = originData[i][j];
                 }
                 maxScore = Math.max(maxScore, score);
-                scores.push({originOrder: i, 'type': bankType[i], score: score, name: nameList[i], weightDim: weightDim, originDim: originDim});
+                scores.push({originOrder: i, 'type': bankType[i], score: score, name: nameList[i], weightDim: weightDim, normalizationDim: normalizationDim, originDim: originDim});
             }
             // 将数据的得分归一化到0-100
             scores.map(item=>{
@@ -608,6 +612,64 @@ export default {
         
             return [rankAxisData, ranks];
         },
+        getNormalizationData(rawdata, fieldList){
+            let self = this;
+            //极小型指标 -> 极大型指标
+            function minTOmax(items){
+                var maxValue = d3.max(items);
+                for(var i in items){
+                    items[i] = maxValue - items[i];
+                }
+                return items;
+            }
+            function transpose(arr){
+                return arr[0].map(function(col, i) {
+                    return arr.map(function(row) {
+                        return row[i];
+                    });
+                });
+            }
+            function normalization(data){
+                var ans = [];
+                // for(var i in data){
+                //     var sum = 0;
+                //     for(var j in data[i]){
+                //         sum+=Math.pow(data[i][j], 2);
+                //     }
+                //     ans.push(Math.pow(sum, 0.5));
+                // }
+                for(var i in data){
+                    var sum = 0;
+                    for(var j in data[i]){
+                        sum=Math.max(sum, data[i][j])
+                        //sum+=Math.pow(data[i][j], 2);
+                    }
+                    ans.push(sum);
+                }
+                for(let i in data){
+                    for(let j in data[i]){
+                        if(ans[i]!=0)
+                            data[i][j]/=ans[i];
+                    }
+                }
+                return data;
+            }
+            rawdata = transpose(rawdata);
+
+            var data = [];
+            for(var i in rawdata){
+                if(self.valueDirections[fieldList[i]]){
+                    data.push(rawdata[i]);
+                }
+                else{
+                    data.push(minTOmax(rawdata[i]));
+                }
+            }
+
+            data = normalization(data);
+            data = transpose(data);
+            return data;
+        },
         getWeightData(rawdata, fieldList, typeList, flag){
             let self = this;
             //极小型指标 -> 极大型指标
@@ -630,9 +692,10 @@ export default {
                 for(var i in data){
                     var sum = 0;
                     for(var j in data[i]){
-                        sum+=Math.pow(data[i][j], 2);
+                        sum=Math.max(sum, data[i][j])
+                        //sum+=Math.pow(data[i][j], 2);
                     }
-                    ans.push(Math.pow(sum, 0.5));
+                    ans.push(sum);
                 }
                 for(let i in data){
                     for(let j in data[i]){
