@@ -313,7 +313,7 @@ export default {
             var svmC = 1.0;
             svm.train(data, labels, { kernel: 'linear' , C: svmC});
             wb= svm.getWeights();
-            wb['w'] = self.getPercentWeight(wb['w'])
+            // wb['w'] = self.getPercentWeight(wb['w'])
 
             console.log('wb123', wb)
             let valueWeight = [];
@@ -372,7 +372,7 @@ export default {
             var svmC = 1.0;
             svm.train(data, labels, { kernel: 'linear' , C: svmC});
             wb= svm.getWeights();
-            wb['w'] = self.getPercentWeight(wb['w'])
+            // wb['w'] = self.getPercentWeight(wb['w'])
             let valueWeight = [];
             // let fieldSymbol = {}
             fieldList.map((field, i)=>{
@@ -437,7 +437,7 @@ export default {
                     let svm= new svmjs.SVM();
                     svm.train(data, labels, { kernel: 'linear' , C: 1.0});
                     let wb= svm.getWeights(); // weights and offset structure
-                    wb['w'] = self.getPercentWeight(wb['w'])
+                    //wb['w'] = self.getPercentWeight(wb['w'])
                     console.log(wb)
                     let valueWeight = [];
                     fieldList.map((field, i)=>{
@@ -760,7 +760,8 @@ export default {
             return targetObj;
         },
         //拖拽银行传过来的银行拖拽序号
-        dragBank(val){
+        dragBank(valArr){
+            let val = valArr.newDragBankArr;
             console.log('拖拽银行----',val);
             let inputSample1 
             [inputSample1, this.valueWeight] = this.getLocSVMWeight(this.rankAxisData, val);

@@ -10,12 +10,13 @@
     </header>
     <div style="height:30px;"></div>
     <!-- 左侧 -->
-    <!-- <div style="width:24%;height:calc(68% - 30px);position: absolute;border-right: 1px solid #ccc;">
-      <div style="height:calc(100% - 24vw);">
+     <!-- <div style="width:24%;height:calc(68% - 30px);position: absolute;border-right: 1px solid #ccc;">
+     <div style="height:calc(100% - 24vw);">
+
       </div>
       <Radar :indicator='indicator' :radarSeriesData = 'radarSeriesData'/>
     </div> -->
-    <div style="width:100%;height:calc(68% - 30px);margin-left:0%;">
+    <div style="width:100%;height:calc(68% - 30px);">
         <div class="main">
           <div class="right-box">
             <!-- 数据选择 -->

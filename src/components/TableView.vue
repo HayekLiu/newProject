@@ -528,17 +528,26 @@ export default {
                     weightDims.push(item['weightDim']);
                 });
                 dataTable['columns'] = fieldList;
-                let stackedData = d3.stack()
-                    .keys(dataTable.columns)(weightDims)
-                    .map(d => (d.forEach(v => v.key = d.key), d));
+                // let stackedData = d3.stack()
+                //     .keys(dataTable.columns)(weightDims)
+                //     .map(d => (d.forEach(v => v.key = d.key), d));
 
+
+                var stack = d3.stack() 
+                    .keys(dataTable.columns)
+                    .value((d, key) => d.weightDim[key])
+                    .order(d3.stackOrderNone)
+                    .offset(d3.stackOffsetDiverging);
+  
+                var stackedData = stack(dataTable);
+                
                 stackedData.map((item,link)=>{
 
                     item.map((i,k)=>{
                         i['name'] = nameArr[k];
                         i['svgBoxIndex'] = self.svgBoxIndex;
                         i['link'] = link;
-
+                        i['key'] = dataTable.columns[link]
                     });
                 });
                 self.svgBoxIndex++;
@@ -724,8 +733,9 @@ export default {
                 });
                
             }
+            let setDragBank = {newDragBankArr:newDragBankArr,newNameArr:newNameArr};
             if(!this.stackedDataFlag ){
-                this.$emit('dragBank',newDragBankArr);
+                this.$emit('dragBank',setDragBank);
             }
             this.stackedDataFlag = true;
             //保存后拖拽数组清空
@@ -792,11 +802,11 @@ export default {
                 let yAxis = g => g
                     .attr("transform", `translate(${margin.left},0)`)
                     .call(d3.axisLeft(y).tickSizeOuter(0))
-                    .call(d3.axisLeft(y).tickFormat((d,index) =>  d + " " +(index+1)))
-                    .call(g => g.selectAll(".domain").remove());
+                    .call(d3.axisLeft(y).tickFormat((d,index) =>  d + " " +(index+1)));
+                    // .call(g => g.selectAll(".domain").remove());
 
                 let g = svg.append("g")
-                    .attr('class','g_drag g_'+index)
+                    .attr('class','g_'+index)
                     .attr("transform",function(){
                         if(index == 0){
                             return  "translate(" + stackedWid + "," + 40 + ")";
@@ -992,12 +1002,19 @@ export default {
                     .enter()
                     .append('rect')
                     .attr("x", function(d){
-                        return x(d[0]);
+                        if(x(d[0])>0){
+                            return x(d[0]);
+                        }else{
+                            console.log('x(d[0])---小于0',x(d[0]))
+                        }
+                        
                     })
                     .attr("y", function(d){
                         return y(d.name);
                     })
-                    .attr("width", d => x(d[1]) - x(d[0]))
+                    .attr("width", function(d){
+                        return Math.abs(x(d[1]) - x(d[0]));
+                    })
                     .attr("height", y.bandwidth())
                     .attr('class',function(d){
                         if(d.link == item.stackedData.length-1){
