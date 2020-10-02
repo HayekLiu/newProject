@@ -188,7 +188,7 @@ export default {
                     // })
 
                     .attr('r', (d, i)=>{
-                        return arcScale(radarData[this.nameListData[i]]['score']);
+                        return arcScale(Math.abs(radarData[this.nameListData[i]]['score']));
                     })
                     .attr('fill', ()=>{
                         return '#d6d0d0'

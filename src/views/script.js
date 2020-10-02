@@ -313,7 +313,7 @@ export default {
             return valueWeight;
         },
         getLocSVMWeight(rankAxisData, dragData){
-            let self = this;
+            // let self = this;
             let ranktodata = {};
             let nametodata = {};
             // let len = rankAxisData.length;
