@@ -191,7 +191,7 @@ export default {
                         return arcScale(Math.abs(radarData[this.nameListData[i]]['score']));
                     })
                     .attr('fill', ()=>{
-                        return '#d6d0d0'
+                        return '#f1f2f2'
                         //return colorRed(radarData[this.nameListData[i]]['score']/100);
                     })
                     .attr('class',(d,i)=>this.nameListData[i]+' uItem')
