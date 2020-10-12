@@ -7,6 +7,7 @@ import TableView from '@/components/TableView.vue';
 import ScatterLink from '@/components/ScatterLink.vue';
 import RankLink from '@/components/RankLink.vue';
 import mockData from './../mock/mockData.json';
+import kmeans from 'ml-kmeans';
 // import miserables from './../mock/matrix.json' //矩阵数据
 import * as svmjs from "svm";
 window.svmjs = svmjs;
@@ -66,7 +67,7 @@ export default {
             matrixData: [], //矩阵图的数据
             // matrixDataArr:{}, //矩阵图整理后画图用数据
             nameListData:[], //每个数据的名称
-           
+            weightList: [],
             fieldList: [], //数据所包含的指标
             fieldColor: {}, //每个属性的颜色
             fieldSymbol: {}, //每个属性
@@ -118,7 +119,7 @@ export default {
     },
     watch:{
         valueWeight(val){
-            console.log('tsne update', val);
+            //console.log('tsne update', val);
         },
         
     },
@@ -180,6 +181,8 @@ export default {
 
             rankAxisData = this.getCluster(rankAxisData)
             rankAxisData['inputSample'] = inputSample
+            if(flag) rankAxisData['weight'] =self.valueWeight
+            else rankAxisData['weight'] =self.typeValueWeight
             this.rankAxisData = rankAxisData;
             // console.log('rankAxisData123', rankAxisData)
 
@@ -475,30 +478,60 @@ export default {
             return weights
         },
         getCluster(rankAxisData){
-            rankAxisData.map(item=>{
-                let rank =  item['rank']
-                if(rank<4){
-                    item['cluster']=1
-                }
-                else if(rank<11){
-                    item['cluster']=2
-                }
-                else if(rank<17){
-                    item['cluster']=3
-                }
-                else if(rank<27){
-                    item['cluster']=4
-                }
-                else if(rank<33){
-                    item['cluster']=5
-                }
-                else if(rank<38){
-                    item['cluster']=6
-                }
-                else{
-                    item['cluster']=7
-                }
+            console.log('rankAxisData1234', rankAxisData)
+            let data = rankAxisData.map(item=>{return [item.score]})
+    
+            let ans = kmeans(data, 5)['clusters'];
+            let temp = []
+            
+            let rankDict = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
+            ans.map((d, i)=>{
+                rankDict[d]=rankAxisData[i].score 
             })
+            let rankList =[]
+            for(let cluster in rankDict){
+                rankList.push({'orgin_cluster': cluster, 'sum': rankDict[cluster]})
+            }
+
+            rankList.sort(function(a,b){
+                return b.sum - a.sum;
+            });
+            let clusterMap={}
+            rankList.map((item, i)=>{
+                clusterMap[item['orgin_cluster']] = i+1
+            })
+            ans.map((d,i)=>{
+                rankAxisData[i]['cluster'] = clusterMap[ans[i]]
+            })
+            let sumDict = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+            rankAxisData.map(item=>{
+                sumDict[item['cluster']]+=1
+            })
+            for(let i=2; i<6; i++){
+                sumDict[i] +=sumDict[i-1]
+            }
+            delete sumDict[5]
+            rankAxisData['segmentation'] = Object.values(sumDict)
+            console.log('ans', ans, clusterMap, rankAxisData, sumDict);
+
+            // rankAxisData.map(item=>{
+            //     let rank =  item['rank']
+            //     if(rank<14){
+            //         item['cluster']=1
+            //     }
+            //     else if(rank<32){
+            //         item['cluster']=2
+            //     }
+            //     else if(rank<48){
+            //         item['cluster']=3
+            //     }
+            //     else if(rank<57){
+            //         item['cluster']=4
+            //     }
+            //     else{
+            //         item['cluster']=5
+            //     }
+            // })
             return rankAxisData
         },
         pointDistance(A, B){
@@ -603,7 +636,7 @@ export default {
                 return a.originOrder - b.originOrder;
             });
 
-            console.log('score', scores, data);
+            //console.log('score', scores, data);
 
             var ranks =  scores.map(item=>{
                 return item['rank'];
@@ -726,12 +759,9 @@ export default {
                 // var score = 0
                 if(flag) weights = Object.values(self.valueWeight);
                 else {
-
-           
-                    console.log('123', self.typeValueWeight, self.typeValueWeight[typeList[i]], self.globalValueWeight)
+                    //console.log('123', self.typeValueWeight, self.typeValueWeight[typeList[i]], self.globalValueWeight)
                     if(self.typeValueWeight[typeList[i]]) weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
                     else weights = Object.values(self.globalValueWeight)
-                    
                    // weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
                 }
                 for(let j=0; j<data[i].length; j++){
@@ -764,6 +794,7 @@ export default {
             let val = valArr.newDragBankArr;
             console.log('拖拽银行----',val);
             let inputSample1 
+            
             [inputSample1, this.valueWeight] = this.getLocSVMWeight(this.rankAxisData, val);
             this.init(true, inputSample1);
             console.log('valueWeight', this.valueWeight)

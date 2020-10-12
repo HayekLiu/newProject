@@ -4,7 +4,7 @@
     class="tableView"
   >
     <div class="btn-box" id="areaDiv">
-        <span class="saveBtn" @click='saveProject'>Save Risk Weight Scheme</span>
+        <span class="saveBtn" @click='saveProject'>Save Weight Scheme</span>
         <!-- 滑动条 -->
         <!-- <div style="margin: 0 10px;">
             <c-progress class="c-progress"
@@ -1226,7 +1226,7 @@ export default {
             let self = this;
             let myData = this.rankAxisDataTable;
             d3.select('#clusterSVG').remove();
-            console.log('drawClass', myData, self.fieldColor);
+            //console.log('drawClass', myData, self.fieldColor);
             self.legendArr.map(item =>{
                 item.color = self.fieldColor(item.name);
             });
@@ -1241,7 +1241,7 @@ export default {
             width = width - margin.left - margin.right;
             height = height - margin.top - margin.bottom;
             
-            console.log('enter drawClass');
+            //console.log('enter drawClass');
 
             let svg =  this.clusterSVG.append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -1272,7 +1272,7 @@ export default {
             });
 
             xScale.domain([1, d3.max(weightDims, d=>d.rank)]);
-            console.log('xScale.domain', xScale.domain());
+            // console.log('xScale.domain', xScale.domain());
             yScale.domain([0, yValue]);
 
             let stackedData = d3.stack()
