@@ -118,7 +118,7 @@ export default {
         
     },
     watch:{
-        valueWeight(val){
+        valueWeight(){
             //console.log('tsne update', val);
         },
         
@@ -385,7 +385,7 @@ export default {
             return [inputSample, valueWeight];
         },
         getTypeSVMWeight(rankAxisData, dragData){
-            let self = this;
+            // let self = this;
             let ranktodata = {};
             let nametodata = {};
             // let len = rankAxisData.length;
@@ -482,7 +482,7 @@ export default {
             let data = rankAxisData.map(item=>{return [item.score]})
 
             let ans = kmeans(data, 5)['clusters'];
-            let temp = []
+            // let temp = []
 
             let rankDict = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
             ans.map((d, i)=>{
@@ -762,7 +762,7 @@ export default {
                     //console.log('123', self.typeValueWeight, self.typeValueWeight[typeList[i]], self.globalValueWeight)
                     if(self.typeValueWeight[typeList[i]]) weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
                     else weights = Object.values(self.globalValueWeight)
-                   // weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
+                    // weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
                 }
                 for(let j=0; j<data[i].length; j++){
                     data[i][j]*=weights[j];
@@ -802,7 +802,7 @@ export default {
             // debugger
             let inputSample2
             [inputSample2, this.valueWeight] = this.getGobalSVMWeight(this.rankAxisData, val);
-            this.globalValueWeight = this.valueWeight
+            this.globalValueWeight = this.valueWeight;
             this.init(true, inputSample2);
             console.log('valueWeight', this.valueWeight)
 

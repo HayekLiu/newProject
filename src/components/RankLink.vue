@@ -86,8 +86,8 @@ export default {
             let rankWidth = 2*width/3
             
             let dashG = svg
-                    .append("g")
-                    .attr("transform", "translate(" + 0 + "," + margin.top + ")");
+                .append("g")
+                .attr("transform", "translate(" + 0 + "," + margin.top + ")");
 
             let dashLineData = []
             for(let i=0; i<8; i++){
@@ -107,8 +107,8 @@ export default {
                 .attr("y2", d=>(d.y2))
 
             let xScale = d3.scaleLinear()
-                    .range([0, rankWidth])
-                    .domain([1, self.rankAxisDataArrays[0].length]);
+                .range([0, rankWidth])
+                .domain([1, self.rankAxisDataArrays[0].length]);
 
             let yScale = d3.scaleLinear()
                 .range([rankHeight, 0])
@@ -131,8 +131,8 @@ export default {
             let types = []
 
             let pathG = svg
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             let selectBanks = []
             console.log('self.rankAxisDataArrays', self.rankAxisDataArrays)
@@ -148,6 +148,53 @@ export default {
                 'City Commercial Bank': '#bebada',
                 'Rural Commercial Bank': '#fb8072'
             }
+
+            //legend颜色
+            let legend = svg.append("g").attr('transform','translate(20,0)');
+            let bgColor = [
+                {'Large State-owned Commercial Bank': '#8dd3c7'},
+                {'Joint-stock Commercial Bank': '#ffffb3'},
+                {'City Commercial Bank': '#bebada'},
+                {'Rural Commercial Bank': '#fb8072'},
+            ];
+            
+            let legendG = legend.selectAll("g").data(bgColor)
+                .enter()
+                .append("g");
+            legendG.append("rect")
+                .attr('width', 10)
+                .attr('height', 10)
+                .attr('x', (d,i)=> i*20)
+                .attr('y', 9)
+                .attr('transform',function(d,i){
+                    if(i == 1){
+                        return 'translate('+210+',0)';
+                    }else if(i == 2){
+                        return 'translate('+376+',0)';
+                    }else if(i == 3){
+                        return 'translate('+506+',0)';
+                    }
+                    
+                })
+                .attr('fill', function(d){
+                    return d[d3.keys(d)[0]]
+                });
+
+            legendG.append("text")
+                .text((d)=>d3.keys(d)[0])
+                .attr('x',18)
+                .attr('y',18)
+                .style('font-size',12)
+                .attr('transform',function(d,i){
+                    if(i == 1){
+                        return 'translate('+228+',0)';
+                    }else if(i == 2){
+                        return 'translate('+412+',0)';
+                    }else if(i == 3){
+                        return 'translate('+562+',0)';
+                    }
+                    
+                });
 
             self.rankAxisDataArrays.map((rankAxisData, index)=>{
                 console.log('144', rankAxisData)
@@ -204,32 +251,32 @@ export default {
                 let interval = xScale(2) - xScale(1)
 
                 rankG.selectAll('.rank_rect_'+type)
-                  .data(rankAxisData)
-                  .enter()
-                  .append("rect")
-                  .attr('class',(d)=>d.name+'_rank_rect_'+type)
-                  .attr("x", d=> xScale(d.rank)-interval/2)
-                  .attr("y", -5)
-                  .attr("width", interval)
-                  .attr("height", 10)
-                  .style('fill', d=>bankTypeColor[d.type])
-                  .style('stroke', 'grey')
-                  .style('stroke-width', '0.1px');
+                    .data(rankAxisData)
+                    .enter()
+                    .append("rect")
+                    .attr('class',(d)=>d.name+'_rank_rect_'+type)
+                    .attr("x", d=> xScale(d.rank)-interval/2)
+                    .attr("y", -5)
+                    .attr("width", interval)
+                    .attr("height", 10)
+                    .style('fill', d=>bankTypeColor[d.type])
+                    .style('stroke', 'grey')
+                    .style('stroke-width', '0.1px');
 
 
                 
                 rankG.selectAll('.rating_rect_'+type)
-                  .data(rankAxisData['segmentation'])
-                  .enter()
-                  .append("rect")
-                  .attr('class',(d,i)=>'rating_rect_'+type+'_'+(i+1))
-                  .attr("x", d=> xScale(d+0.5)-1.5)
-                  .attr("y", -10)
-                  .attr("width", 3)
-                  .attr("height", 20)
-                  .style('fill', 'grey')
-                  .style('stroke', 'black')
-                  .style('stroke-width', '1 px');
+                    .data(rankAxisData['segmentation'])
+                    .enter()
+                    .append("rect")
+                    .attr('class',(d,i)=>'rating_rect_'+type+'_'+(i+1))
+                    .attr("x", d=> xScale(d+0.5)-1.5)
+                    .attr("y", -10)
+                    .attr("width", 3)
+                    .attr("height", 20)
+                    .style('fill', 'grey')
+                    .style('stroke', 'black')
+                    .style('stroke-width', '1 px');
 
                 let segmentation = self.deepClone(rankAxisData['segmentation'])
                 segmentation.unshift(1)
@@ -330,7 +377,7 @@ export default {
                 let xAxis = d3.axisBottom()
                     .scale(xScale);
 
-                //y坐标轴
+                    //y坐标轴
                 let yAxis = d3.axisLeft()
                     .scale(yScale);
 
@@ -388,13 +435,13 @@ export default {
                 })
                 console.log('pathData', pathData)
                 pathG.append("path")
-                        .attr("d", lineFunction(pathData))
-                        //.attr('class', 'linkPath')
-                        .attr('class', name+'_linkPath')
-                        .attr("stroke", 'black')
-                        .attr("stroke-width", 1)
-                        .attr("opacity", 1)
-                        .attr("fill", "none")
+                    .attr("d", lineFunction(pathData))
+                //.attr('class', 'linkPath')
+                    .attr('class', name+'_linkPath')
+                    .attr("stroke", 'black')
+                    .attr("stroke-width", 1)
+                    .attr("opacity", 1)
+                    .attr("fill", "none")
                        
             }
             self.rankAxisDataArrays[0].map(item=>{
@@ -485,7 +532,7 @@ export default {
                                 console.log(posBanks, negBanks)
                                 
                             }
-                             weightList.push(Object.values(rankAxisData['weight'][banktype]['valueWeight']))
+                            weightList.push(Object.values(rankAxisData['weight'][banktype]['valueWeight']))
                         }
                         fieldList.map(field=>{
                             let data = []
@@ -639,7 +686,7 @@ export default {
                     .y0(boxplotHeight/2)
                     .y1(function(d) { return y(d.weight); });
 
-                        // define the line
+                // define the line
                 var valueline = d3.line()
                     .x(function(d) { return x(d.field); })
                     .y(function(d) { return y(d.weight); });
@@ -686,22 +733,22 @@ export default {
                     .data(sumstat)
                     .enter()
                     .append("rect")
-                        .attr("x", function(d){return(x(d.key)-boxWidth/2)})
-                        .attr("y", function(d){return(y(d.value.q3))})
-                        .attr("height", function(d){return(y(d.value.q1)-y(d.value.q3))})
-                        .attr("width", boxWidth )
-                        .attr("stroke", "black")
-                        .style("fill",d=>{
-                            //console.log(d)
-                            if(d.key.includes('assetSize')){
-                                console.log('112', fieldColor(d.key))
-                            }
-                            return fieldColor(d.key)
-                            // return "#69b3a2"
-                        })
-                        .on('mouseover', d=>{
-                            console.log(type, d)
-                        })
+                    .attr("x", function(d){return(x(d.key)-boxWidth/2)})
+                    .attr("y", function(d){return(y(d.value.q3))})
+                    .attr("height", function(d){return(y(d.value.q1)-y(d.value.q3))})
+                    .attr("width", boxWidth )
+                    .attr("stroke", "black")
+                    .style("fill",d=>{
+                        //console.log(d)
+                        if(d.key.includes('assetSize')){
+                            console.log('112', fieldColor(d.key))
+                        }
+                        return fieldColor(d.key)
+                        // return "#69b3a2"
+                    })
+                    .on('mouseover', d=>{
+                        console.log(type, d)
+                    })
 
                 // Show the median
                 boxplotG.selectAll("medianLines")
@@ -761,8 +808,8 @@ export default {
                     .style('cursor', 'default');
 
                 d3.selectAll(circleSelector)
-                        .attr('stroke-width', '1px')
-                        .attr('cursor', 'default');
+                    .attr('stroke-width', '1px')
+                    .attr('cursor', 'default');
             }
             
         },

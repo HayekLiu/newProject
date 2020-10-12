@@ -1420,7 +1420,7 @@ export default {
     align-items: center;
 
     .btn-box{
-        width: 100%;display: flex;justify-content: flex-start;align-items: center;height: 30px;line-height: 30px;padding-left:10px;
+        width: 100%;display: flex;justify-content: flex-start;align-items: center;height: 30px;line-height: 30px;padding-left:10px;background-color:#fff;
         .saveBtn{
             background-color: #409EFF;color: #fff;height: 24px;line-height: 24px;padding:0 10px;border-radius: 4px;cursor: pointer;font-size: 12px;font-weight: bold;flex: 0 0 auto;
         }
