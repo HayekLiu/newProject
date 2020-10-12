@@ -94,7 +94,7 @@ export default {
                     radarData[item['name']]['score'] = item['score'];
                     radarData[item['name']]['weightDim'] = item['weightDim'];
                 });
-                console.log('radarData', radarData)
+                //console.log('radarData', radarData)
                 this.svg.append('rect')
                     .attr("x", padding.left - 15 )
                     .attr("width", blockWidth)
@@ -336,7 +336,8 @@ export default {
                 })
                 .y((d, i) => {
                     return _this.scaleArray[i][1](d[1]);
-                });
+                })
+                .curve(d3.curveCardinal); 
 
             for(let [k,v] of Object.entries(obj)){
                 this.svg.append('path')

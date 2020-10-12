@@ -29,12 +29,13 @@
               />
             </div>
             <!-- 数据选择 -->
-            <div style="height: 55%; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;padding-right: 4px;padding-left: 4px;">
+            <div style="height: 60%; border-bottom: 1px solid #ccc;border-right: 1px solid #ccc;padding-right: 4px;padding-left: 4px;">
               <RankLink
                 :name-list-data="nameListData"
                 :tsne-arrays="tsneArrays"
                 :rank-axis-data-arrays ="rankAxisDataArrays"
                 :field-color = "fieldColor"
+                :weight-list = "weightList"
               />
             </div>
           </div>
