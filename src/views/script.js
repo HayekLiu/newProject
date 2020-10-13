@@ -269,14 +269,15 @@ export default {
             }
             return arr;
         },
-        getLocSVMWeight(rankAxisData, dragData){
+        getLocSVMWeight(rankAxisData, dragData, newNameArr){
             let self = this;
             let ranktodata = {};
             let nametodata = {};
             let len = rankAxisData.length;
             let fieldList = [];
             rankAxisData.map(item=>{
-                ranktodata[item['rank']] = item;
+                let newRank = newNameArr.indexOf(item['name'])+1
+                ranktodata[newRank] = item;
                 nametodata[item['name']] = item;
                 fieldList = Object.keys(item['weightDim']);
             });
@@ -284,14 +285,17 @@ export default {
             let data = [];
             let labels= [];
             let inputSample = {}
+
+            console.log('getLocSVMWeight', newNameArr)
+
             dragData.map(item=>{
                 let locs = self.getSampleIDs(item['newBankIndex'], len);
                 let weightDim = nametodata[item['dragBank']]['weightDim'];
-                console.log('locs', dragData)
+                
                 inputSample[item['dragBank']] = {1: [], 0: []}
-                console.log('locs', locs);
+                console.log('getLocSVMWeight', locs);
                 locs.map(loc=>{
-                    //console.log(loc, ranktodata[loc])
+                    
                     let comweightDim = ranktodata[loc]['weightDim'];
                     let temp = [];
                     for(let field in weightDim){
@@ -309,7 +313,7 @@ export default {
                     }
                 });
             });
-            console.log('locs', inputSample)
+            console.log('getLocSVMWeight', inputSample)
             console.log(data, labels)
             var wb; // weights and offset structure
             var svm= new svmjs.SVM();
@@ -330,27 +334,33 @@ export default {
             this.fieldSymbol = fieldSymbol
             return [inputSample, valueWeight];
         },
-        getGobalSVMWeight(rankAxisData, dragData){
+        getGobalSVMWeight(rankAxisData, dragData, newNameArr){
             let self = this;
             let ranktodata = {};
             let nametodata = {};
             // let len = rankAxisData.length;
             let fieldList = [];
             rankAxisData.map(item=>{
-                ranktodata[item['rank']] = item;
+                let newRank = newNameArr.indexOf(item['name'])+1
+                ranktodata[newRank] = item;
                 nametodata[item['name']] = item;
                 fieldList = Object.keys(item['weightDim']);
             });
 
             console.log('rankAxisData_getSVMWeight', rankAxisData)
+
+            console.log('getGobalSVMWeight', newNameArr)
             let data = [];
             let labels= [];
             let inputSample = {}
             dragData.map(item=>{
                 let weightDim = nametodata[item['dragBank']]['weightDim'];
-                let locs = self.getRandom(parseInt(item['newBankIndex']*0.5), 1, item['newBankIndex']-1)
-                locs = locs.concat(self.getRandom(parseInt((rankAxisData.length - item['newBankIndex'])*0.2), item['newBankIndex']+1, rankAxisData.length))
-                console.log('locs', locs)
+                //let locs = self.getRandom(parseInt(item['newBankIndex']*0.5), 1, item['newBankIndex']-1)
+                //locs = locs.concat(self.getRandom(parseInt((rankAxisData.length - item['newBankIndex'])*0.2), item['newBankIndex']+1, rankAxisData.length))
+                let locs = self.getRandom(3, 1, item['newBankIndex']-1)
+                locs = locs.concat(self.getRandom(3, item['newBankIndex']+1, rankAxisData.length))
+                //console.log('locs', locs)
+                console.log('getGobalSVMWeight', locs)
                 inputSample[item['dragBank']] = {1: [], 0: []}
                 locs.map(loc=>{
                     let comweightDim = ranktodata[loc]['weightDim'];
@@ -369,7 +379,7 @@ export default {
                     }
                 });
             });
-
+            console.log('getGobalSVMWeight', inputSample)
             var wb; // weights and offset structure
             var svm= new svmjs.SVM();
             var svmC = 1.0;
@@ -384,7 +394,7 @@ export default {
             console.log('getGobalSVMWeight', inputSample, valueWeight)
             return [inputSample, valueWeight];
         },
-        getTypeSVMWeight(rankAxisData, dragData){
+        getTypeSVMWeight(rankAxisData, dragData, newNameArr){
             let self = this;
             let ranktodata = {};
             let nametodata = {};
@@ -398,20 +408,33 @@ export default {
             }
 
             rankAxisData.map(item=>{
-                ranktodata[item['rank']] = item;
+                let newRank = newNameArr.indexOf(item['name'])+1
+                ranktodata[newRank] = item;
                 nametodata[item['name']] = item;
                 fieldList = Object.keys(item['weightDim']);
                 typeRankData[item['type']]['weightDims'].push(item['weightDim'])
-                typeRankData[item['type']]['ranks'].push(item['rank'])
+                typeRankData[item['type']]['ranks'].push(newRank)
             });
 
+            console.log('getTypeSVMWeight', newNameArr, typeRankData, dragData)
             let typeValueWeight = {}
             for(let bankType in typeRankData){
                 console.log(bankType)
-                let data = [];
-                let labels= [];
+                
                 let inputSample = {}
+                
+                let labels = []
+                let data = []
                 dragData.map(item=>{
+                    let negLabels= []
+                    let negData = []
+
+                    let posLabels= []
+                    let posData = []
+
+                    let posName = []
+                    let negName = []
+
                     inputSample[item['dragBank']] = {1: [], 0: []}
                     let weightDim = nametodata[item['dragBank']]['weightDim'];
                     typeRankData[bankType]['weightDims'].map((comweightDim, i)=>{
@@ -420,22 +443,47 @@ export default {
                             for(let field in weightDim){
                                 temp.push(comweightDim[field]-weightDim[field]);
                             }
-                            data.push(temp)
+                            //data.push(temp)
                             if(typeRankData[bankType]['ranks'][i]<item['newBankIndex']){
-                                labels.push(1);
-                                inputSample[item['dragBank']][1].push(ranktodata[typeRankData[bankType]['ranks'][i]]['name'])
+                                posLabels.push(1);
+                                posData.push(temp)
+                                posName.push(ranktodata[typeRankData[bankType]['ranks'][i]]['name'])
+                                //inputSample[item['dragBank']][1].push(ranktodata[typeRankData[bankType]['ranks'][i]]['name'])
                             }
                             else{
-                                labels.push(-1);
-                                inputSample[item['dragBank']][0].push(ranktodata[typeRankData[bankType]['ranks'][i]]['name'])
+                                negLabels.push(-1);
+                                negData.push(temp)
+                                negName.push(ranktodata[typeRankData[bankType]['ranks'][i]]['name'])
+                                //inputSample[item['dragBank']][0].push(ranktodata[typeRankData[bankType]['ranks'][i]]['name'])
                             }
                         }
                     })
+                    if(posLabels.length>3){
+                        posLabels = posLabels.slice(0,3)
+                        posData = posData.slice(0,3)
+                        posName = posName.slice(0,3)
+                    }
+                    if(negLabels.length>3){
+                        negLabels = negLabels.slice(0,3)
+                        negData = negData.slice(0,3)
+                        negName = negName.slice(0,3)
+                    }
+                    posLabels = posLabels.concat(negLabels)
+                    labels = posLabels.concat(posLabels)
+
+                    posData = posData.concat(negData)
+                    data = data.concat(posData)
+
+                    inputSample[item['dragBank']][1] = inputSample[item['dragBank']][1].concat(posName)
+                    inputSample[item['dragBank']][0] = inputSample[item['dragBank']][0].concat(negName)
                 });
+                
                 let sum = 0
                 labels.map(label=>{
-                    sum+=label
+                    sum +=label
                 })
+
+                console.log('bankType', bankType, labels, data)
                 if(Math.abs(sum)!=labels.length){
                     let svm= new svmjs.SVM();
                     svm.train(data, labels, { kernel: 'linear' , C: 1.0});
@@ -455,6 +503,8 @@ export default {
                     typeValueWeight[bankType] = null
                 }
             }
+
+            console.log('getTypeSVMWeight', newNameArr, typeRankData, dragData, typeValueWeight)
             console.log('typeRankData', typeRankData)
             console.log('typeValueWeight', typeValueWeight)
             return typeValueWeight
@@ -605,6 +655,7 @@ export default {
                 //console.log(item)
             });
 
+            
             scores.sort(function(a,b){
                 return b.score - a.score;
             });
@@ -636,6 +687,7 @@ export default {
                 return a.originOrder - b.originOrder;
             });
 
+            console.log('getRank', scores)
             //console.log('score', scores, data);
 
             var ranks =  scores.map(item=>{
@@ -792,21 +844,22 @@ export default {
         //拖拽银行传过来的银行拖拽序号
         dragBank(valArr){
             let val = valArr.newDragBankArr;
-            console.log('拖拽银行----',val);
+            let newNameArr = valArr.newNameArr;
+            console.log('拖拽银行----',valArr);
             let inputSample1 
             
-            [inputSample1, this.valueWeight] = this.getLocSVMWeight(this.rankAxisData, val);
+            [inputSample1, this.valueWeight] = this.getLocSVMWeight(this.rankAxisData, val, newNameArr);
             this.init(true, inputSample1);
             console.log('valueWeight', this.valueWeight)
             //this.getLocSVMWeight(this.rankAxisData, val);
             // debugger
             let inputSample2
-            [inputSample2, this.valueWeight] = this.getGobalSVMWeight(this.rankAxisData, val);
+            [inputSample2, this.valueWeight] = this.getGobalSVMWeight(this.rankAxisData, val, newNameArr);
             this.globalValueWeight = this.valueWeight
             this.init(true, inputSample2);
             console.log('valueWeight', this.valueWeight)
 
-            this.typeValueWeight = this.getTypeSVMWeight(this.rankAxisData, val);
+            this.typeValueWeight = this.getTypeSVMWeight(this.rankAxisData, val, newNameArr);
             console.log('typeValueWeight',  this.typeValueWeight)
             this.init(false, this.typeValueWeight);
             console.log('valueWeight', this.typeValueWeight)
