@@ -157,7 +157,7 @@ export default {
                 {'City Commercial Bank': '#bebada'},
                 {'Rural Commercial Bank': '#fb8072'},
             ];
-            
+
             let legendG = legend.selectAll("g").data(bgColor)
                 .enter()
                 .append("g");
@@ -174,7 +174,7 @@ export default {
                     }else if(i == 3){
                         return 'translate('+506+',0)';
                     }
-                    
+
                 })
                 .attr('fill', function(d){
                     return d[d3.keys(d)[0]]
@@ -193,7 +193,7 @@ export default {
                     }else if(i == 3){
                         return 'translate('+562+',0)';
                     }
-                    
+
                 });
 
             self.rankAxisDataArrays.map((rankAxisData, index)=>{
@@ -236,7 +236,7 @@ export default {
                     }
                 }
                 
-                console.log(11, 'posSample', posSample)
+                console.log(11, 'posSample', posSample, negSample)
                 rankG.append("text")
                     // .attr("x", -5)
                     // .attr("y", (5+rankHeight/2)) // 100 is where the first dot appears. 25 is the distance between dots
@@ -305,6 +305,7 @@ export default {
                     .data(rankAxisData)
                     .enter().append('circle')
                     .attr('r', (d)=>{
+                        return 3
                         return arcScale(d.score);
                     })
                     .attr('fill', (d)=>{
@@ -377,7 +378,7 @@ export default {
                 let xAxis = d3.axisBottom()
                     .scale(xScale);
 
-                    //y坐标轴
+                //y坐标轴
                 let yAxis = d3.axisLeft()
                     .scale(yScale);
 
@@ -463,7 +464,6 @@ export default {
                     let tempData = [pathData[i-1], pathData[i]]
                     let interval = tempData[1].rank - tempData[0].rank
                     console.log('interval', interval, tempData)
-
                     pathG.append("path")
                         .attr("d", lineFunction(tempData))
                         //.attr('class', 'linkPath')
@@ -492,11 +492,7 @@ export default {
                             self.highlighCirclePath('.'+name+'_linkPath', '#'+name+'_rank_point', false)
                         })
                 }
-
-                
-                
             })
-            
             // draw boxplot
 
             let boxplotWidth = width/3-80
@@ -519,6 +515,7 @@ export default {
                 let negBanks = []
                 let posBanks = []
                 let type = rankAxisData[0]['scheme']
+                console.log('rankAxisData321', rankAxisData)
                 console.log(type)
                 if(type.includes('Type')){
                     for(let banktype in rankAxisData['inputSample']){
@@ -532,41 +529,42 @@ export default {
                                 console.log(posBanks, negBanks)
                                 
                             }
-                            weightList.push(Object.values(rankAxisData['weight'][banktype]['valueWeight']))
+                             weightList.push(Object.values(rankAxisData['inputSample'][banktype]['valueWeight']))
+
+                            fieldList.map(field=>{
+                                let data = []
+                                posBanks.map(bank=>{
+                                    data.push(nameToData[bank]['normalizationDim'][field])
+                                })
+                                var data_sorted = data.sort(d3.ascending)
+                                var q1 = d3.quantile(data_sorted, .25)
+                                var median = d3.quantile(data_sorted, .5)
+                                var q3 = d3.quantile(data_sorted, .75)
+                                var interQuantileRange = q3 - q1
+                                var min = q1 - 1.5 * interQuantileRange
+                                var max = q1 + 1.5 * interQuantileRange
+                                sumstat.push({'key': field+1, 'value':{q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max}})
+                            })
+
+                            fieldList.map(field=>{
+                                let data = []
+                                negBanks.map(bank=>{
+                                    data.push(nameToData[bank]['normalizationDim'][field])
+
+                                })
+                                var data_sorted = data.sort(d3.ascending)
+                                var q1 = d3.quantile(data_sorted, .25)
+                                var median = d3.quantile(data_sorted, .5)
+                                var q3 = d3.quantile(data_sorted, .75)
+                                var interQuantileRange = q3 - q1
+                                var min = q1 - 1.5 * interQuantileRange
+                                var max = q1 + 1.5 * interQuantileRange
+                                sumstat.push({'key': field+0, 'value':{q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max}})
+                            })
+                            console.log('sumstat123', sumstat)
+                            sumstats[banktype]=sumstat
                         }
-                        fieldList.map(field=>{
-                            let data = []
-                            posBanks.map(bank=>{
-                                data.push(nameToData[bank]['normalizationDim'][field])
-                    
-                            })
-                            var data_sorted = data.sort(d3.ascending)
-                            var q1 = d3.quantile(data_sorted, .25)
-                            var median = d3.quantile(data_sorted, .5)
-                            var q3 = d3.quantile(data_sorted, .75)
-                            var interQuantileRange = q3 - q1
-                            var min = q1 - 1.5 * interQuantileRange
-                            var max = q1 + 1.5 * interQuantileRange
-                            sumstat.push({'key': field+1, 'value':{q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max}})
-                        })
-                        
-                        fieldList.map(field=>{
-                            let data = []
-                            negBanks.map(bank=>{
-                                data.push(nameToData[bank]['normalizationDim'][field])
-                    
-                            })
-                            var data_sorted = data.sort(d3.ascending)
-                            var q1 = d3.quantile(data_sorted, .25)
-                            var median = d3.quantile(data_sorted, .5)
-                            var q3 = d3.quantile(data_sorted, .75)
-                            var interQuantileRange = q3 - q1
-                            var min = q1 - 1.5 * interQuantileRange
-                            var max = q1 + 1.5 * interQuantileRange
-                            sumstat.push({'key': field+0, 'value':{q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max}})
-                        })
-                        console.log('sumstat123', sumstat)
-                        sumstats[banktype]=sumstat
+
                        
                     }
                     
@@ -618,12 +616,14 @@ export default {
 
             
             
-            console.log('weightList', weightList)
-            console.log('sumstats', sumstats)
+            // console.log('weightList', weightList)
+            // console.log('sumstats', sumstats)
             let index = 1
             for(let type in sumstats){
-                
+                //if(!weightList) break
+
                 let weights = weightList[index-1] 
+                console.log('weights',weightList,sumstats,index, weights)
                 let sumstat = sumstats[type]
                 let boxplotG = svg
                     .append("g")
@@ -650,6 +650,7 @@ export default {
 
                 let npFieldList = []
                 let areaData = []
+                console.log(fieldList, weights)
                 fieldList.map((field, i)=>{
                     npFieldList.push(field+0)
                     npFieldList.push(field+1)
