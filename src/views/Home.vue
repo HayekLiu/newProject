@@ -26,6 +26,8 @@
                 :tsne-arrays="tsneArrays"
                 :rank-axis-data-arrays ="rankAxisDataArrays"
                 :field-color = "fieldColor"
+                :tabClickName = "tabClickName"
+                @lassoData ="lassoData"
               />
             </div>
             <!-- 数据选择 -->
@@ -50,10 +52,11 @@
             :valueWeightData='valueWeight'
             :rank-axis-data="rankAxisData"
             :rankAxisDataTableArr = 'rankAxisDataTableArr'
+            :selectedIDs = 'selectedIDs'
             @dragBank = 'dragBank'
             @getChooseColor = 'getChooseColor'
             @deleteIndex = 'deleteIndex'
-           
+            @clickName = 'clickName'
           />
       </div>
   </div>

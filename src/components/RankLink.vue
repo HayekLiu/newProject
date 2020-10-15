@@ -37,21 +37,21 @@ export default {
             selectedCluster:[],  //套索选择数据
             targetList: [], // Tsne块数组
             scaleArray: [], // 缓存每个块的Scale
-            blockWidth: 0, 
+            blockWidth: 0,
             lineObjects: {}, // 每条线的点集合
         };
     },
     computed:{
-        
+
     },
     watch:{
         tsneArrays(val){
             this.tsneArraysData =val;
-            
+
         },
         rankAxisDataArrays(val){
             this.init();
-            
+
             console.log('rankAxisDataArrays', val)
         },
         nameListData(val){
@@ -59,7 +59,7 @@ export default {
         }
     },
     mounted() {
-        
+
     },
     methods:{
         init() {
@@ -81,10 +81,10 @@ export default {
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.left + margin.right+height)
                 .attr("id", "svg" + this.id)
-            
+
             let rankHeight = height/3
             let rankWidth = 2*width/3
-            
+
             let dashG = svg
                 .append("g")
                 .attr("transform", "translate(" + 0 + "," + margin.top + ")");
@@ -141,7 +141,7 @@ export default {
                 selectBanks = Object.keys(self.rankAxisDataArrays[1]['inputSample'])
             }
             console.log('selectBanks', selectBanks)
-            
+
             let bankTypeColor ={
                 'Large State-owned Commercial Bank': '#8dd3c7',
                 'Joint-stock Commercial Bank': '#ffffb3',
@@ -201,15 +201,15 @@ export default {
                 let rankG = svg
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + (margin.top+rankHeight*index) + ")");
-                
+
                 rankG.call(rankTips);
 
                 let color = d3.schemeCategory10;
                 let type = rankAxisData[0]['scheme'].replaceAll(' ', '').replaceAll(':', '')
                 types.push('_rank_point_'+type)
-                
+
                 // console.log('type123', type)
-                
+
                 let posSample = []
                 let negSample = []
                 console.log(11, 'posSample', type, rankAxisData['inputSample'])
@@ -222,20 +222,20 @@ export default {
                                 //console.log(rankAxisData['inputSample'][bankType]['inputSample'][bank])
                                 posSample = posSample.concat(rankAxisData['inputSample'][bankType]['inputSample'][bank]['1'])
                                 negSample = negSample.concat(rankAxisData['inputSample'][bankType]['inputSample'][bank]['0'])
-                            }   
+                            }
                         }
                     }
-                    
+
                 }
                 else{
                     if(rankAxisData['inputSample']){
                         for(let bank in rankAxisData['inputSample']){
                             posSample = posSample.concat(rankAxisData['inputSample'][bank]['1'])
                             negSample = negSample.concat(rankAxisData['inputSample'][bank]['0'])
-                        }   
+                        }
                     }
                 }
-                
+
                 console.log(11, 'posSample', posSample, negSample)
                 rankG.append("text")
                     // .attr("x", -5)
@@ -264,7 +264,7 @@ export default {
                     .style('stroke-width', '0.1px');
 
 
-                
+
                 rankG.selectAll('.rating_rect_'+type)
                     .data(rankAxisData['segmentation'])
                     .enter()
@@ -293,7 +293,7 @@ export default {
                     .attr('class', 'comField')
                     .attr("x", d=> xScale(d))
                     .attr("y", -15)
-                    .text(function(d,i){ 
+                    .text(function(d,i){
                         return 'Rating '+ (i+1);
                     })
                     .attr("font-size", "11")
@@ -391,7 +391,7 @@ export default {
                 //     .attr("class", "y axis")
                 //     .call(yAxis);
             })
-            
+
             let lineFunction = d3.line()
                 .x(function(d) { return d.x; })
                 .y(function(d) { return d.y; })
@@ -443,7 +443,7 @@ export default {
                     .attr("stroke-width", 1)
                     .attr("opacity", 1)
                     .attr("fill", "none")
-                       
+
             }
             self.rankAxisDataArrays[0].map(item=>{
                 let name = item.name
@@ -460,7 +460,7 @@ export default {
                     pathData.push({x: x, y: y, rank: rank})
                 })
 
-                for(let i=1; i<pathData.length; i++){  
+                for(let i=1; i<pathData.length; i++){
                     let tempData = [pathData[i-1], pathData[i]]
                     let interval = tempData[1].rank - tempData[0].rank
                     console.log('interval', interval, tempData)
@@ -473,7 +473,7 @@ export default {
                             // if(interval<0) return colorRed(interval/rankIntervalNeg)
                             // else if(interval>0) return colorBlue(interval/rankIntervalNeg)
                             // else return 'black'
-                           
+
                             if(interval<0) return 'blue'
                             else if(interval>0) return 'red'
                             else return 'black'
@@ -527,9 +527,9 @@ export default {
                                 posBanks = posBanks.concat(rankAxisData['inputSample'][banktype]['inputSample'][bank]['1'])
                                 negBanks = negBanks.concat(rankAxisData['inputSample'][banktype]['inputSample'][bank]['0'])
                                 console.log(posBanks, negBanks)
-                                
+
                             }
-                             weightList.push(Object.values(rankAxisData['inputSample'][banktype]['valueWeight']))
+                            weightList.push(Object.values(rankAxisData['inputSample'][banktype]['valueWeight']))
 
                             fieldList.map(field=>{
                                 let data = []
@@ -565,9 +565,9 @@ export default {
                             sumstats[banktype]=sumstat
                         }
 
-                       
+
                     }
-                    
+
                 }
                 else{
                     weightList.push(Object.values(rankAxisData['weight']))
@@ -583,7 +583,7 @@ export default {
                         let data = []
                         posBanks.map(bank=>{
                             data.push(nameToData[bank]['normalizationDim'][field])
-                
+
                         })
                         var data_sorted = data.sort(d3.ascending)
                         var q1 = d3.quantile(data_sorted, .25)
@@ -594,12 +594,12 @@ export default {
                         var max = q1 + 1.5 * interQuantileRange
                         sumstat.push({'key': field+1, 'value':{q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max}})
                     })
-                    
+
                     fieldList.map(field=>{
                         let data = []
                         negBanks.map(bank=>{
                             data.push(nameToData[bank]['normalizationDim'][field])
-                
+
                         })
                         var data_sorted = data.sort(d3.ascending)
                         var q1 = d3.quantile(data_sorted, .25)
@@ -614,15 +614,15 @@ export default {
                 }
             }
 
-            
-            
+
+
             // console.log('weightList', weightList)
             // console.log('sumstats', sumstats)
             let index = 1
             for(let type in sumstats){
                 //if(!weightList) break
 
-                let weights = weightList[index-1] 
+                let weights = weightList[index-1]
                 console.log('weights',weightList,sumstats,index, weights)
                 let sumstat = sumstats[type]
                 let boxplotG = svg
@@ -667,12 +667,12 @@ export default {
                 boxplotG.append("g")
                     .attr("transform", "translate(0," + boxplotHeight/2 + ")")
                     .call(d3.axisBottom(x).tickSize(0).tickValues([]))
-                    // .selectAll("text")	
+                    // .selectAll("text")
                     // .style("text-anchor", "end")
                     // .attr("dx", "-.8em")
                     // .attr("dy", ".15em")
                     // .attr("transform", function(d) {
-                    //     return "rotate(-10)" 
+                    //     return "rotate(-10)"
                     //     });
 
 
@@ -724,12 +724,12 @@ export default {
                     .style("width", 40)
 
                 // rectangle for the main box
-                var boxWidth = 10 
+                var boxWidth = 10
 
                 let fieldColor = d3.scaleOrdinal()
                     .domain(["assetSize1", "capitalAdequacyRatio1", "nonPerformingLoansRatio1", "specialMentionedLoansRatio1", "provisionCoverage1", "liquidityRatio1", "assetProfitRatio1", "capitalProfitRatio1", "costToIncomeRatio1", "assetSize0", "capitalAdequacyRatio0", "nonPerformingLoansRatio0", "specialMentionedLoansRatio0", "provisionCoverage0", "liquidityRatio0", "assetProfitRatio0", "capitalProfitRatio0", "costToIncomeRatio0"])
                     .range(['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E8684A', '#6DC8EC', '#9270CA', '#FF9D4D', '#269A99', '#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E8684A', '#6DC8EC', '#9270CA', '#FF9D4D', '#269A99']);
-                
+
                 boxplotG.selectAll("boxes")
                     .data(sumstat)
                     .enter()
@@ -786,7 +786,7 @@ export default {
                     .style("width", 80)
 
             }
-           
+
         },
         drawBoxPlot(){
 
@@ -812,7 +812,7 @@ export default {
                     .attr('stroke-width', '1px')
                     .attr('cursor', 'default');
             }
-            
+
         },
         deepClone(source){
             let self = this;

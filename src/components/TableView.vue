@@ -68,6 +68,10 @@ export default {
             type:Array,
             default:()=>[],
         },
+        selectedIDs:{
+            type:Array,
+            default:()=>[],
+        }
     },
     components:{cProgress},
     data(){
@@ -204,6 +208,17 @@ export default {
         },
         fieldSymbol(){
 
+        },
+        selectedIDs(val){
+            $('.costNumberView').find('.tbody').find('.tr').css('border','2px solid #D0CECE');
+            if(val.length>0){
+                val.map((item)=>{
+                    d3.select("#"+item+'LinkPath')
+                        .attr("stroke-width", 18)
+                        .attr("opacity", 0.8);
+                    $('.costNumberView').find('.tbody').find('#tr_'+item).css('border','2px solid red');
+                })
+            }
         }
     },
     mounted() {
@@ -344,6 +359,7 @@ export default {
                     d3.selectAll('.LinkPath')
                         .attr("stroke-width", 1)
                         .attr("opacity", 0.5);
+                    _this.$emit('clickName',d.name);
                     d3.select("#"+d.name+'LinkPath')
                         .attr("stroke-width", 18)
                         .attr("opacity", 0.8);
