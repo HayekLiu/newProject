@@ -22,6 +22,58 @@ export default {
     data(){
         return{
             msg:'Home page data',
+            typeData: {'工商银行': {'rank': 1, 'cluster': 1},
+            '建设银行': {'rank': 2, 'cluster': 1},
+            '农业银行': {'rank': 3, 'cluster': 1},
+            '中国银行': {'rank': 4, 'cluster': 1},
+            '交通银行': {'rank': 5, 'cluster': 1},
+            '邮储银行': {'rank': 6, 'cluster': 1},
+            '招商银行': {'rank': 7, 'cluster': 1},
+            '兴业银行': {'rank': 8, 'cluster': 1},
+            '浦发银行': {'rank': 9, 'cluster': 1},
+            '中信银行': {'rank': 10, 'cluster': 1},
+            '平安银行': {'rank': 11, 'cluster': 1},
+            '民生银行': {'rank': 12, 'cluster': 2},
+            '华夏银行': {'rank': 13, 'cluster': 2},
+            '广发银行': {'rank': 14, 'cluster': 2},
+            '浙商银行': {'rank': 15, 'cluster': 2},
+            '南京银行': {'rank': 16, 'cluster': 2},
+            '宁波银行': {'rank': 17, 'cluster': 2},
+            '徽商银行': {'rank': 18, 'cluster': 2},
+            '重庆农商': {'rank': 19, 'cluster': 2},
+            '杭州银行': {'rank': 20, 'cluster': 2},
+            '北京农商': {'rank': 21, 'cluster': 2},
+            '上海农商': {'rank': 22, 'cluster': 2},
+            '长沙银行': {'rank': 23, 'cluster': 2},
+            '广州银行': {'rank': 24, 'cluster': 2},
+            '天津银行': {'rank': 25, 'cluster': 3},
+            '成都银行': {'rank': 26, 'cluster': 3},
+            '重庆银行': {'rank': 27, 'cluster': 3},
+            '深圳农商': {'rank': 28, 'cluster': 3},
+            '东莞银行': {'rank': 29, 'cluster': 3},
+            '苏州银行': {'rank': 30, 'cluster': 3},
+            '广东顺德农商': {'rank': 31, 'cluster': 3},
+            '西安银行': {'rank': 32, 'cluster': 3},
+            '晋商银行': {'rank': 33, 'cluster': 3},
+            '郑州银行': {'rank': 34, 'cluster': 4},
+            '江西银行': {'rank': 35, 'cluster': 4},
+            '江苏江南农商': {'rank': 36, 'cluster': 4},
+            '九江银行': {'rank': 37, 'cluster': 4},
+            '青岛农商': {'rank': 38, 'cluster': 5},
+            '齐鲁银行': {'rank': 39, 'cluster': 4},
+            '长安银行': {'rank': 40, 'cluster': 4},
+            '华兴银行': {'rank': 41, 'cluster': 4},
+            '江苏紫金农商': {'rank': 42, 'cluster': 4},
+            '台州银行': {'rank': 43, 'cluster': 4},
+            '浙江泰隆商行': {'rank': 44, 'cluster': 4},
+            '江苏常熟农商': {'rank': 45, 'cluster': 4},
+            '浙江萧山农商': {'rank': 46, 'cluster': 4},
+            '乌鲁木齐银行': {'rank': 47, 'cluster': 4},
+            '赣州银行': {'rank': 48, 'cluster': 4},
+            '甘肃银行': {'rank': 49, 'cluster': 5},
+            '江苏张家港农商': {'rank': 50, 'cluster': 5},
+            '金华银行': {'rank': 51, 'cluster': 5},
+            '嘉兴银行': {'rank': 52, 'cluster': 5}},
             valueDirections: {
                 assetSize: true, //'资产规模',
                 capitalAdequacyRatio: true, //'资本充足率',
@@ -84,7 +136,7 @@ export default {
                 // true 代表越大越好，false代表越小越好
                 //name: '银行名称',
                 //deadline: '数据截止期',
-                assetSize: 0.35, //'资产规模',
+                assetSize: 1, //'资产规模',
                 capitalAdequacyRatio: 0.15, //'资本充足率',
                 // netCapital: '资本净额',
                 // tocdRatio: 0.1,//'一级资本充足率', //tier one capital adequacy ratio
@@ -114,11 +166,9 @@ export default {
         // this.radarDataFun(this.tableData);
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
-        
-        
     },
     watch:{
-        valueWeight(val){
+        valueWeight(){
             //console.log('tsne update', val);
         },
         
@@ -131,7 +181,7 @@ export default {
             let typeList = []
             let values = [];
             let bankType = [];
-            console.log('mockData', mockData)
+            // console.log('mockData', mockData)
             //debugger
             mockData.forEach(item=>{
                 for(let key in item){
@@ -185,8 +235,15 @@ export default {
             else rankAxisData['weight'] =self.typeValueWeight
             this.rankAxisData = rankAxisData;
             // console.log('rankAxisData123', rankAxisData)
-
-            self.rankAxisDataArrays.push(rankAxisData)
+            if(flag){
+                self.rankAxisDataArrays.push(rankAxisData)
+            }
+            else{
+                rankAxisData.map(item=>{
+                    item['rank'] = self.typeData[item.name]['rank']
+                    item['cluster'] = self.typeData[item.name]['cluster']
+                })
+            }
 
             self.rankAxisDataArrays[0].map(item=>{
                 item['scheme'] = 'Default Scheme'
@@ -246,13 +303,13 @@ export default {
             if(loc<=3){
                 let locs = [];
                 for(let i = 1; i<loc; i++) locs.push(i);
-                for(let i = loc+1; i<loc+6-locs.length; i++) locs.push(i);
+                for(let i = loc+1; i<loc+3; i++) locs.push(i);
                 return locs;
             }
             if(loc>len-3){
                 let locs = [];
                 for(let i = loc+1; i<len; i++) locs.push(i);
-                for(let i = loc-(6-locs.length); i<loc; i++) locs.push(i);
+                for(let i = loc-3; i<loc; i++) locs.push(i);
                 return locs;
             }
         },
@@ -314,7 +371,7 @@ export default {
                 });
             });
             console.log('getLocSVMWeight', inputSample)
-            console.log(data, labels)
+            //console.log(data, labels)
             var wb; // weights and offset structure
             var svm= new svmjs.SVM();
             var svmC = 1.0;
@@ -322,9 +379,9 @@ export default {
             wb= svm.getWeights();
             // wb['w'] = self.getPercentWeight(wb['w'])
 
-            console.log('wb123', wb)
+            // console.log('wb123', wb)
             let valueWeight = [];
-            let fieldSymbol = {} 
+            let fieldSymbol = {};
             fieldList.map((field, i)=>{
                 //valueWeight[field] = wb['w'][i]
                 valueWeight[field] = Math.abs(wb['w'][i])
@@ -419,7 +476,7 @@ export default {
             console.log('getTypeSVMWeight', newNameArr, typeRankData, dragData)
             let typeValueWeight = {}
             for(let bankType in typeRankData){
-                console.log(bankType)
+                
                 
                 let inputSample = {}
                 
@@ -434,8 +491,7 @@ export default {
 
                     let posName = []
                     let negName = []
-
-                    inputSample[item['dragBank']] = {1: [], 0: []}
+  
                     let weightDim = nametodata[item['dragBank']]['weightDim'];
                     typeRankData[bankType]['weightDims'].map((comweightDim, i)=>{
                         if(item['newBankIndex']!=typeRankData[bankType]['ranks'][i]){
@@ -458,6 +514,7 @@ export default {
                             }
                         }
                     })
+                    
                     if(posLabels.length>3){
                         posLabels = posLabels.slice(0,3)
                         posData = posData.slice(0,3)
@@ -468,14 +525,24 @@ export default {
                         negData = negData.slice(0,3)
                         negName = negName.slice(0,3)
                     }
-                    posLabels = posLabels.concat(negLabels)
-                    labels = posLabels.concat(posLabels)
+                    
+                    if(posLabels.length!=0 && negLabels.length!=0){
+                        
+                        posLabels = posLabels.concat(negLabels)
+                        labels = posLabels.concat(posLabels)
 
-                    posData = posData.concat(negData)
-                    data = data.concat(posData)
+                        posData = posData.concat(negData)
+                        data = data.concat(posData)
 
-                    inputSample[item['dragBank']][1] = inputSample[item['dragBank']][1].concat(posName)
-                    inputSample[item['dragBank']][0] = inputSample[item['dragBank']][0].concat(negName)
+                        inputSample[item['dragBank']] = {1: [], 0: []}
+
+                        inputSample[item['dragBank']][1] = inputSample[item['dragBank']][1].concat(posName)
+                        inputSample[item['dragBank']][0] = inputSample[item['dragBank']][0].concat(negName)
+
+                        console.log('qwer', bankType, 'posName', posName, 'negName', negName, inputSample[item['dragBank']])
+
+                    }
+                    
                 });
                 
                 let sum = 0
@@ -528,15 +595,15 @@ export default {
             return weights
         },
         getCluster(rankAxisData){
-            console.log('rankAxisData1234', rankAxisData)
+            //console.log('rankAxisData1234', rankAxisData)
             let data = rankAxisData.map(item=>{return [item.score]})
-    
+
             let ans = kmeans(data, 5)['clusters'];
-            let temp = []
-            
+            // let temp = []
+
             let rankDict = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
             ans.map((d, i)=>{
-                rankDict[d]=rankAxisData[i].score 
+                rankDict[d]=rankAxisData[i].score
             })
             let rankList =[]
             for(let cluster in rankDict){
@@ -562,7 +629,7 @@ export default {
             }
             delete sumDict[5]
             rankAxisData['segmentation'] = Object.values(sumDict)
-            console.log('ans', ans, clusterMap, rankAxisData, sumDict);
+            // console.log('ans', ans, clusterMap, rankAxisData, sumDict);
 
             // rankAxisData.map(item=>{
             //     let rank =  item['rank']
@@ -624,8 +691,7 @@ export default {
         },
         getRank(data, normalizationDatas, originData, nameList, fieldList, bankType){
             let scores = [];
-            console.log('data123', data)
-
+            // console.log('data123', data)
             let maxScore = 0;
             // 求数据的得分
             for(let i=0; i<data.length; i++){
@@ -652,10 +718,8 @@ export default {
                 Object.keys(item['weightDim']).map(field=>{
                     item['weightDim'][field] = item['score']*item['weightDim'][field]/sum;
                 });
-                //console.log(item)
             });
 
-            
             scores.sort(function(a,b){
                 return b.score - a.score;
             });
@@ -678,8 +742,6 @@ export default {
             scores.map((item)=>{
                 item['loc'] /= maxLoc;
             });
-
-            
             let rankAxisData = this.deepClone(scores);
             //console.log('score', scores, data);
 
@@ -687,14 +749,12 @@ export default {
                 return a.originOrder - b.originOrder;
             });
 
-            console.log('getRank', scores)
+            // console.log('getRank', scores)
             //console.log('score', scores, data);
 
             var ranks =  scores.map(item=>{
                 return item['rank'];
             });
-
-        
             return [rankAxisData, ranks];
         },
         getNormalizationData(rawdata, fieldList){
@@ -805,7 +865,7 @@ export default {
             data = normalization(data);
             data = transpose(data);
 
-            console.log('datadata', data)
+            //console.log('datadata', data)
             let weights
             for(let i=0; i<data.length; i++){
                 // var score = 0
@@ -814,7 +874,7 @@ export default {
                     //console.log('123', self.typeValueWeight, self.typeValueWeight[typeList[i]], self.globalValueWeight)
                     if(self.typeValueWeight[typeList[i]]) weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
                     else weights = Object.values(self.globalValueWeight)
-                   // weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
+                    // weights = Object.values(self.typeValueWeight[typeList[i]]['valueWeight']);
                 }
                 for(let j=0; j<data[i].length; j++){
                     data[i][j]*=weights[j];
@@ -847,12 +907,9 @@ export default {
             let newNameArr = valArr.newNameArr;
             console.log('拖拽银行----',valArr);
             let inputSample1 
-            
             [inputSample1, this.valueWeight] = this.getLocSVMWeight(this.rankAxisData, val, newNameArr);
             this.init(true, inputSample1);
-            console.log('valueWeight', this.valueWeight)
-            //this.getLocSVMWeight(this.rankAxisData, val);
-            // debugger
+            
             let inputSample2
             [inputSample2, this.valueWeight] = this.getGobalSVMWeight(this.rankAxisData, val, newNameArr);
             this.globalValueWeight = this.valueWeight
@@ -863,10 +920,7 @@ export default {
             console.log('typeValueWeight',  this.typeValueWeight)
             this.init(false, this.typeValueWeight);
             console.log('valueWeight', this.typeValueWeight)
-
-
             console.log('rankAxisDataArrays', this.rankAxisDataArrays)
-            //this.tsneArrays.push(this.tsneValues);
         },
 
         //选中的legend字段
