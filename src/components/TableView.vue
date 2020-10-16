@@ -782,7 +782,7 @@ export default {
             //堆积图间距
             let stackedWid = 50;
             //表格每条格子高xx*73
-            let height = 18*72 - margin.top - margin.bottom+30;
+            let height = 18*52 - margin.top - margin.bottom+30;
             Object.keys(this.rankAxisDataTable[0]['weightDim']);
             let color = self.fieldColor;
 
