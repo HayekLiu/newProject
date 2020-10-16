@@ -6,6 +6,7 @@
 import d3tip from 'd3-tip';
 import * as lasso from 'd3-lasso';
 let _lasso = lasso;
+let circleColor = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854'];
 export default {
     name: 'ScatterLink',
     props: {
@@ -20,6 +21,10 @@ export default {
         nameListData:{
             type:Array,
             default:()=>[],
+        },
+        tabClickName:{
+            type:String,
+            default:()=>'',
         }
     },
     data(){
@@ -33,6 +38,7 @@ export default {
             scaleArray: [], // 缓存每个块的Scale
             blockWidth: 0, 
             lineObjects: {}, // 每条线的点集合
+            clickName:'',
         };
     },
     computed:{
@@ -48,6 +54,14 @@ export default {
         },
         nameListData(val){
             this.nameList = val;
+        },
+        tabClickName(val){
+            this.clickName = val;
+            let obj = {};
+            obj[val] = this.lineObjects[val];
+            d3.selectAll('.'+val)
+                .attr('stroke-width', '2px')   
+            this.drawLines(obj);
         }
     },
     mounted() {
@@ -72,6 +86,31 @@ export default {
                 .attr("id", "svg" + this.id);
            
             
+            let legendG = this.svg.selectAll("g").data(circleColor)
+                .enter()
+                .append("g");
+            legendG.append("circle")
+                .attr('r',6)
+                // .attr('width', 10)
+                // .attr('height', 10)
+                .attr('cx', 10)
+                .attr('cy', (d,i)=>14*i)
+                .attr('transform',function(){
+                    return 'translate(0,10)';
+                })
+                .attr('fill', function(d,i){
+                    return circleColor[i];
+                });
+
+            legendG.append("text")
+                .text((d,i)=>i+1)
+                .attr('x',18)
+                .attr('y',18)
+                .style('font-size',12)
+                .attr('transform',function(d,i){
+                    return 'translate(0,'+(14*i-4)+')';
+                });
+
             let scaleArray = []; // 缓存每个图的标尺
             let lineObjects = {}; // 存放每条线的路径点
             
@@ -104,7 +143,7 @@ export default {
                     .attr('stroke', 'transparent')
                     .attr('stroke-width', '2px')
                     .attr('pointer-events', 'none')
-                    .attr("transform", "translate(" + blockWidth * k + ",0 )");
+                    .attr("transform", "translate(" + (blockWidth * k+10) + ",0 )");
 
                 let transformLen = 0;
                 if(k==0){
@@ -114,7 +153,7 @@ export default {
                 }
 
                 let blockg = this.svg.append('g').attr("width", blockWidth).attr("height", height).attr('id', `tsne_g_${k}`)
-                    .attr("transform", "translate(" + transformLen + ",0 )");
+                    .attr("transform", "translate(" + (transformLen+10) + ",0 )");
 
                 blockg.append('text')
                     .text(()=>{
@@ -138,7 +177,8 @@ export default {
                     .attr("x2", (blockWidth+40) * (k+1))
                     .attr("y2", height-20)
                     .style("stroke-width", "0.2px")
-                    .style("stroke-dasharray", ("3, 3"));
+                    .style("stroke-dasharray", ("3, 3"))
+                    .attr("transform", "translate(10,0)");
 
                 let current = this.tsneArrays[k];
                 this.targetList.push(blockg);
@@ -178,7 +218,7 @@ export default {
                 
                 g.append('circle')
                     .attr('r', 5)
-                    .attr('fill', '#D0CECE')
+                    // .attr('fill', '#D0CECE')
                     .attr('cx', d=> xScale(d[0]))
                     .attr('cy', d=> yScale(d[1]))
                     .attr('stroke', 'black')
@@ -190,23 +230,23 @@ export default {
                     .attr('r', (d, i)=>{
                         return arcScale(Math.abs(radarData[this.nameListData[i]]['score']));
                     })
-                    .attr('fill', ()=>{
-                        return '#f1f2f2'
-                        //return colorRed(radarData[this.nameListData[i]]['score']/100);
+                    .attr('fill', (d)=>{
+                        return circleColor[d[2]-1];
+                        //return colorRed(radarData[this.nameListData[i]]['score']/100);circleColor
                     })
                     .attr('class',(d,i)=>this.nameListData[i]+' uItem')
                     .attr('title',(d,i)=>this.nameListData[i])
                     .on('mouseover', function(d, i){
                         bankName.show(self.nameListData[i],this);
                         d3.select(this)
-                            .attr('r', 7)
+                            // .attr('r', 7)
                             .attr('stroke-width', '2px')
                             .attr('cursor', 'pointer');
                     })
                     .on('mouseout', function(){
                         bankName.hide();
                         d3.select(this)
-                            .attr('r', 5)
+                            // .attr('r', 5)
                             .attr('stroke-width', '1px')
                             .attr('cursor', 'default');
                     });
@@ -346,6 +386,7 @@ export default {
                     .attr('stroke-width','2px')
                     .attr('fill', 'none')
                     .attr('class', `diy-path ${k}`)
+                    .attr("transform", "translate(10,0)")
                     .style("marker-end","url(#triangle)");
             }
         },

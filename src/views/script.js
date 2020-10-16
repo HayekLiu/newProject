@@ -15,7 +15,7 @@ export default {
     name: 'Home',
     components: {
         TableView,
-        
+
         ScatterLink,
         RankLink
     },
@@ -127,7 +127,7 @@ export default {
             rankAxisData: [], //排名轴的数据
             rankAxisDataTable: [], //表格堆叠图数据
             miserables:{},  //矩阵图整理后画图用数据
-           
+
             martrixShow:false,
             testShow:false,
             typeValueWeight :{},
@@ -156,6 +156,8 @@ export default {
                 // topTenCustomer: 0.01,// '前十大客户',
             },
             chooseColorArr:[],
+            selectedIDs:[], //套索选中的数据
+            tabClickName:'',//表格点击的银行
         };
     },
     computed:{
@@ -166,12 +168,14 @@ export default {
         // this.radarDataFun(this.tableData);
         // console.log('svm', svmjs, new svmjs.SVM())
         //this.tableData = mockData;
+
+
     },
     watch:{
         valueWeight(){
             //console.log('tsne update', val);
         },
-        
+
     },
     methods:{
         init(flag, inputSample){
@@ -235,6 +239,10 @@ export default {
             else rankAxisData['weight'] =self.typeValueWeight
             this.rankAxisData = rankAxisData;
             // console.log('rankAxisData123', rankAxisData)
+
+
+           // self.rankAxisDataArrays.push(rankAxisData)
+
             if(flag){
                 self.rankAxisDataArrays.push(rankAxisData)
             }
@@ -243,6 +251,7 @@ export default {
                     item['rank'] = self.typeData[item.name]['rank']
                     item['cluster'] = self.typeData[item.name]['cluster']
                 })
+                self.rankAxisDataArrays.push(rankAxisData)
             }
 
             self.rankAxisDataArrays[0].map(item=>{
@@ -260,7 +269,7 @@ export default {
                     item['scheme'] = type
                 })
             }
-        
+
             // self.rankAxisDataArrays.unshift(rankAxisData)
             this.rankAxisDataTable = this.deepClone(rankAxisData);
             this.tableData = this.deepClone(mockData);
@@ -268,7 +277,13 @@ export default {
                 this.tableData[i]['rank'] = rank;
             });
 
-            this.tsneValues = self.getTsneData(weightData);
+            // this.tsneValues = self.getTsneData(weightData);
+            let tsneValuesColor = self.getTsneData(weightData);
+            tsneValuesColor.map((item,index)=>{
+                item.push(rankAxisData[index].cluster)
+            });
+            this.tsneValues = tsneValuesColor;
+
             // this.tsneArrays.push(this.tsneValues);
             if(this.rankAxisDataTableArr < 1){
                 this.tsneArrays.splice(1,0,this.tsneValues);
@@ -294,7 +309,7 @@ export default {
             // let b = self.getTsneData(weightData);
             // let c = self.getTsneData(weightData);
             // this.tsneArrays = [a,b,c];
-            
+
             this.testShow = true;
 
         },
@@ -348,11 +363,11 @@ export default {
             dragData.map(item=>{
                 let locs = self.getSampleIDs(item['newBankIndex'], len);
                 let weightDim = nametodata[item['dragBank']]['weightDim'];
-                
+
                 inputSample[item['dragBank']] = {1: [], 0: []}
                 console.log('getLocSVMWeight', locs);
                 locs.map(loc=>{
-                    
+
                     let comweightDim = ranktodata[loc]['weightDim'];
                     let temp = [];
                     for(let field in weightDim){
@@ -412,9 +427,9 @@ export default {
             let inputSample = {}
             dragData.map(item=>{
                 let weightDim = nametodata[item['dragBank']]['weightDim'];
-                //let locs = self.getRandom(parseInt(item['newBankIndex']*0.5), 1, item['newBankIndex']-1)
+                let locs = self.getRandom(parseInt(item['newBankIndex']*0.5), 1, item['newBankIndex']-1)
                 //locs = locs.concat(self.getRandom(parseInt((rankAxisData.length - item['newBankIndex'])*0.2), item['newBankIndex']+1, rankAxisData.length))
-                let locs = self.getRandom(3, 1, item['newBankIndex']-1)
+                // let locs = self.getRandom(3, 1, item['newBankIndex']-1)
                 locs = locs.concat(self.getRandom(3, item['newBankIndex']+1, rankAxisData.length))
                 //console.log('locs', locs)
                 console.log('getGobalSVMWeight', locs)
@@ -479,7 +494,7 @@ export default {
                 
                 
                 let inputSample = {}
-                
+
                 let labels = []
                 let data = []
                 dragData.map(item=>{
@@ -544,7 +559,7 @@ export default {
                     }
                     
                 });
-                
+
                 let sum = 0
                 labels.map(label=>{
                     sum +=label
@@ -681,7 +696,7 @@ export default {
             model.run();
             model.getOutput();
             let results = model.getOutputScaled();
-            
+
             results.map(item=>{
                 item[0] = (item[0]+1)*5;
                 item[1] = (item[1]+1)*5;
@@ -934,6 +949,17 @@ export default {
             this.rankAxisDataArrays.splice(index,1);
             this.rankAxisDataTableArr.splice(index,1);
         },
+
+        //套索选中的点
+        lassoData(val){
+            this.selectedIDs = val;
+        },
+
+        //表格点击选中银行
+        clickName(val){
+            this.tabClickName = val;
+        }
+
 
 
         // //雷达图
