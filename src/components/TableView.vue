@@ -502,7 +502,7 @@ export default {
             //     nameArr.push(bankName[i].innerText);
             // }
 
-            console.log('rankAxisDataTableArr=========>',this.rankAxisDataTableArr);
+            //console.log('rankAxisDataTableArr=========>',this.rankAxisDataTableArr);
 
             if(self.stackedDataFlag){
                 self.stackedFigureData = [];
@@ -1005,7 +1005,7 @@ export default {
                         if(x(d[0])>0){
                             return x(d[0]);
                         }else{
-                            console.log('x(d[0])---小于0',x(d[0]))
+                            //console.log('x(d[0])---小于0',x(d[0]))
                         }
                         
                     })
@@ -1302,8 +1302,7 @@ export default {
                     "translate(0, " + height + ")");
             
 
-            console.log('weightDims', weightDims);
-
+            // console.log('weightDims', weightDims);
             svg.selectAll(".clusterRect")
                 .data(weightDims)
                 .enter().append("rect")

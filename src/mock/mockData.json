@@ -130,19 +130,6 @@
     "costToIncomeRatio": 0.3057
   },
   {
-    "name": "光大银行",
-    "type": "Joint-stock Commercial Bank",
-    "assetSize": 43573,
-    "capitalAdequacyRatio": 0.1301,
-    "nonPerformingLoansRatio": 0.0159,
-    "specialMentionedLoansRatio": 0.0241,
-    "provisionCoverage": 1.7616,
-    "liquidityRatio": 0.6426,
-    "assetProfitRatio": 0.008,
-    "capitalProfitRatio": 0.1155,
-    "costToIncomeRatio": 0.2879
-  },
-  {
     "name": "平安银行",
     "type": "Joint-stock Commercial Bank",
     "assetSize": 34186,
@@ -154,32 +141,6 @@
     "assetProfitRatio": 0.0073,
     "capitalProfitRatio": 0.1149,
     "costToIncomeRatio": 0.3032
-  },
-  {
-    "name": "北京银行",
-    "type": "City Commercial Bank",
-    "assetSize": 25729,
-    "capitalAdequacyRatio": 0.1207,
-    "nonPerformingLoansRatio": 0.0146,
-    "specialMentionedLoansRatio": 0.0088,
-    "provisionCoverage": 2.1751,
-    "liquidityRatio": 0.5593,
-    "assetProfitRatio": 0.0082,
-    "capitalProfitRatio": 0.1165,
-    "costToIncomeRatio": 0.2519
-  },
-  {
-    "name": "上海银行",
-    "type": "City Commercial Bank",
-    "assetSize": 20278,
-    "capitalAdequacyRatio": 0.13,
-    "nonPerformingLoansRatio": 0.0114,
-    "specialMentionedLoansRatio": 0.0186,
-    "provisionCoverage": 3.3295,
-    "liquidityRatio": 0.4417,
-    "assetProfitRatio": 0.0094,
-    "capitalProfitRatio": 0.1267,
-    "costToIncomeRatio": 0.2052
   },
   {
     "name": "民生银行",
@@ -219,19 +180,6 @@
     "assetProfitRatio": 0.0048,
     "capitalProfitRatio": 0.0882,
     "costToIncomeRatio": 0.3618
-  },
-  {
-    "name": "江苏银行",
-    "type": "City Commercial Bank",
-    "assetSize": 19258,
-    "capitalAdequacyRatio": 0.1255,
-    "nonPerformingLoansRatio": 0.0139,
-    "specialMentionedLoansRatio": 0.0225,
-    "provisionCoverage": 2.0384,
-    "liquidityRatio": 0.5223,
-    "assetProfitRatio": 0,
-    "capitalProfitRatio": 0.1243,
-    "costToIncomeRatio": 0.2868
   },
   {
     "name": "浙商银行",
@@ -286,19 +234,6 @@
     "costToIncomeRatio": 0.2302
   },
   {
-    "name": "渤海银行",
-    "type": "Joint-stock Commercial Bank",
-    "assetSize": 10345,
-    "capitalAdequacyRatio": 0.1177,
-    "nonPerformingLoansRatio": 0.0184,
-    "specialMentionedLoansRatio": 0.0288,
-    "provisionCoverage": 1.8696,
-    "liquidityRatio": 0.5637,
-    "assetProfitRatio": 0.007,
-    "capitalProfitRatio": 0.1359,
-    "costToIncomeRatio": 0.3546
-  },
-  {
     "name": "重庆农商",
     "type": "Rural Commercial Bank",
     "assetSize": 9506,
@@ -338,19 +273,6 @@
     "costToIncomeRatio": 0.3357
   },
   {
-    "name": "厦门国际银行",
-    "type": "City Commercial Bank",
-    "assetSize": 8061,
-    "capitalAdequacyRatio": 0.1277,
-    "nonPerformingLoansRatio": 0.0073,
-    "specialMentionedLoansRatio": 0.0132,
-    "provisionCoverage": 3.1059,
-    "liquidityRatio": 0.8014,
-    "assetProfitRatio": 0.0077,
-    "capitalProfitRatio": 0.1152,
-    "costToIncomeRatio": 0.2555
-  },
-  {
     "name": "上海农商",
     "type": "Rural Commercial Bank",
     "assetSize": 8337,
@@ -362,19 +284,6 @@
     "assetProfitRatio": 0.0089,
     "capitalProfitRatio": 0.1325,
     "costToIncomeRatio": 0.3195
-  },
-  {
-    "name": "广州农商",
-    "type": "Rural Commercial Bank",
-    "assetSize": 7633,
-    "capitalAdequacyRatio": 0.1428,
-    "nonPerformingLoansRatio": 0.0127,
-    "specialMentionedLoansRatio": 0.0258,
-    "provisionCoverage": 2.7664,
-    "liquidityRatio": 0.7691,
-    "assetProfitRatio": 0.0091,
-    "capitalProfitRatio": 0.1313,
-    "costToIncomeRatio": 0.2805
   },
   {
     "name": "长沙银行",
@@ -403,19 +312,6 @@
     "costToIncomeRatio": 0.2976
   },
   {
-    "name": "贵阳银行",
-    "type": "City Commercial Bank",
-    "assetSize": 5033,
-    "capitalAdequacyRatio": 0.1297,
-    "nonPerformingLoansRatio": 0.0135,
-    "specialMentionedLoansRatio": 0.0259,
-    "provisionCoverage": 2.6605,
-    "liquidityRatio": 0.8584,
-    "assetProfitRatio": 0.0108,
-    "capitalProfitRatio": 0.1888,
-    "costToIncomeRatio": 0.2673
-  },
-  {
     "name": "天津银行",
     "type": "City Commercial Bank",
     "assetSize": 6593,
@@ -427,19 +323,6 @@
     "assetProfitRatio": 0.0062,
     "capitalProfitRatio": 0.0915,
     "costToIncomeRatio": 0.2718
-  },
-  {
-    "name": "中原银行",
-    "type": "City Commercial Bank",
-    "assetSize": 6170,
-    "capitalAdequacyRatio": 0.1437,
-    "nonPerformingLoansRatio": 0.0244,
-    "specialMentionedLoansRatio": 0.0392,
-    "provisionCoverage": 1.5611,
-    "liquidityRatio": 0.0358,
-    "assetProfitRatio": 0.0071,
-    "capitalProfitRatio": 0.0827,
-    "costToIncomeRatio": 0.3365
   },
   {
     "name": "成都银行",
@@ -466,19 +349,6 @@
     "assetProfitRatio": 0.0088,
     "capitalProfitRatio": 0.128,
     "costToIncomeRatio": 0.2293
-  },
-  {
-    "name": "东莞农商",
-    "type": "Rural Commercial Bank",
-    "assetSize": 4082,
-    "capitalAdequacyRatio": 0.1484,
-    "nonPerformingLoansRatio": 0.0127,
-    "specialMentionedLoansRatio": 0.0005,
-    "provisionCoverage": 3.2967,
-    "liquidityRatio": 0.903,
-    "assetProfitRatio": 0.0115,
-    "capitalProfitRatio": 0.1668,
-    "costToIncomeRatio": 0.0089
   },
   {
     "name": "深圳农商",
@@ -546,32 +416,6 @@
     "costToIncomeRatio": 0.2797
   },
   {
-    "name": "厦门银行",
-    "type": "City Commercial Bank",
-    "assetSize": 2324,
-    "capitalAdequacyRatio": 0.1503,
-    "nonPerformingLoansRatio": 0.0133,
-    "specialMentionedLoansRatio": 0.0108,
-    "provisionCoverage": 2.1283,
-    "liquidityRatio": 0.8273,
-    "assetProfitRatio": 0.0064,
-    "capitalProfitRatio": 0.0135,
-    "costToIncomeRatio": 0.2778
-  },
-  {
-    "name": "温州银行",
-    "type": "City Commercial Bank",
-    "assetSize": 2278,
-    "capitalAdequacyRatio": 0.1185,
-    "nonPerformingLoansRatio": 0.0172,
-    "specialMentionedLoansRatio": 0.0005,
-    "provisionCoverage": 1.5114,
-    "liquidityRatio": 0.0358,
-    "assetProfitRatio": 0,
-    "capitalProfitRatio": 0.0135,
-    "costToIncomeRatio": 0.0089
-  },
-  {
     "name": "晋商银行",
     "type": "City Commercial Bank",
     "assetSize": 2276,
@@ -583,32 +427,6 @@
     "assetProfitRatio": 0.0061,
     "capitalProfitRatio": 0.0848,
     "costToIncomeRatio": 0.3688
-  },
-  {
-    "name": "杭州联合农商",
-    "type": "Rural Commercial Bank",
-    "assetSize": 2099,
-    "capitalAdequacyRatio": 0.1468,
-    "nonPerformingLoansRatio": 0.0133,
-    "specialMentionedLoansRatio": 0.0005,
-    "provisionCoverage": 3.3369,
-    "liquidityRatio": 0.0358,
-    "assetProfitRatio": 0.0114,
-    "capitalProfitRatio": 0.1209,
-    "costToIncomeRatio": 0.2958
-  },
-  {
-    "name": "重庆三峡银行",
-    "type": "City Commercial Bank",
-    "assetSize": 2047,
-    "capitalAdequacyRatio": 0.1293,
-    "nonPerformingLoansRatio": 0.013,
-    "specialMentionedLoansRatio": 0.0355,
-    "provisionCoverage": 1.6348,
-    "liquidityRatio": 0.8638,
-    "assetProfitRatio": 0.0063,
-    "capitalProfitRatio": 0.0985,
-    "costToIncomeRatio": 0.3572
   },
   {
     "name": "郑州银行",
@@ -741,19 +559,6 @@
     "costToIncomeRatio": 0.3195
   },
   {
-    "name": "珠海华润银行",
-    "type": "City Commercial Bank",
-    "assetSize": 1745,
-    "capitalAdequacyRatio": 0.1277,
-    "nonPerformingLoansRatio": 0.0191,
-    "specialMentionedLoansRatio": 0.0139,
-    "provisionCoverage": 1.9883,
-    "liquidityRatio": 0.0358,
-    "assetProfitRatio": 0.0084,
-    "capitalProfitRatio": 0.1161,
-    "costToIncomeRatio": 0.3712
-  },
-  {
     "name": "浙江泰隆商行",
     "type": "City Commercial Bank",
     "assetSize": 1686,
@@ -819,45 +624,6 @@
     "costToIncomeRatio": 0.3205
   },
   {
-    "name": "江苏苏州农商",
-    "type": "Rural Commercial Bank",
-    "assetSize": 1168,
-    "capitalAdequacyRatio": 0.1489,
-    "nonPerformingLoansRatio": 0.0131,
-    "specialMentionedLoansRatio": 0.0467,
-    "provisionCoverage": 2.4818,
-    "liquidityRatio": 0.6753,
-    "assetProfitRatio": 0.0076,
-    "capitalProfitRatio": 0.0908,
-    "costToIncomeRatio": 0.3418
-  },
-  {
-    "name": "江苏江阴农商",
-    "type": "Rural Commercial Bank",
-    "assetSize": 1149,
-    "capitalAdequacyRatio": 0.1521,
-    "nonPerformingLoansRatio": 0.0215,
-    "specialMentionedLoansRatio": 0.0167,
-    "provisionCoverage": 2.3371,
-    "liquidityRatio": 0.8649,
-    "assetProfitRatio": 0.007,
-    "capitalProfitRatio": 0.0872,
-    "costToIncomeRatio": 0.2826
-  },
-  {
-    "name": "江苏昆山农商",
-    "type": "Rural Commercial Bank",
-    "assetSize": 1017,
-    "capitalAdequacyRatio": 0.1371,
-    "nonPerformingLoansRatio": 0.013,
-    "specialMentionedLoansRatio": 0.0329,
-    "provisionCoverage": 3.8872,
-    "liquidityRatio": 0.5981,
-    "assetProfitRatio": 0.0101,
-    "capitalProfitRatio": 0.1347,
-    "costToIncomeRatio": 0.0089
-  },
-  {
     "name": "甘肃银行",
     "type": "City Commercial Bank",
     "assetSize": 3286,
@@ -869,19 +635,6 @@
     "assetProfitRatio": 0.0115,
     "capitalProfitRatio": 0.1643,
     "costToIncomeRatio": 0.2472
-  },
-  {
-    "name": "南粤银行",
-    "type": "City Commercial Bank",
-    "assetSize": 2049,
-    "capitalAdequacyRatio": 0.1157,
-    "nonPerformingLoansRatio": 0.0195,
-    "specialMentionedLoansRatio": 0.0005,
-    "provisionCoverage": 2.1793,
-    "liquidityRatio": 0.7533,
-    "assetProfitRatio": 0.0068,
-    "capitalProfitRatio": 0.0985,
-    "costToIncomeRatio": 0.4052
   },
   {
     "name": "江苏张家港农商",
@@ -921,18 +674,5 @@
     "assetProfitRatio": 0.0097,
     "capitalProfitRatio": 0.1461,
     "costToIncomeRatio": 0.338
-  },
-  {
-    "name": "江苏盐城农商",
-    "type": "Rural Commercial Bank",
-    "assetSize": 316,
-    "capitalAdequacyRatio": 0.1367,
-    "nonPerformingLoansRatio": 0.0202,
-    "specialMentionedLoansRatio": 0.0248,
-    "provisionCoverage": 2.3083,
-    "liquidityRatio": 0.4722,
-    "assetProfitRatio": 0,
-    "capitalProfitRatio": 0.1254,
-    "costToIncomeRatio": 0.3539
   }
 ]
