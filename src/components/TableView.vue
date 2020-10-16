@@ -211,6 +211,9 @@ export default {
         },
         selectedIDs(val){
             $('.costNumberView').find('.tbody').find('.tr').css('border','2px solid #D0CECE');
+            d3.selectAll('.LinkPath')
+                .attr("stroke-width", 1)
+                .attr("opacity", 0.5);
             if(val.length>0){
                 val.map((item)=>{
                     d3.select("#"+item+'LinkPath')
