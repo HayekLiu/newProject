@@ -35,6 +35,7 @@
               <RankLink
                 :name-list-data="nameListData"
                 :tsne-arrays="tsneArrays"
+                :selectedIDs = 'selectedIDs'
                 :rank-axis-data-arrays ="rankAxisDataArrays"
                 :field-color = "fieldColor"
                 :weight-list = "weightList"

@@ -136,7 +136,7 @@ export default {
                 // true 代表越大越好，false代表越小越好
                 //name: '银行名称',
                 //deadline: '数据截止期',
-                assetSize: 1.5, //'资产规模',
+                assetSize: 1, //'资产规模',
                 capitalAdequacyRatio: 0.15, //'资本充足率',
                 // netCapital: '资本净额',
                 // tocdRatio: 0.1,//'一级资本充足率', //tier one capital adequacy ratio

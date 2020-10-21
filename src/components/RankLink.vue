@@ -28,6 +28,10 @@ export default {
         fieldColor: {
 
         },
+        selectedIDs:{
+            type:Array,
+            default:()=>[],
+        }
     },
     data(){
         return{
@@ -57,6 +61,16 @@ export default {
         },
         nameListData(val){
             this.nameList = val;
+        },
+        selectedIDs(val){
+            //console.log('selectedIDs', val)
+            d3.selectAll('.bankName1')
+                .style('fill', 'black')
+            val.map(bank=>{
+                //console.log('selectedIDs', val)
+                d3.selectAll('.'+bank+'_bankName1')
+                    .style('fill', 'red')
+            })
         }
     },
     mounted() {
@@ -198,7 +212,7 @@ export default {
                     }
 
                 });
-
+            let samlpleCicles = []
             self.rankAxisDataArrays.map((rankAxisData, index)=>{
                 // console.log('144', rankAxisData)
                 let rankG = svg
@@ -212,7 +226,7 @@ export default {
                 types.push('_rank_point_'+type)
 
                 // console.log('type123', type)
-
+                let samlpleCicle = {}
                 let posSample = []
                 let negSample = []
                 // console.log(11, 'posSample', type, rankAxisData['inputSample'])
@@ -223,6 +237,9 @@ export default {
                             for(let bank in rankAxisData['inputSample'][bankType]['inputSample']){
                                 //console.log(bankTypeColor)
                                 //console.log(rankAxisData['inputSample'][bankType]['inputSample'][bank])
+                                samlpleCicle[bank] = rankAxisData['inputSample'][bankType]['inputSample'][bank][1]
+                                samlpleCicle[bank] = samlpleCicle[bank].concat(rankAxisData['inputSample'][bankType]['inputSample'][bank][0])
+                                
                                 posSample = posSample.concat(rankAxisData['inputSample'][bankType]['inputSample'][bank]['1'])
                                 negSample = negSample.concat(rankAxisData['inputSample'][bankType]['inputSample'][bank]['0'])
                             }
@@ -232,14 +249,17 @@ export default {
                 }
                 else{
                     if(rankAxisData['inputSample']){
+                        
                         for(let bank in rankAxisData['inputSample']){
+                            samlpleCicle[bank] = rankAxisData['inputSample'][bank][1]
+                            samlpleCicle[bank] = samlpleCicle[bank].concat(rankAxisData['inputSample'][bank][0])
                             posSample = posSample.concat(rankAxisData['inputSample'][bank]['1'])
                             negSample = negSample.concat(rankAxisData['inputSample'][bank]['0'])
                         }
                     }
                 }
-
-                console.log(11, 'posSample', posSample, negSample)
+                samlpleCicles.push(samlpleCicle)
+                console.log(11, 'posSample', posSample, negSample, samlpleCicle)
                 rankG.append("text")
                     // .attr("x", -5)
                     // .attr("y", (5+rankHeight/2)) // 100 is where the first dot appears. 25 is the distance between dots
@@ -317,6 +337,9 @@ export default {
                     .attr("transform", "translate(0," + 0 + ")")
                     .call(xAxis);
 
+                rankAxisData.map(d=>{
+                    d.click = false
+                })
                 let circleElement = rankG.selectAll('.rank_point_'+type)
                     .data(rankAxisData)
                     .enter().append('circle')
@@ -338,9 +361,20 @@ export default {
                     .attr('stroke', 'grey')
                     // .attr('stroke', '#D0CECE')
                     .attr('stroke-width', '1px')
+                    
                     .attr('class',(d)=>d.name+'_rank_point_'+type)
                     .attr('id',(d)=>d.name+'_rank_point')
                     //.attr('id',(d,i)=>this.nameListData[i]+'_tsne')
+                    .on('click', function(d){
+                        console.log(d)
+                        if(!d.click){
+                            self.highlighCirclePath('.'+d.name+'_linkPath', '#'+d.name+'_rank_point', true)
+                        }
+                        else{
+                            self.highlighCirclePath('.'+d.name+'_linkPath', '#'+d.name+'_rank_point', false)
+                        }
+                        d.click = !d.click;
+                    })
                     .on('mouseover', function(d){
                         //console.log(d)
                         rankTips.show(d, this);
@@ -348,14 +382,17 @@ export default {
                     })
                     .on('mouseout', function(d){
                         rankTips.hide();
-                        self.highlighCirclePath('.'+d.name+'_linkPath', '#'+d.name+'_rank_point', false)
-                    });
+                        if(!d.click){
+                            self.highlighCirclePath('.'+d.name+'_linkPath', '#'+d.name+'_rank_point', false)
+                        }
+                    })
 
 
                 if(index==self.rankAxisDataArrays.length-1){
-                    rankG.selectAll('.bankName')
+                    rankG.selectAll('.bankName1')
                         .data(rankAxisData)
                         .enter().append('text')
+                         .attr('class', (d)=>(d.name+'_bankName1 bankName1'))
                         .text(d=>(d.name))
                         // .attr('x', d=> xScale(d.rank))
                         // .attr('y', d=> 0)
@@ -505,7 +542,6 @@ export default {
                             // if(interval<0) return colorRed(interval/rankIntervalNeg)
                             // else if(interval>0) return colorBlue(interval/rankIntervalNeg)
                             // else return 'black'
-
                             if(interval<0) return 'blue'
                             else if(interval>0) return 'red'
                             else return 'black'
@@ -525,6 +561,50 @@ export default {
                         })
                 }
             })
+
+
+            console.log('types', types, samlpleCicles)
+            // draw sample link
+  
+            samlpleCicles.map((samlpleCicle, index)=>{
+                let pathDataLink = []
+                console.log('samlpleCicle', samlpleCicle)
+                if(Object.keys(samlpleCicle).length !=0) {
+                    let bank = Object.keys(samlpleCicle)[0]
+                    let type=types[index].replaceAll('_rank_point_', '')
+                    console.log('.'+bank+type)
+                    let base_x = parseFloat(d3.select('.'+bank+'_rank_point_'+type).attr('cx'))
+                    let base_y = rankHeight*index-5
+                    pathDataLink = [{x: base_x, y: base_y}]
+
+                    samlpleCicle[bank].map((name)=>{
+                        
+                        let x = parseFloat(d3.select('.'+name+'_rank_point_'+type).attr('cx'))
+                        
+                        pathDataLink.push({x: (base_x+x)/2, y: base_y-10})
+
+                        pathDataLink.push({x: x, y: base_y})
+
+                            // console.log('pathData', pathData)
+                        // pathG.append("path")
+                        //     .attr("d", lineFunctionRate(pathDataLink))
+                        // //.attr('class', 'linkPath')
+                        //     .attr('class', name+'_'+type+'_linkPathLink linkPathLink')
+                        //     .attr("stroke", 'red')
+                        //     .attr("stroke-width", 1)
+                        //     .attr("opacity", 1)
+                        //     .attr("fill", "none")
+                        
+                        pathDataLink = [{x: base_x, y: base_y}]
+                    })
+
+                    console.log('pathData123', samlpleCicles, bank, type, base_y, pathDataLink)
+                    
+                    
+                }
+            })
+
+
             // draw boxplot
 
             let boxplotWidth = width/4-40
@@ -697,7 +777,7 @@ export default {
                     .paddingOuter(.5)
 
                 boxplotG.append("g")
-                    .attr("transform", "translate(0," + boxplotHeight/2 + ")")
+                    .attr("transform", "translate(0," + 5*boxplotHeight/7 + ")")
                     .call(d3.axisBottom(x).tickSize(0).tickValues([]))
                     // .selectAll("text")
                     // .style("text-anchor", "end")

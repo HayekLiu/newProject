@@ -83,12 +83,15 @@ export default {
             };
             this.svg = d3.select("#" + this.id).append("svg")
                 .attr("width", (blockWidth+40)*this.tsneArrays.length).attr("height", height)
-                .attr("id", "svg" + this.id);
+                .attr("id", "svg" + this.id)
            
             
             let legendG = this.svg.selectAll("g").data(circleColor)
                 .enter()
-                .append("g");
+                .append("g")
+                .attr('transform',function(){
+                    return 'translate(0,'+10+')';
+                })
             legendG.append("circle")
                 .attr('r',6)
                 // .attr('width', 10)
@@ -103,7 +106,7 @@ export default {
                 });
 
             legendG.append("text")
-                .text((d,i)=>i+1)
+                .text((d,i)=>"Rating "+(i+1))
                 .attr('x',18)
                 .attr('y',18)
                 .style('font-size',12)
@@ -132,6 +135,7 @@ export default {
                     //radarData[item['name']]['rank'] = self.rankData[i];
                     radarData[item['name']]['score'] = item['score'];
                     radarData[item['name']]['weightDim'] = item['weightDim'];
+                    radarData[item['name']]['originDim'] = item['originDim'];
                 });
                 //console.log('radarData', radarData)
                 this.svg.append('rect')
@@ -213,6 +217,11 @@ export default {
                 let arcScale = d3.scaleLinear()
                     .range([0, 8])
                     .domain([0, 100]);
+                
+                var arcScaleLog = d3.scaleLog()
+                   // .base(Math.E)
+                    .range([2, 8])
+                    .domain([673, 276995]);
 
                 d3.interpolateHsl("white", "red");
                 
@@ -228,6 +237,8 @@ export default {
                     // })
 
                     .attr('r', (d, i)=>{
+                        return arcScaleLog(radarData[[self.nameListData[i]]]['originDim']['assetSize'])
+
                         return arcScale(Math.abs(radarData[this.nameListData[i]]['score']));
                     })
                     .attr('fill', (d)=>{
