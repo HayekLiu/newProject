@@ -215,7 +215,7 @@ export default {
                 g.call(bankName);
 
                 let arcScale = d3.scaleLinear()
-                    .range([0, 8])
+                    .range([3, 8])
                     .domain([0, 100]);
                 
                 var arcScaleLog = d3.scaleLog()

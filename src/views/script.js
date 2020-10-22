@@ -10,6 +10,7 @@ import mockData from './../mock/mockData.json';
 import kmeans from 'ml-kmeans';
 // import miserables from './../mock/matrix.json' //矩阵数据
 import * as svmjs from "svm";
+import { csvParse } from 'd3';
 window.svmjs = svmjs;
 export default {
     name: 'Home',
@@ -223,16 +224,18 @@ export default {
             this.nameListData = nameList;
             let weightData;
             if(flag){
-                weightData = self.getWeightData(values, this.fieldList, typeList, true);
+                weightData = self.getWeightData(nameList, values, this.fieldList, typeList, true);
             }
             else{
-                weightData = self.getWeightData(values, this.fieldList, typeList, false);
+                weightData = self.getWeightData(nameList, values, this.fieldList, typeList, false);
             }
-            // console.log('weightData', weightData)
+            console.log('weightData', weightData)
 
             let normalizationData = self.getNormalizationData(values, this.fieldList);
+            console.log('normalizationData', nameList, normalizationData)
             let [rankAxisData, ranks] = this.getRank(weightData, normalizationData, values, nameList, this.fieldList, bankType);
-
+            
+            console.log(rankAxisData)
             rankAxisData = this.getCluster(rankAxisData)
             rankAxisData['inputSample'] = inputSample
             if(flag) rankAxisData['weight'] =self.valueWeight
@@ -274,13 +277,14 @@ export default {
                 item['scheme'] = 'Default Scheme'
             })
             for(let i=1; i<self.rankAxisDataArrays.length; i++){
-                //let a = parseInt(i/3)+1
-                let a = 1
-                let b = i%3
+
+                let k = i-1
+                let a = parseInt(k/3)+1
+                let b = k%3
                 let type =null
-                if(b==1) type = 'Scheme ' + a+': Local Weight'
-                if(b==2) type = 'Scheme ' + a+': Global Weight'
-                if(b==0) type = 'Scheme ' + a+': Type Weight'
+                if(b==0) type = 'Scheme ' + a+': Local Weight'
+                if(b==1) type = 'Scheme ' + a+': Global Weight'
+                if(b==2) type = 'Scheme ' + a+': Type Weight'
                 self.rankAxisDataArrays[i].map(item=>{
                     item['scheme'] = type
                 })
@@ -593,7 +597,13 @@ export default {
                         // valueWeight[field] = Math.abs(wb['w'][i])
                         valueWeight[field] = wb['w'][i]
                     });
+
+                    console.log('typeValueWeight', valueWeight)
                     typeValueWeight[bankType] = {}
+                    console.log('valueWeight', valueWeight)
+                    for(let key in valueWeight){
+                        console.log('valueWeight', key)
+                    }
                     typeValueWeight[bankType]['valueWeight'] = valueWeight
                     typeValueWeight[bankType]['inputSample'] = inputSample
                 }
@@ -605,6 +615,54 @@ export default {
             console.log('getTypeSVMWeight', newNameArr, typeRankData, dragData, typeValueWeight)
             console.log('typeRankData', typeRankData)
             console.log('typeValueWeight', typeValueWeight)
+
+            console.log('typeValueWeight', typeValueWeight)
+            
+            // typeValueWeight['Large State-owned Commercial Bank']['valueWeight'] = {
+            //     "assetSize": 1.2338802982387468,
+            //     "capitalAdequacyRatio": 0.2261276563427111, 
+            //     "nonPerformingLoansRatio": 0.06901402336057952, 
+            //     "specialMentionedLoansRatio": -0.20499397129338234, 
+            //     "provisionCoverage": -0.05113395635300671, 
+            //     "liquidityRatio": -0.3058274314134892, 
+            //     "assetProfitRatio": 0.09780417242043095, 
+            //     "capitalProfitRatio": 0.021720029280186293, 
+            //     "costToIncomeRatio": 0.2037291011401734
+            // }
+
+            // typeValueWeight['Large State-owned Commercial Bank']['valueWeight'] = {
+            //     "assetSize": 1.2338802982387468,
+            //     "capitalAdequacyRatio": 0.2261276563427111, 
+            //     "nonPerformingLoansRatio": 0.06901402336057952, 
+            //     "specialMentionedLoansRatio": -0.20499397129338234, 
+            //     "provisionCoverage": -0.05113395635300671, 
+            //     "liquidityRatio": -0.3058274314134892, 
+            //     "assetProfitRatio": 0.09780417242043095, 
+            //     "capitalProfitRatio": 0.021720029280186293, 
+            //     "costToIncomeRatio": 0.2037291011401734
+            // }
+
+            //typeValueWeight['Large State-owned Commercial Bank'] = 
+            // {
+            //     "Large State-owned Commercial Bank": null,
+            //     "Joint-stock Commercial Bank": {
+            //       "valueWeight": [],
+            //       "inputSample": {
+            //         "农业银行": {
+            //           "0": [
+            //             "广发银行",
+            //             "兴业银行",
+            //             "浙商银行"
+            //           ],
+            //           "1": [
+            //             "招商银行"
+            //           ]
+            //         }
+            //       }
+            //     },
+            //     "City Commercial Bank": null,
+            //     "Rural Commercial Bank": null
+            //   }
             return typeValueWeight
         },
         getPercentWeight(weights){
@@ -629,6 +687,8 @@ export default {
             //console.log('rankAxisData1234', rankAxisData)
             let data = rankAxisData.map(item=>{return [item.score]})
 
+            console.log('data367', data)
+            
             let ans = kmeans(data, 5)['clusters'];
             // let temp = []
 
@@ -780,8 +840,8 @@ export default {
                 return a.originOrder - b.originOrder;
             });
 
-            // console.log('getRank', scores)
-            //console.log('score', scores, data);
+            console.log('getRank', scores)
+            console.log('score', scores, data);
 
             var ranks =  scores.map(item=>{
                 return item['rank'];
@@ -846,7 +906,7 @@ export default {
             data = transpose(data);
             return data;
         },
-        getWeightData(rawdata, fieldList, typeList, flag){
+        getWeightData(nameList, rawdata, fieldList, typeList, flag){
             let self = this;
             //极小型指标 -> 极大型指标
             function minTOmax(items){
@@ -892,10 +952,9 @@ export default {
                     data.push(minTOmax(rawdata[i]));
                 }
             }
-
             data = normalization(data);
             data = transpose(data);
-
+            console.log(222, nameList, data, fieldList, typeList)
             //console.log('datadata', data)
             let weights
             for(let i=0; i<data.length; i++){
@@ -974,6 +1033,8 @@ export default {
         //表格点击选中银行
         clickName(val){
             this.tabClickName = val;
+
+            console.log('this.tabClickName', this.tabClickName)
         }
 
 

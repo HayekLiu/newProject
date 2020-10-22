@@ -6,6 +6,7 @@
 import d3tip from 'd3-tip';
 import { constants } from 'zlib';
 import { connect } from 'net';
+import { Promise } from 'q';
 // import * as lasso from 'd3-lasso';
 // import { connect } from 'tls';
 // import { constants } from 'zlib';
@@ -141,8 +142,14 @@ export default {
                 .attr("class", "d3-tip")
                 .offset([-10, 0])
                 .html(function(d) {
-                    //console.log(d)
-                    return "Bank Name: "+d.name+"<br>Rank: "+d.rank+"<br>Score: "+d.score.toFixed(2)
+                    console.log(d)
+                    let text = "Bank Name: "+d.name+"<br>Rank: "+d.rank
+                    for(let field in d.originDim){
+                        text+="<br>"+field+": "+d['originDim'][field]
+                    }
+                    return text
+
+                    //+"<br>Score: "+d.score.toFixed(2)
                     //+"<br>Bank Type: "+d.type;
                 });
             let types = []
@@ -610,6 +617,12 @@ export default {
             let boxplotWidth = width/4-40
             let boxplotHeight = rankHeight-20
 
+            let boxplotTypeG = svg
+                .append("g")
+                .attr("transform", "translate(" + (margin.left+rankWidth+50) + "," + (10) + ")");
+            
+            //self.drawBoxPlot(boxplotTypeG, boxplotWidth, boxplotHeight, self.rankAxisDataArrays[0])
+
             // self.rankAxisDataArrays.map((rankAxisData, index)=>
             let fieldList = []
             let sumstats = {}
@@ -657,12 +670,10 @@ export default {
                                 var max = q1 + 1.5 * interQuantileRange
                                 sumstat.push({'key': field+1, 'value':{q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max}})
                             })
-
                             fieldList.map(field=>{
                                 let data = []
                                 negBanks.map(bank=>{
                                     data.push(nameToData[bank]['normalizationDim'][field])
-
                                 })
                                 var data_sorted = data.sort(d3.ascending)
                                 var q1 = d3.quantile(data_sorted, .25)
@@ -676,10 +687,7 @@ export default {
                             console.log('sumstat123', sumstat)
                             sumstats[banktype]=sumstat
                         }
-
-
                     }
-
                 }
                 else{
                     weightList.push(Object.values(rankAxisData['weight']))
@@ -690,7 +698,6 @@ export default {
                         negBanks = negBanks.concat(rankAxisData['inputSample'][bank]['0'])
                     }
                     //console.log(posBanks, negBanks)
-
                     fieldList.map(field=>{
                         let data = []
                         posBanks.map(bank=>{
@@ -711,7 +718,6 @@ export default {
                         let data = []
                         negBanks.map(bank=>{
                             data.push(nameToData[bank]['normalizationDim'][field])
-
                         })
                         var data_sorted = data.sort(d3.ascending)
                         var q1 = d3.quantile(data_sorted, .25)
@@ -725,11 +731,9 @@ export default {
                     sumstats[type]=sumstat
                 }
             }
-
-
-
             // console.log('weightList', weightList)
-            // console.log('sumstats', sumstats)
+
+            console.log('sumstats', sumstats)
             let index = 1
             for(let type in sumstats){
                 //if(!weightList) break
@@ -773,7 +777,7 @@ export default {
                 var x = d3.scaleBand()
                     .range([ 0, boxplotWidth])
                     .domain(npFieldList)
-                    .paddingInner(1)
+                    .paddingInner(0.5)
                     .paddingOuter(.5)
 
                 boxplotG.append("g")
@@ -833,7 +837,7 @@ export default {
                     .attr("y1", function(d){return(y(d.value.min))})
                     .attr("y2", function(d){return(y(d.value.max))})
                     .attr("stroke", "grey")
-                    .style("width", 40)
+                   // .style("width", 30)
 
                 // rectangle for the main box
                 var boxWidth = 10
@@ -896,12 +900,183 @@ export default {
                     .attr("y2", function(d){return(y(d.value.max))})
                     .attr("stroke", "black")
                     .style("width", 80)
+            }
+        },
+        drawBoxPlot(boxplotG, boxplotWidth, boxplotHeight, rankAxisData){
+            rankAxisData
 
+            let bankType = ['Large State-owned Commercial Bank', 'Joint-stock Commercial Bank', 'City Commercial Bank', 'Rural Commercial Bank']
+            
+            let dataType={}
+            for(let index in bankType){
+                dataType[bankType[index]] = []
+                rankAxisData.map(item=>{
+                    if(item['type']==bankType[index]){
+                        dataType[bankType[index]].push(item)
+                    }
+                })
             }
 
-        },
-        drawBoxPlot(){
+            let index = 0
+            let fieldList = Object.keys(rankAxisData[0]['normalizationDim'])
+            let sumstat = []
+            let npFieldList = []
+            let colors = []
+            let fieldColorScale = d3.scaleOrdinal()
+                    .domain(["assetSize", "capitalAdequacyRatio", "nonPerformingLoansRatio", "specialMentionedLoansRatio", "provisionCoverage", "liquidityRatio", "assetProfitRatio", "capitalProfitRatio", "costToIncomeRatio"])
+                    .range(['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E8684A', '#6DC8EC', '#9270CA', '#FF9D4D', '#269A99']);
+            
+            for(let type in dataType){
+                fieldList.map(field=>{
+                    let data = []
+                    dataType[type].map(item=>{
+                        data.push(item['normalizationDim'][field])
+                    })
+                    var data_sorted = data.sort(d3.ascending)
+                    var q1 = d3.quantile(data_sorted, .25)
+                    var median = d3.quantile(data_sorted, .5)
+                    var q3 = d3.quantile(data_sorted, .75)
+                    var interQuantileRange = q3 - q1
+                    var min = q1 - 1.5 * interQuantileRange
+                    var max = q1 + 1.5 * interQuantileRange
+                    sumstat.push({'key': field+index, 'value':{q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max}})
+                    if(npFieldList.indexOf(field+index)==-1){
+                        npFieldList.push(field+index)
+                        colors.push(fieldColorScale(field))
+                    }
+                })
+                index+=1
+            }
+            console.log('dataType', dataType, sumstat, npFieldList)
+            
 
+            let fieldColor = d3.scaleOrdinal()
+                  .domain(npFieldList)
+                  .range(colors)
+                   
+          
+            var x = d3.scaleBand()
+                .range([ 0, boxplotWidth])
+                .domain(npFieldList)
+                .paddingInner(1)
+                .paddingOuter(1)
+
+            boxplotG.append("g")
+                .attr("transform", "translate(0," + 5*boxplotHeight/7 + ")")
+                .call(d3.axisBottom(x).tickSize(0).tickValues([]))
+                // .selectAll("text")
+                // .style("text-anchor", "end")
+                // .attr("dx", "-.8em")
+                // .attr("dy", ".15em")
+                // .attr("transform", function(d) {
+                //     return "rotate(-10)"
+                //     });
+
+
+            // Show the Y scale
+            var y = d3.scaleLinear()
+                .domain([-0.4, 1])
+                .range([boxplotHeight, 0])
+
+
+            var area = d3.area()
+                .x(function(d) { return x(d.field); })
+                .y0(boxplotHeight/2)
+                .y1(function(d) { return y(d.weight); });
+
+            // define the line
+            var valueline = d3.line()
+                .x(function(d) { return x(d.field); })
+                .y(function(d) { return y(d.weight); });
+
+            //         // add the area
+            // boxplotG.append("path")
+            //     .data([areaData])
+            //     .attr("class", "area")
+            //     .attr("d", area)
+            //     .attr('fill', 'lightsteelblue');
+
+            // // add the valueline path.
+            // boxplotG.append("path")
+            //     .data([areaData])
+            //     .attr("class", "line")
+            //     .attr("d", valueline)
+            //     .attr('fill', 'none')
+            //     .attr('stroke', 'grey');
+
+
+            boxplotG.append("g").call(d3.axisLeft(y).ticks(5))
+
+            // Show the main vertical line
+            boxplotG
+                .selectAll("vertLines")
+                .data(sumstat)
+                .enter()
+                .append("line")
+                .attr("x1", function(d){return(x(d.key))})
+                .attr("x2", function(d){return(x(d.key))})
+                .attr("y1", function(d){return(y(d.value.min))})
+                .attr("y2", function(d){return(y(d.value.max))})
+                .attr("stroke", "grey")
+                // .style("width", 30)
+
+            // rectangle for the main box
+            var boxWidth = 10
+
+            boxplotG.selectAll("boxes")
+                .data(sumstat)
+                .enter()
+                .append("rect")
+                .attr("x", function(d){return(x(d.key)-boxWidth/2)})
+                .attr("y", function(d){return(y(d.value.q3))})
+                .attr("height", function(d){return(y(d.value.q1)-y(d.value.q3))})
+                .attr("width", boxWidth )
+                .attr("stroke", "black")
+                .style("fill",d=>{
+                    //console.log(d)
+                    if(d.key.includes('assetSize')){
+                        console.log('112', fieldColor(d.key))
+                    }
+                    return fieldColor(d.key)
+                    // return "#69b3a2"
+                })
+                .on('mouseover', d=>{
+                    console.log(type, d)
+                })
+
+            // Show the median
+            boxplotG.selectAll("medianLines")
+                .data(sumstat)
+                .enter()
+                .append("line")
+                .attr("x1", function(d){return(x(d.key)-boxWidth/2) })
+                .attr("x2", function(d){return(x(d.key)+boxWidth/2) })
+                .attr("y1", function(d){return(y(d.value.median))})
+                .attr("y2", function(d){return(y(d.value.median))})
+                //.attr("stroke", "red")
+                .style("width", 80)
+
+            boxplotG.selectAll("medianLines")
+                .data(sumstat)
+                .enter()
+                .append("line")
+                .attr("x1", function(d){return(x(d.key)-boxWidth/2) })
+                .attr("x2", function(d){return(x(d.key)+boxWidth/2) })
+                .attr("y1", function(d){return(y(d.value.min))})
+                .attr("y2", function(d){return(y(d.value.min))})
+                .attr("stroke", "black")
+                .style("width", 80)
+
+            boxplotG.selectAll("medianLines")
+                .data(sumstat)
+                .enter()
+                .append("line")
+                .attr("x1", function(d){return(x(d.key)-boxWidth/2) })
+                .attr("x2", function(d){return(x(d.key)+boxWidth/2) })
+                .attr("y1", function(d){return(y(d.value.max))})
+                .attr("y2", function(d){return(y(d.value.max))})
+                .attr("stroke", "black")
+                .style("width", 80)
         },
         highlighCirclePath(pathSelector, circleSelector, flag){
             if(flag){

@@ -210,7 +210,7 @@ export default {
 
         },
         selectedIDs(val){
-            //$('.costNumberView').find('.tbody').find('.tr').css('border','2px solid #D0CECE');
+            $('.costNumberView').find('.tbody').find('.tr').css('border','2px solid #D0CECE');
             if(val.length>0){
                 val.map((item)=>{
                     d3.select("#"+item+'LinkPath')
@@ -968,7 +968,8 @@ export default {
                     .style('cursor', 'pointer')
                     .text(function(){
 
-                        return item.dataTable[0].scheme;
+                        
+                        return item.dataTable[0].scheme.replace('2', '1');
                         // if(index>0){
                         //     return 'Scheme'+(index);
                         // }else{
