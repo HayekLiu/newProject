@@ -22,6 +22,10 @@ export default {
             type:Array,
             default:()=>[],
         },
+        linkedData:{
+            type:Array,
+            default:()=>[],
+        },
         tabClickName:{
             type:String,
             default:()=>'',
@@ -55,13 +59,29 @@ export default {
         nameListData(val){
             this.nameList = val;
         },
-        tabClickName(val){
-            this.clickName = val;
+        // tabClickName(val){
+        //     this.clickName = val;
+        //     let obj = {};
+        //     obj[val] = this.lineObjects[val];
+        //     d3.selectAll('.'+val)
+        //         .attr('stroke-width', '2px')   
+        //     this.drawLines(obj);
+        // }
+        linkedData(val){
+            // this.clickName = val;
+            
             let obj = {};
-            obj[val] = this.lineObjects[val];
-            d3.selectAll('.'+val)
-                .attr('stroke-width', '2px')   
-            this.drawLines(obj);
+            d3.selectAll('.selectedCluster').remove();
+            d3.selectAll('.diy-path').remove();
+            d3.selectAll('.uItem')
+                    .attr('stroke-width', '1px');
+            val.map((item)=>{
+                obj[item] = this.lineObjects[item];
+                d3.selectAll('.'+item)
+                    .attr('stroke-width', '2px');   
+                this.drawLines(obj);
+            });
+            
         }
     },
     mounted() {
@@ -361,7 +381,7 @@ export default {
                     drawnPath = '';
                     loopClosePath ='';
 
-                    _this.$emit('lassoData', selectedIDs);
+                    _this.$emit('setLinkedData', selectedIDs);
                     
                     lasso.notSelectedItems()
                         .each(function () {

@@ -45,6 +45,8 @@ export default {
             scaleArray: [], // 缓存每个块的Scale
             blockWidth: 0,
             lineObjects: {}, // 每条线的点集合
+
+            clickData:[], //点击选中的数据
         };
     },
     computed:{
@@ -65,12 +67,22 @@ export default {
         },
         selectedIDs(val){
             //console.log('selectedIDs', val)
+            let self = this;
+            
             d3.selectAll('.bankName1')
-                .style('fill', 'black')
+                .style('fill', 'black');
+                self.clickData = val;
+            this.highlighCirclePath('.d_linkPath', '.d_rank_point', false);
             val.map(bank=>{
+                // if(self.clickData.indexOf(bank) == -1){
+                //     self.clickData.push(bank);
+                // }
                 //console.log('selectedIDs', val)
                 d3.selectAll('.'+bank+'_bankName1')
-                    .style('fill', 'red')
+                    .style('fill', 'red');
+                d3.selectAll('.'+bank+'_rank_point_')
+                    .attr('stroke-width', '2px');
+                this.highlighCirclePath('.'+bank+'_linkPath', '#'+bank+'_rank_point', true);
             })
         }
     },
@@ -369,18 +381,37 @@ export default {
                     // .attr('stroke', '#D0CECE')
                     .attr('stroke-width', '1px')
                     
-                    .attr('class',(d)=>d.name+'_rank_point_'+type)
+                    .attr('class',(d)=>d.name+'_rank_point_'+type+' d_rank_point '+d.name+'_rank_point_')
                     .attr('id',(d)=>d.name+'_rank_point')
                     //.attr('id',(d,i)=>this.nameListData[i]+'_tsne')
                     .on('click', function(d){
                         console.log(d)
-                        if(!d.click){
+                        if(!d.click || self.clickData.indexOf(d.name) > -1){
+                            d.click = true;
+                            if(self.clickData.indexOf(d.name) == -1){
+                                self.clickData.push(d.name);
+                            }else{
+                                d.click = false;
+                                self.clickData.map((item,index)=>{
+                                    if(d.name == item){
+                                        self.clickData.splice(index,1);
+                                    }
+                                })
+                            }
+                          
                             self.highlighCirclePath('.'+d.name+'_linkPath', '#'+d.name+'_rank_point', true)
                         }
                         else{
+                            d.click = false;
+                            self.clickData.map((item,index)=>{
+                                if(d.name == item){
+                                    self.clickData.splice(index,1);
+                                }
+                            })
                             self.highlighCirclePath('.'+d.name+'_linkPath', '#'+d.name+'_rank_point', false)
                         }
-                        d.click = !d.click;
+                        self.$emit('setLinkedData',self.clickData);
+                        // d.click = !d.click;
                     })
                     .on('mouseover', function(d){
                         //console.log(d)
@@ -389,7 +420,7 @@ export default {
                     })
                     .on('mouseout', function(d){
                         rankTips.hide();
-                        if(!d.click){
+                        if(self.clickData.indexOf(d.name) == -1){
                             self.highlighCirclePath('.'+d.name+'_linkPath', '#'+d.name+'_rank_point', false)
                         }
                     })
@@ -514,7 +545,7 @@ export default {
                 pathG.append("path")
                     .attr("d", lineFunctionRate(pathData))
                 //.attr('class', 'linkPath')
-                    .attr('class', name+'_linkPath')
+                    .attr('class', name+'_linkPath d_linkPath')
                     .attr("stroke", 'grey')
                     .attr("stroke-width", 1)
                     .attr("opacity", 1)
@@ -543,7 +574,7 @@ export default {
                     pathG.append("path")
                         .attr("d", lineFunction(tempData))
                         //.attr('class', 'linkPath')
-                        .attr('class', name+'_linkPath')
+                        .attr('class', name+'_linkPath d_linkPath')
                         .attr("stroke", function(d){
                             // console.log('interval', interval, tempData)
                             // if(interval<0) return colorRed(interval/rankIntervalNeg)
@@ -564,7 +595,9 @@ export default {
                             self.highlighCirclePath('.'+name+'_linkPath', '#'+name+'_rank_point', true)
                         })
                         .on('mouseout', function(d){
-                            self.highlighCirclePath('.'+name+'_linkPath', '#'+name+'_rank_point', false)
+                            if(self.clickData.indexOf(name) == -1){
+                                self.highlighCirclePath('.'+name+'_linkPath', '#'+name+'_rank_point', false)
+                            }   
                         })
                 }
             })
