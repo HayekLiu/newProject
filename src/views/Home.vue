@@ -40,6 +40,7 @@
                 :rank-axis-data-arrays ="rankAxisDataArrays"
                 :field-color = "fieldColor"
                 :weight-list = "weightList"
+                @setLinkedData = 'setLinkedData'
               />
             </div>
           </div>

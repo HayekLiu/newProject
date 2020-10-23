@@ -363,7 +363,12 @@ export default {
                     d3.selectAll('.LinkPath')
                         .attr("stroke-width", 1)
                         .attr("opacity", 0.5);
-                    _this.$emit('setLinkedData',[d.name]);
+                    if(_this.selectedIDs.indexOf(d.name) == -1){
+                        _this.selectedIDs.push(d.name);
+                    }else{
+                        _this.selectedIDs.splice(_this.selectedIDs.indexOf(d.name),1);
+                    }
+                    _this.$emit('setLinkedData',_this.selectedIDs);
                     d3.select("#"+d.name+'LinkPath')
                         .attr("stroke-width", 18)
                         .attr("opacity", 0.8);
@@ -1054,7 +1059,13 @@ export default {
                         $('.costNumberView').find('.tbody').find('.tr').css('background-color','#fff');
                         $('#tr_'+d.name).css('border-color','#5DA5B3');
                         $('#tr_'+d.name).css('background-color','#5DA5B3');
-                        self.$emit('radarBankName',d.name);
+
+                        if(self.selectedIDs.indexOf(d.name) == -1){
+                            self.selectedIDs.push(d.name);
+                        }else{
+                            self.selectedIDs.splice(self.selectedIDs.indexOf(d.name),1);
+                        }
+                        self.$emit('setLinkedData',self.selectedIDs);
                     })
                     .append("title")   //堆叠图上的title悬浮
                     .text(function(d){

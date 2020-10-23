@@ -72,6 +72,7 @@ export default {
             
             let obj = {};
             d3.selectAll('.selectedCluster').remove();
+            d3.selectAll('.diy-path').remove();
             d3.selectAll('.uItem')
                     .attr('stroke-width', '1px');
             val.map((item)=>{
