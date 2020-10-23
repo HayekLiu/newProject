@@ -98,7 +98,7 @@ export default {
                 .attr("height", height + margin.left + margin.right+height)
                 .attr("id", "svg" + this.id)
             
-            let rankHeight = 2*height/7
+            let rankHeight = 1*height/5
             let rankWidth = 3*width/4
             
             let dashG = svg
