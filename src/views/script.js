@@ -159,6 +159,7 @@ export default {
             chooseColorArr:[],
             selectedIDs:[], //套索选中的数据
             tabClickName:'',//表格点击的银行
+            linkedData:[],  //组件事件关联数据集合
         };
     },
     computed:{
@@ -1025,17 +1026,18 @@ export default {
             this.rankAxisDataTableArr.splice(index,1);
         },
 
-        //套索选中的点
-        lassoData(val){
-            this.selectedIDs = val;
+        //事件选中的数据
+        setLinkedData(val){
+            // this.selectedIDs = val;
+            this.linkedData = val;
         },
 
         //表格点击选中银行
-        clickName(val){
-            this.tabClickName = val;
-
-            console.log('this.tabClickName', this.tabClickName)
-        }
+        // clickName(val){
+        //     this.tabClickName = val;
+            
+        //     console.log('this.tabClickName', this.tabClickName)
+        // }
 
 
 

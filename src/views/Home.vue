@@ -27,7 +27,8 @@
                 :rank-axis-data-arrays ="rankAxisDataArrays"
                 :field-color = "fieldColor"
                 :tabClickName = "tabClickName"
-                @lassoData ="lassoData"
+                :linkedData = 'linkedData'
+                @setLinkedData ="setLinkedData"
               />
             </div>
             <!-- 数据选择 -->
@@ -35,7 +36,7 @@
               <RankLink
                 :name-list-data="nameListData"
                 :tsne-arrays="tsneArrays"
-                :selectedIDs = 'selectedIDs'
+                :selectedIDs = 'linkedData'
                 :rank-axis-data-arrays ="rankAxisDataArrays"
                 :field-color = "fieldColor"
                 :weight-list = "weightList"
@@ -53,11 +54,11 @@
             :valueWeightData='valueWeight'
             :rank-axis-data="rankAxisData"
             :rankAxisDataTableArr = 'rankAxisDataTableArr'
-            :selectedIDs = 'selectedIDs'
+            :selectedIDs = 'linkedData'
             @dragBank = 'dragBank'
             @getChooseColor = 'getChooseColor'
             @deleteIndex = 'deleteIndex'
-            @clickName = 'clickName'
+            @setLinkedData = 'setLinkedData'
           />
       </div>
   </div>

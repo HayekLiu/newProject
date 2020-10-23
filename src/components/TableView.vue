@@ -210,7 +210,8 @@ export default {
 
         },
         selectedIDs(val){
-            $('.costNumberView').find('.tbody').find('.tr').css('border','2px solid #D0CECE');
+            $('.costNumberView').find('.tbody').find('.tr').css('border-color','#D0CECE');
+            $('.costNumberView').find('.tbody').find('.tr').css('background-color','#fff');
             d3.selectAll('.LinkPath')
                 .attr("stroke-width", 1)
                 .attr("opacity", 0.5);
@@ -362,7 +363,7 @@ export default {
                     d3.selectAll('.LinkPath')
                         .attr("stroke-width", 1)
                         .attr("opacity", 0.5);
-                    _this.$emit('clickName',d.name);
+                    _this.$emit('setLinkedData',[d.name]);
                     d3.select("#"+d.name+'LinkPath')
                         .attr("stroke-width", 18)
                         .attr("opacity", 0.8);
