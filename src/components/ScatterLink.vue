@@ -6,7 +6,7 @@
 import d3tip from 'd3-tip';
 import * as lasso from 'd3-lasso';
 let _lasso = lasso;
-let circleColor = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854'];
+let circleColor = ['#ff7f00','#7fc97f','#beaed4','#fdc086','#ffff99'];;
 export default {
     name: 'ScatterLink',
     props: {
@@ -69,16 +69,24 @@ export default {
         // }
         linkedData(val){
             // this.clickName = val;
-            
+            console.log('linkedData', val)
             let obj = {};
             d3.selectAll('.selectedCluster').remove();
             d3.selectAll('.diy-path').remove();
             d3.selectAll('.uItem')
-                    .attr('stroke-width', '1px');
+                    .attr('stroke-width', '1px')
+                    .attr('opacity', .3);
+
+            if(val.length==0){
+                d3.selectAll('.uItem')
+                    .attr('opacity', 1);  
+            }
+
             val.map((item)=>{
                 obj[item] = this.lineObjects[item];
                 d3.selectAll('.'+item)
-                    .attr('stroke-width', '2px');   
+                    .attr('stroke-width', '2px')
+                    .attr('opacity', 1);  
                 this.drawLines(obj);
             });
             
@@ -289,7 +297,7 @@ export default {
                 
                     .style('font-size', '9px')
                     .style('font-weight', 'light')
-                    .style('fill', 'grey')
+                    //.style('fill', 'grey')
                     .text((d,i)=>this.nameListData[i]);
             }
             this.lassoDraw(this.svg);

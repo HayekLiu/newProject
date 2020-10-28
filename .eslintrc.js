@@ -24,8 +24,8 @@ module.exports = {
     "Promise": true,
     "d3": true
   },
-  //"extends": ["eslint:recommended", "plugin:vue/recommended"], //debugger清楚
-  "extends": ["", "plugin:vue/recommended"],
+  "extends": ["eslint:recommended", "plugin:vue/recommended"], //debugger清楚
+  //"extends": ["", "plugin:vue/recommended"],
   "rules": {
     "indent": ["error", 4, {
       "SwitchCase": 1

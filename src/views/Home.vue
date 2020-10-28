@@ -132,7 +132,7 @@
   }
 
   .table-view{
-            width:100%;height: 32%;margin:0 auto;border-top: 1px solid rgb(204, 204, 204);
+            width:100%;height: 32%;margin:0 auto;border-top: 0px solid rgb(204, 204, 204);
             //border-top: 1px solid #ccc;
         }
 </style>

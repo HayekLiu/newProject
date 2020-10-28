@@ -110,7 +110,8 @@ export default {
                 .attr("height", height + margin.left + margin.right+height)
                 .attr("id", "svg" + this.id)
             
-            let rankHeight = 1*height/5
+            //let rankHeight = 1*height/5
+            let rankHeight = 2*height/7
             let rankWidth = 3*width/4
             
             let dashG = svg
@@ -179,19 +180,19 @@ export default {
             console.log('selectBanks', selectBanks)
 
             let bankTypeColor ={
-                'Large State-owned Commercial Bank': '#5B8FF9',
-                'Joint-stock Commercial Bank': '#5AD8A6',
-                'City Commercial Bank': '#5D7092',
-                'Rural Commercial Bank': '#F6BD16'
+                'Large State-owned Commercial Bank': '#002766',
+                'Joint-stock Commercial Bank': '#096dd9',
+                'City Commercial Bank': '#69c0ff',
+                'Rural Commercial Bank': '#e6f7ff'
             }
 
             //legend颜色
             let legend = svg.append("g").attr('transform','translate(20,0)');
             let bgColor = [
-                {'Large State-owned Commercial Bank': '#5B8FF9'},
-                {'Joint-stock Commercial Bank': '#5AD8A6'},
-                {'City Commercial Bank': '#5D7092'},
-                {'Rural Commercial Bank': '#F6BD16'},
+                {'Large State-owned Commercial Bank': '#002766'},
+                {'Joint-stock Commercial Bank': '#096dd9'},
+                {'City Commercial Bank': '#69c0ff'},
+                {'Rural Commercial Bank': '#e6f7ff'},
             ];
 
             let legendG = legend.selectAll("g").data(bgColor)
